@@ -1,0 +1,565 @@
+# Chinese (Simplified)
+
+# main
+web_TypeError: 出错了呜呜呜 ~ Web 界面配置绑定到了一个无效地址。
+web_KeyError: 出错了呜呜呜 ~ 配置文件中缺少 Web 界面配置。
+PhoneNumberInvalidError: 出错了呜呜呜 ~ 输入的电话号码无效。 请确保附加国家代码。
+module: 模块
+error: 加载出错
+start: PagerMaid-Modify 已启动，在任何聊天中输入 ,help 以获得帮助消息。
+
+# utils
+msg_ValueError: 出错了呜呜呜 ~ 没有成功获取到消息！
+isinstance: 出错了呜呜呜 ~ 长度必须是整数!
+
+# init
+platform: 将平台检测为“
+platform_load: ，进入PagerMaid的早期加载过程。
+platform_unsupported: ，不支持运行 PagerMaid，请在Linux或 *BSD 上启动 PagerMaid。
+error_prefix: 出错了呜呜呜 ~
+python: 请将您的 python 升级到至少3.6版。
+config_error: 出错了呜呜呜 ~ 请在工作目录中放置一个有效的配置文件。
+save_id: 设置用户标识成功。
+
+# modules_init
+modules_init_loading_modules: 加载内置模块
+modules_init_loading_plugins: 加载插件
+
+# listener
+command: 命令
+has_reg: 已经被注册。
+too_long: 出错了呜呜呜 ~ 生成的输出太长，无法显示。
+run_error: 出错了呜呜呜 ~ 执行此命令时发生错误。
+report_error: 上报错误出错了呜呜呜 ~
+use_method: 使用方法
+
+# account
+## username
+username_des: 通过命令快捷设置道纹（不支持回复）
+arg_error: 您好像输入了一个无效的参数。
+username_exist: 道纹已存在。
+username_vaild: 您好像输入了一个无效的道纹。
+username_set: 道纹设置完毕。
+username_cancel: 道纹已被取消。
+username_whatset: 道纹已被设置为
+## name
+name_des: 换个名称。（不支持回复）
+name_vaild: 您好像输入了一个无效的 first name.
+name_set: 显示名称已成功更改。
+name_whatset: 显示名称已被更改为
+## pfp
+pfp_des: 回复某条带附件的消息然后把它变成咱的头像
+pfp_process: 设置头像中 . . .
+pfp_e_notp: 无法将此附件解析为图片。
+pfp_e_size: 此图像尺寸小于最小要求。
+pfp_e_img: 此图像可以已经损坏。
+## bio
+bio_des: 设置咱的公开情报
+bio_too_lang: 情报太长啦
+bio_set: 公开情报设置成功啦 ~
+bio_cancel: 公开情报已被取消。
+bio_whatset: 公开的情报已被设置为
+## rmpfp
+rmpfp_des: 删除指定数量的咱的头像
+int: 数字
+rmpfp_p: 删除了
+rmpfp_l: 张头像。
+## profile
+profile_des: 生成一位用户简介 ~ 消息有点长
+profile_process: 正在生成用户简介摘要中 . . .
+profile_e_no: 指定的用户不存在。
+profile_e_nou: 指定的道纹不存在。
+profile_e_nof: 无法通过此 UserID 找到对应的用户。
+profile_e_long: 指定的 UserID 已超出长度限制，您确定输对了？
+profile_user: 用户
+profile_noset: 喵喵喵 ~ 好像没有设置
+profile_nobio: 没有公开的情报
+profile_yes: 是
+profile_no: 否
+profile_name: 用户简介
+profile_username: 道纹
+profile_fname: 名字
+profile_lname: 姓氏
+profile_bio: 目前已知的情报
+profile_gic: 共同裙
+profile_verified: 官方认证
+profile_restricted: 受限制
+profile_type: 类型
+## block
+block_des: 拉黑一个用户
+block_process: 正在拉黑中 . . .
+block_success: 成功拉黑
+block_exist: 已存在黑名单中。
+## unblock
+unblock_des: 取消拉黑一个用户
+unblock_process: 正在取消拉黑中 . . .
+unblock_success: 成功取消拉黑
+unblock_exist: 不存在黑名单中。
+
+# avoid
+## ghost
+ghost_des: 开启对话的自动已读，需要 Redis
+redis_dis: Redis 好像离线了，无法执行命令。
+ghost_e_mark: 在？为什么要在收藏夹里面用？
+ghost_set_f: 已成功将
+ghost_set_l: 添加到自动已读对话列表中。
+ghost_cancel: 从自动已读对话列表中移除。
+ghost_e_noexist: emm...当前对话不存在于自动已读对话列表中。
+ghost_e_exist: emm...当前对话存在于自动已读对话列表中。
+## deny
+deny_des: 拒绝聊天功能，需要 redis
+deny_set: 已被添加到自动拒绝对话列表中。
+deny_cancel: 已从自动拒绝对话列表中移除。
+deny_e_noexist: emm...当前对话不在自动拒绝对话列表中。
+deny_e_exist: emm...当前对话在自动拒绝对话列表中。
+# help
+help_des: 显示命令列表或单个命令的帮助。
+help_list: 命令列表
+help_send: 发送
+help_see: 以查看特定命令的帮助
+help_source: 🖥 源代码
+help_plugin: 🔅 插件列表
+help_module: 💠 內置模块
+# qr
+## genqr
+genqr_des: 生成 QR Code 。
+genqr_process: 生成QR码中。。。
+genqr_e_encode: 解析目标消息中的字符出现错误。
+genqr_ok: 生成了一张 QR 码。
+## parseqr
+parseqr_des: 回复一张 QR 码进行解析并发送 QR 码内容。
+parseqr_nofile: 回复的消息中没有附件。
+parseqr_content: 内容
+parseqr_e_noqr: 回复的附件不是 QR 码。
+parseqr_log: 已解析一张带有 QR 码的消息，内容：
+
+# backup
+## backup
+backup_des: 备份数据文件到本地以及日志频道，支持数据库的全量备份，安全可靠。
+backup_process: 备份中，请耐心等待备份程序完成...
+backup_success_channel: 数据文件备份完成并已打包发送到 Log 频道！
+backup_success: 数据文件备份完成！
+## recovery
+recovery_des: 从本地备份或者所回复的备份文件中恢复数据，支持数据库的全量恢复，方便快速。
+recovery_file_error: 未知的文件，可能并不是通过 PagerMaid 所备份的文件类型。
+recovery_down: 正在下载备份文件到本地... 在备份的过程中，建议减少使用 PagerMaid
+recovery_process: 开始恢复，可能需要一定的时间。。
+recovery_file_not_found: 找不到可用的备份文件。
+recovery_success: 備份恢复完成！
+
+# captions
+## convert
+convert_des: 回复某条附件消息然后转换为图片输出
+convert_process: 正在转换中 . . .
+convert_no_file: 出错了呜呜呜 ~ 回复的消息中好像没有附件。
+convert_error: 出错了呜呜呜 ~ 转换期间发生了错误。
+convert_invalid: 出错了呜呜呜 ~ 图片尺寸无效。
+## caption
+caption_des: 将两行字幕添加到回复的图片中，字幕将分别添加到顶部和底部，字幕需要以逗号分隔。
+caption_process: 正在渲染图像中 . . .
+caption_error_grammer: 出错了呜呜呜 ~ 错误的语法。
+caption_no_file: 出错了呜呜呜 ~ 目标消息中没有附件
+caption_error: 出错了呜呜呜 ~ 转换期间发生了错误。
+caption_success1: 成功将字幕
+caption_success2: 添加到了一张图片.
+## ocr
+ocr_des: 从回复的图片中提取文本
+ocr_psm_len_error: 呜呜呜出错了...psm 取值为 0-13
+ocr_processing: 正在处理图片，请稍候 . . .
+ocr_no_file: 出错了呜呜呜 ~ 回复的消息中没有附件。
+ocr_no_result: 没有提取到任何文字。
+ocr_result_hint: 以下是提取到的文字
+## highlight
+highlight_des: 生成有语法高亮显示的图片。
+highlight_processing: 正在渲染图片，请稍候 . . .
+highlight_no_file: 出错了呜呜呜 ~ 无法检索目标消息。
+highlight_uploading: 正在上传图片中 . . .
+## handle_failure
+handle_failure_error: 出错了呜呜呜 ~ 请报告此问题。
+
+# clock
+## time
+time_des: 显示特定区域的时间，如果参数为空，则默认显示配置值。
+time_parameters: <地区>
+time_time: 时间
+time_config: 出错了呜呜呜 ~ 配置文件填写错误
+
+# external
+## translate
+translate_des: 通过 Google 翻译将目标消息翻译成指定的语言。（支持回复）
+translate_parameters: <文本>
+translate_processing: 正在生成翻译中 . . .
+translate_ValueError: 出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。
+translate_ImportError: 出错了呜呜呜 ~ 请先安装 translators 模块。
+translate_hits: 文本翻译
+translate_original_lang: 源语言
+translate_tg_limit_uploading_file: 输出超出 TG 限制，正在尝试上传文件。
+translate_get: 把一条消息
+translate_from: 从
+translate_to: 翻译到了
+# tts
+tts_des: 通过 Google文本到语音 基于字符串生成语音消息。
+tts_processing: 生成语音中 . . .
+tts_AssertionError: 出错了呜呜呜 ~ 无效的参数。
+tts_ValueError: 出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。
+tts_RuntimeError: 出错了呜呜呜 ~ 加载语言数组时出错。
+tts_success: 生成了一条文本到语音的音频消息
+# google
+google_des: 使用 Google 查询
+google_processing: 正在拉取结果 . . .
+google_connection_error: 连接到 google服务器 失败
+google_success: 在Google搜索引擎上查询了
+# fetchaudio
+fetchaudio_des: 从多个平台获取音频文件。
+fetchaudio_error_grammer: 出错了呜呜呜 ~ 错误的语法。
+fetchaudio_processing: 拉取音频中 . . .
+fetchaudio_error_downloading: 出错了呜呜呜 ~ 原声带下载失败。
+fetchaudio_success: 从链接中获取了一条音频
+fetchaudio_link: 链接
+
+# fun
+## animate
+animate_des: 使用消息制作文本动画。
+## teletype
+teletype_des: 通过编辑消息来制作打字动画。会产生大量操作记录！
+## mock
+mock_des: 通过怪异的大写字母来嘲笑人们。
+## widen
+widen_des: 加宽字符串中的每个字符。
+widen_already: 此消息已被加宽。
+## fox
+fox_des: 使用狐狸来让您的消息看起来不那么完整
+## owo
+owo_des: 将消息转换为OwO。
+## flip
+flip_des: 翻转消息。
+## ship
+ship_des: 生成随机基友，也支持指定目标。
+ship_processing: 生成基友中 . . .
+ship_BaseException: 出错了呜呜呜 ~ 获取用户时出错。
+ship_hint: 恭喜两位
+## rng
+rng_des: 生成具有特定长度的随机字符串。
+## aaa
+aaa_des: 发送一条包含 a 和 A 的消息
+## asciiart
+asciiart_des: 为指定的字符串生成ASCII文字。
+## tuxsay
+tuxsay_des: 生成一条看起来像企鹅说话的 ASCII 艺术消息
+## coin
+coin_des: 扔硬币。
+coin_processing: 扔硬币中 . . .
+coin_lost: 我丢了硬币
+
+# help
+## lang
+lang_des: 切换语言。
+lang_change_to: 语言已切换到
+lang_reboot: 正在重新启动。
+lang_current_lang: 当前语言是
+lang_all_lang: 所有可用的语言有：
+## alias
+alias_des: 重定向原始命令。
+alias_list: 以下是重定向命令列表：
+alias_no: 您还没有重定向任何原始命令。
+alias_success: 编辑重定向命令成功，PagerMaid-Modify 正在重新启动。
+alias_exist: 出错了呜呜呜 ~ 重定向指向的命令已被占用。
+alias_no_exist: 出错了呜呜呜 ~ 原始命令没有被重定向。
+# message
+## id
+id_des: 获取一条消息的各种信息。
+id_hint: 以下是被回复消息的信息
+id_is_bot_yes: 是
+id_da: 死号
+## uslog
+uslog_des: 转发一条消息到日志。
+uslog_success: 已记录。
+uslog_log_disable: 出错了呜呜呜 ~ 日志记录已禁用。
+## log
+log_des: 静默转发一条消息到日志。
+## re
+re_des: 在当前会话复读回复的消息。（需要回复一条消息）
+re_parameters: <次数>
+re_too_big: 呜呜呜出错了...这个数字太大惹
+re_arg_error: 呜呜呜出错了...可能参数包含了数字以外的符号
+re_forbidden: 呜呜呜出错了...此群组的消息禁止转发
+not_reply: 出错了呜呜呜 ~ 您好像没有回复一条消息。
+## leave
+leave_res: 说 “再见” 然后离开会话。
+leave_bye: 贵群真是浪费我的时间，再见。
+leave_not_group: 出错了呜呜呜 ~ 当前聊天似乎不是群聊。
+## meter2feet
+m2f_des: 将米转换为英尺。
+m2f_get: 将
+m2f_meter: 米
+m2f_convert_to: 转换为了
+m2f_feet: 英尺
+## feet2meter
+f2m_des: 将英尺转换为米。
+## hitokoto
+hitokoto_des: 每日一言
+hitokoto_type_anime: 动画
+hitokoto_type_manga: 漫画
+hitokoto_type_game: 游戏
+hitokoto_type_article: 文学
+hitokoto_type_original: 原创
+hitokoto_type_web: 来自网络
+hitokoto_type_other: 其他
+hitokoto_type_movie: 影视
+hitokoto_type_poem: 诗词
+hitokoto_type_netease_music: 网易云
+hitokoto_type_philosophy: 哲学
+hitokoto_type_meme: 抖机灵
+
+# plugin
+## apt
+apt_des: 用于管理安装到 PagerMaid-Modify 的插件。
+apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <插件名称/文件>"
+apt_processing: 安装插件中 . . .
+apt_no_py: 出错了呜呜呜 ~ 无法从附件获取插件文件。
+apt_plugin: 插件
+apt_installed: 已安装
+apt_reboot: PagerMaid-Modify 正在重新启动。
+apt_install_success: 安装成功
+apt_not_found: 错误：没有找到插件
+apt_install_failed: 安装失败
+apt_no_update: 无需更新 
+apt_remove_success: 成功删除插件
+apt_remove: 删除插件
+apt_removed_plugins: 已删除的插件
+apt_not_exist: 出错了呜呜呜 ~ 指定的插件不存在。
+apt_no_running_plugins: 没有运行中的插件。
+apt_no_load_falied_plugins: 没有运行中的插件。
+apt_no_disabled_plugins: 没有关闭的插件
+apt_plugin_list: 插件列表
+apt_plugin_running: 运行中
+apt_plugin_disabled: 已关闭
+apt_plugin_failed: 加载失败
+apt_enable: 已启用
+apt_disable: 已禁用
+apt_uploading: 上传插件中 . . .
+apt_updated: 已更新
+apt_why_not_install_a_plugin: 安装一个仓库内插件再试试？
+apt_loading_from_online_but_nothing_need_to_update: "正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n**没有需要更新的插件。**"
+apt_loading_from_online_and_updating: "正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n正在更新插件..."
+apt_reading_list: "正在读取云端插件列表...完成\n正在读取本地插件版本信息...完成\n"
+apt_search_no_name: 没插件名我怎么搜索？
+apt_search_not_found: 未在插件仓库中搜索到相关插件。
+apt_search_result_hint: 以下是插件仓库的搜索结果
+apt_search_supporting: 仍在周期中
+apt_search_not_supporting: 已弃疗
+apt_plugin_name: 插件名
+apt_plugin_ver: 版本
+apt_plugin_section: 分类
+apt_plugin_maintainer: 作者
+apt_plugin_size: 大小
+apt_plugin_support: 支持周期
+apt_plugin_des_short: 说明
+
+# prune
+## prune
+prune_des: 以此命令回复某条消息，将删除最新一条消息至该条消息之间的所有消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（非群组管理员只删除自己的消息）
+prune_hint1: 批量删除了
+prune_hint2: 条消息。
+## selfprune
+sp_des: 删除当前对话您发送的特定数量的消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。入群消息非管理员无法删除。（倒序）当数字足够大时即可实现删除所有消息。
+sp_parameters: <数量>
+sp_hint: 自行发送的
+## yourprune
+yp_des: 删除当前对话您回复用户所发送的特定数量的消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（倒序、需要删除消息权限）当数字足够大时即可实现删除所有消息。
+yp_hint: 回复用户所发送的
+## del
+del_des: 删除当前对话您回复的那条消息。（需要回复一条消息）
+del_notification: 删除了一条消息。
+del_BadRequestError: 出错了呜呜呜 ~ 缺少删除此消息的权限。
+## send_prune_notify
+spn_deleted: 删除了
+
+# status
+## sysinfo
+sysinfo_des: 通过 neofetch 检索系统信息.
+sysinfo_loading: 加载系统信息中 . . .
+## fortune
+fortune_des: 读取 fortune cookies 信息。
+fortune_not_exist: 出错了呜呜呜 ~ 此系统上没有 fortune cookies
+## fbcon
+fbcon_des: 拍摄当前绑定的帧缓冲控制台的屏幕截图。
+fbcon_processing: 拍摄帧缓冲控制台的屏幕截图中 . . .
+fbcon_no_fbdump: 出错了呜呜呜 ~ 此系统上没有安装 fbdump
+fbcon_no_ImageMagick: 出错了呜呜呜 ~ 此系统上没有安装 ImageMagick
+fbcon_no_permission: 出错了呜呜呜 ~ 运行 PagerMaid-Modify 的用户不在视频组中。
+fbcon_caption: 绑定的帧缓冲区的屏幕截图。
+fbcon_error: 出错了呜呜呜 ~ 由于发生意外错误，导致文件生成失败。请确保已安装 apt 包 fbcat 和 imagemagick，且你的机器有显卡。
+## status
+status_des: 输出 PagerMaid-Modify 的运行状态。
+status_online: 在线
+status_offline: 离线
+status_hint: PagerMaid-Modify 运行状态
+status_name: 主机名
+status_platform: 主机平台
+status_release: Kernel 版本
+status_python: Python 版本
+status_telethon: Telethon 版本
+status_db: 数据库状态
+status_uptime: 运行时间
+## stats
+stats_des: 查看我的对话统计信息。
+stats_loading: 加载中 . . .
+stats_hint: 对话统计
+stats_dialogs: 对话总数
+stats_private: 您拥有的私聊数为
+stats_group: 您拥有的普通群组数为
+stats_supergroup: 您拥有的超级群组数为
+stats_channel: 您拥有的频道数为
+stats_bot: 您激活的机器人数为
+## speedtest
+speedtest_des: 执行 speedtest 脚本并发送结果。
+speedtest_processing: 执行测试脚本 . . .
+speedtest_ServerFailure: 无法确定最佳服务器。。。
+speedtest_ConnectFailure: speedtest API 服务器连接失败。。。
+## connection
+connection_des: 显示运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的连接信息。
+connection_hint: 连接信息
+connection_country: 地区
+connection_dc: 连接到的数据中心
+connection_nearest_dc: 最近的数据中心
+## pingdc
+pingdc_des: 测试您的服务器到 Telegram 数据服务器的延迟之间的延迟。
+pingdc_1: DC1(美国-迈阿密)
+pingdc_2: DC2(荷兰-阿姆斯特丹)
+pingdc_3: DC3(美国-迈阿密)
+pingdc_4: DC4(荷兰-阿姆斯特丹)
+pingdc_5: DC5(新加坡)
+## ping
+ping_des: 计算 PagerMaid-Modify 与 Telegram 之间的封包和信息延迟。
+## topcloud
+topcloud_des: 生成一张资源占用的词云图片。
+topcloud_processing: 生成图片中 . . .
+topcloud_caption: 正在运行的进程。
+topcloud_success: 生成了一张资源占用的词云图片。
+
+# sudo
+sudo_des: 允许其他用户来使用你的 PagerMaid-Modify
+sudo_has_enabled: Sudo 模式没有关闭
+sudo_enable: Sudo 模式开启成功
+sudo_no_sudo: 请注意：你还没有添加 Sudo 管理员
+sudo_disable: Sudo 模式关闭成功
+sudo_has_disabled: Sudo 模式没有开启
+sudo_add: 成功添加此用户到 Sudo 管理员列表
+sudo_reply: 请先回复一条消息
+sudo_no: 此用户不存在于 Sudo 管理员列表
+sudo_remove: 成功将此用户移出 Sudo 管理员列表
+sudo_no_one: 你还没有添加任何用户到 Sudo 管理员列表
+sudo_list: Sudo 管理员列表：
+
+# sticker
+## sticker
+sticker_des: 收集回复的图像/贴纸作为贴纸，通过参数指定 emoji 以设置非默认的 emoji。
+sticker_processing: 收集图像/贴纸中 . . .
+sticker_downloading: 下载图片中 . . .
+sticker_type_not_support: 出错了呜呜呜 ~ 不支持此文件类型。
+sticker_reply_not_sticker: 出错了呜呜呜 ~ 请回复带有图片/贴纸的消息。
+sticker_pack_title: 的私藏
+sticker_resizing: 调整图像大小中 . . .
+sticker_telegram_server_error: 连接到 Telegram 服务器失败 . . .
+sticker_change_pack_to: 切换到私藏 
+sticker_last_is_full:  上一个贴纸包已满 . . .
+sticker_has_been_added: 这张图片/贴纸已经被添加到
+sticker_this: 这个
+sticker_pack: 贴纸包
+sticker_another_running: 另一个命令正在添加贴纸, 重新尝试中
+sticker_no_pack_exist_creating: 贴纸包不存在，正在创建 . . .
+sticker_to_no: 出错了呜呜呜 ~ 没有指定贴纸包
+sticker_to_full: 出错了呜呜呜 ~ 这个贴纸包已满
+## upload_sticker
+us_animated_uploading: 上传动图中 . . .
+us_static_uploading: 上传图片中 . . .
+us_static_rounding: 图片圆角处理中 . . .
+us_change_rounding_true: 已开启贴纸自动转换圆角功能
+us_change_rounding_false: 已关闭贴纸自动转换圆角功能
+## merge
+merge_command_error: 命令参数错误！
+merge_processing_left: 正在处理第【
+merge_processing_right: 】条消息。
+merge_total_processed_left: 共处理了【
+merge_total_processed_right: 】张贴纸。
+## search
+sticker_search_des: 通过关键词查找 Sticker 包。
+sticker_search_no: 没有找到任何 Sticker 包。
+sticker_search_result: 以下是查找到的 Sticker 包：
+
+# system
+## sh
+sh_des: 在 Telegram 上远程执行 Shell 命令。
+sh_parameters: <命令>
+sh_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Modify 的配置禁止在频道中执行 Shell 命令。
+sh_success: 远程执行 Shell 命令
+## eval
+eval_des: 在 Telegram 上远程执行 Python 命令。
+eval_parameters: <命令>
+eval_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Modify 的配置禁止在频道中执行 Python 命令。
+eval_success: 远程执行 Python 命令
+eval_need_dev: '**请注意：此命令可以直接操作您的账户**
+
+此命令仅适用于开发者，如果您知道您在做什么的话，请手动在 Redis 数据库配置 dev 项为任意值或者在 data 文件夹下创建 dev 文件。'
+## restart
+restart_des: 使 PagerMaid-Modify 重新启动
+restart_processing: 尝试重启 PagerMaid-Modify...
+restart_complete: PagerMaid-Modify 重启完成。
+restart_log: PagerMaid-Modify 重新启动。
+## trace
+trace_des: 跟踪 URL 的重定向。
+trace_processing: 跟踪重定向中 . . .
+trace_over128: 出错了呜呜呜 ~ 超过128次重定向，正在中止!
+trace_re: 重定向
+trace_http_error: 出错了呜呜呜 ~ 发出 HTTP 请求时出了点问题。
+## chat
+chat_des: 加入 Pagermaid-Modify 用户群。
+chat_message: 大家好，我是新人。
+chat_already_join1: 您早已成功加入
+chat_already_join2: 用户群。
+chat_error: 出错了呜呜呜 ~ 请尝试手动加入 @PagerMaid_Modify
+chat_join_success: 您已成功加入
+
+#update
+## update
+update_des: 从远程来源检查更新，并将其安装到 PagerMaid-Modify。
+update_processing: 正在检查远程源以进行更新 . . .
+update_platform_version: 系统版本号
+update_git_version: Git 版本号
+update_local_git_change: 本地修改
+update_hash: 本地修改
+update_date: 提交时间
+update_NoSuchPathError: 目录不存在
+update_InvalidGitRepositoryError: 此 PagerMaid-Modify 实例不是从源安装,请通过您的本机软件包管理器进行升级。
+update_GitCommandError: 出错了呜呜呜 ~ 收到了来自 git 的错误
+update_not_active_branch: 出错了呜呜呜 ~ 该分支未维护
+update_in_branch: 在分支
+update_is_updated: 中已是最新。
+update_found_update_in_branch: 找到了更新，存在于分支
+update_change_log: 更新日志
+update_log_too_big: 更新日志太长，正在附加文件。
+update_hint: 请使用以下命令进行更新
+update_found_pulling: 找到更新，正在拉取 . . .
+update_success: 更新成功。
+update_failed: 更新失败
+update_auto_upgrade_git_failed_ubuntu: 检测到您的系统是Ubuntu或Debain，尝试自动升级git但失败,请手动升级.
+update_auto_upgrade_git_failed_cent: 检测到您的系统是CentOS，尝试自动升级git但失败,请手动升级.
+update_auto_upgrade_git_hint: 您的git版本过低,已尝试为您自动升级. 如再次提醒此错误,请手动升级.
+update_master: 收到已知的 CVE ，正在强制更新 PagerMaid-Modify 实例
+update_plugins: 收到已知的 CVE ，正在强制更新相关插件
+
+# sb
+sb_des: 在自己拥有管理员权限的共同群组中封禁一位用户。
+sb_des_auto: 管理自动封禁列表。
+sb_pause: 暂停
+sb_no: 没有在任何群封禁用户
+sb_per: 在
+sb_in: 个群封禁了用户
+sb_pro: 受影响的群组
+sb_no_per: 没有封禁用户权限。
+sb_set: 已被添加到自动封禁列表中。
+sb_remove: 已被移除自动封禁列表。
+sb_exist: 此群组存在于自动封禁列表中。
+sb_no_exist: 此群组不存在于自动封禁列表中。
+sb_channel: 成功在本群封禁此频道。

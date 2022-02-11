@@ -1,0 +1,91 @@
+# ===================================================================
+# __________                                _____         .__    .___
+# \______   \_____     ____   ___________  /     \ _____  |__| __| _/
+# |     ___/\__  \   / ___\_/ __ \_  __ \/  \ /  \\__  \ |  |/ __ |
+# |    |     / __ \_/ /_/  >  ___/|  | \/    Y    \/ __ \|  / /_/ |
+# |____|    (____  /\___  / \___  >__|  \____|__  (____  /__\____ |
+#                \//_____/      \/              \/     \/        \/
+# ===================================================================
+
+# API Credentials of your telegram application created at https://my.telegram.org/apps | api_key is api_id
+api_key: "ID_HERE"
+api_hash: "HASH_HERE"
+
+# Either debug logging is enabled or not
+debug: "False"
+error_report: "True"
+
+# Admin interface related
+web_interface:
+  enable: "False"
+  secret_key: "RANDOM_STRING_HERE"
+  host: "127.0.0.1"
+  port: "3333"
+
+# Redis connection information
+redis:
+  host: "localhost"
+  port: "6379"
+  db: "14"
+
+# Locale settings
+application_language: "zh-cn"
+application_region: "China"
+application_tts: "zh-CN"
+
+# In-Chat logging settings, default settings logs directly into Kat, strongly advised to change
+log: "False"
+log_chatid: "503691334"
+
+# Disabled Built-in Commands
+disabled_cmd:
+  - example1
+  - example2
+
+# Google search preferences
+result_length: "5"
+
+# TopCloud image output preferences
+width: "1920"
+height: "1080"
+background: "#101010"
+margin: "20"
+
+# socks5 or http or MTProto
+proxy_addr: ""
+proxy_port: ""
+http_addr: ""
+http_port: ""
+mtp_addr: ""
+mtp_port: ""
+mtp_secret: ""
+
+# Apt Git source
+git_source: "https://raw.githubusercontent.com/Xtao-Labs/PagerMaid_Plugins/v2/"
+git_api: "https://github.com/Xtao-Labs/PagerMaid-Pyro/commits/master"
+git_ssh: "https://github.com/Xtao-Labs/PagerMaid-Pyro.git"
+
+# Update Notice
+update_check: "True"
+update_time: "86400"
+update_username: "PagerMaid_Modify_bot"
+update_delete: "True"
+
+# ipv6
+ipv6: "False"
+
+# Analytics
+allow_analytic: "True"
+
+# Speed_test cli path
+speed_test_path: ""
+
+# Time format https://www.runoob.com/python/att-time-strftime.html
+# 24 default
+time_form: "%H:%M"
+date_form: "%A %y/%m/%d"
+# only support %m %d %H %M %S
+start_form: "%m/%d %H:%M"
+
+# Silent to reduce editing times
+silent: "True"

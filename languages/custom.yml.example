@@ -1,0 +1,23 @@
+# sticker
+## sticker
+sticker_des: 收集回复的图像/贴纸作为贴纸，通过参数指定 emoji 以设置非默认的 emoji。
+sticker_processing: 收集图像/贴纸中 . . .
+sticker_downloading: 下载图片中 . . .
+sticker_type_not_support: 出错了呜呜呜 ~ 不支持此文件类型。
+sticker_reply_not_sticker: 出错了呜呜呜 ~ 请回复带有图片/贴纸的消息。
+sticker_pack_title: 的私藏
+sticker_resizing: 调整图像大小中 . . .
+sticker_telegram_server_error: 连接到 Telegram 服务器失败 . . .
+sticker_change_pack_to: 切换到私藏 
+sticker_last_is_full:  上一个贴纸包已满 . . .
+sticker_has_been_added: 这张图片/贴纸已经被添加到
+sticker_this: 这个
+sticker_pack: 贴纸包
+sticker_another_running: 另一个命令正在添加贴纸, 重新尝试中
+sticker_no_pack_exist_creating: 贴纸包不存在，正在创建 . . .
+## upload_sticker
+us_animated_uploading: 上传动图中 . . .
+us_static_uploading: 上传图片中 . . .
+us_static_rounding: 图片圆角处理中 . . .
+us_change_rounding_true: 已开启贴纸自动转换圆角功能
+us_change_rounding_false: 已关闭贴纸自动转换圆角功能
