@@ -382,9 +382,10 @@ status_offline: 離線
 status_hint: 運行狀態
 status_name: 主機名
 status_platform: 主機平台
-status_release: Kernel版本
-status_python: Python版本
-status_telethon: Telethon版本
+status_release: Kernel 版本
+status_python: Python 版本
+status_telethon: Telethon 版本
+status_pyrogram: Pyrogram 版本
 status_db: 數據庫狀態
 status_uptime: 運行時間
 # stats

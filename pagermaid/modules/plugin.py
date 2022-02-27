@@ -14,8 +14,6 @@ from pagermaid.listener import listener
 from pagermaid.utils import upload_attachment, lang, alias_command, client, Message, edit_or_reply
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
 
-git_source = "https://raw.githubusercontent.com/Xtao-Labs/PagerMaid_Plugins/v2/"
-
 
 def remove_plugin(name):
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
@@ -29,27 +27,11 @@ def remove_plugin(name):
         pass
 
 
-async def download(name):
-    html = await client.get(f'{git_source}{name}.py')
-    with open(f'plugins{sep}{name}.py', mode='wb') as f:
-        f.write(html.text.encode('utf-8'))
-    return f'plugins{sep}{name}.py'
-
-
 def move_plugin(file_path):
     name = path.basename(file_path)[:-3]
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
     remove_plugin(name)
     move(file_path, plugin_directory)
-
-
-def update_version(plugin_name, version):
-    plugin_directory = f"{working_dir}{sep}plugins{sep}"
-    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-        version_json = json.load(f)
-        version_json[plugin_name] = version
-    with open(f"{plugin_directory}version.json", 'w') as f:
-        json.dump(version_json, f)
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command('apt'), diagnostics=False,
@@ -82,82 +64,18 @@ async def plugin(__: Client, context: Message):
                                          f"{lang('apt_reboot')}")
             await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
             exit(1)
-        elif len(context.parameter) >= 2:
-            process_list = context.parameter
-            context = await edit_or_reply(context, lang('apt_processing'))
-            del process_list[0]
-            success_list = []
-            failed_list = []
-            noneed_list = []
-            plugin_list = await client.get(f"{git_source}list.json")
-            plugin_list = plugin_list.json()['list']
-            for i in process_list:
-                if exists(f"{plugin_directory}version.json"):
-                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                        version_json = json.load(f)
-                    try:
-                        plugin_version = version_json[i]
-                    except:
-                        plugin_version = 0
-                else:
-                    temp_dict = {}
-                    with open(f"{plugin_directory}version.json", 'w') as f:
-                        json.dump(temp_dict, f)
-                    plugin_version = 0
-                temp = True
-                for x in plugin_list:
-                    if x['name'] == i:
-                        if (float(x['version']) - float(plugin_version)) <= 0:
-                            noneed_list.append(i)
-                            temp = False
-                            break
-                        else:
-                            remove_plugin(i)
-                            await download(i)
-                            update_version(i, x['version'])
-                            success_list.append(i)
-                            temp = False
-                            break
-                if temp:
-                    failed_list.append(i)
-            message = ""
-            if len(success_list) > 0:
-                message += lang('apt_install_success') + " : %s\n" % ", ".join(success_list)
-            if len(failed_list) > 0:
-                message += lang('apt_install_failed') + " %s\n" % ", ".join(failed_list)
-            if len(noneed_list) > 0:
-                message += lang('apt_no_update') + " %s\n" % ", ".join(noneed_list)
-            await log(message)
-            restart = len(success_list) > 0
-            if restart:
-                message += lang('apt_reboot')
-            result = await edit_or_reply(context, message)
-            if restart:
-                exit(1)
         else:
             await edit_or_reply(context, lang('arg_error'))
     elif context.parameter[0] == "remove":
         if len(context.parameter) == 2:
             if exists(f"{plugin_directory}{context.parameter[1]}.py"):
                 remove(f"{plugin_directory}{context.parameter[1]}.py")
-                if exists(f"{plugin_directory}version.json"):
-                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                        version_json = json.load(f)
-                    version_json[context.parameter[1]] = '0.0'
-                    with open(f"{plugin_directory}version.json", 'w') as f:
-                        json.dump(version_json, f)
                 result = await edit_or_reply(context,
                                              f"{lang('apt_remove_success')} {context.parameter[1]}, {lang('apt_reboot')} ")
                 await log(f"{lang('apt_remove')} {context.parameter[1]}.")
                 exit(1)
             elif exists(f"{plugin_directory}{context.parameter[1]}.py.disabled"):
                 remove(f"{plugin_directory}{context.parameter[1]}.py.disabled")
-                if exists(f"{plugin_directory}version.json"):
-                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                        version_json = json.load(f)
-                    version_json[context.parameter[1]] = '0.0'
-                    with open(f"{plugin_directory}version.json", 'w') as f:
-                        json.dump(version_json, f)
                 await edit_or_reply(context, f"{lang('apt_removed_plugins')} {context.parameter[1]}.")
                 await log(f"{lang('apt_removed_plugins')} {context.parameter[1]}.")
             elif "/" in context.parameter[1]:
@@ -242,124 +160,12 @@ async def plugin(__: Client, context: Message):
                 context = await edit_or_reply(context, lang('apt_uploading'))
                 await upload_attachment(file_name,
                                         context.chat.id, reply_id,
-                                        caption=f"PagerMaid-Modify {context.parameter[1]} plugin.")
+                                        caption=f"PagerMaid-Pyro {context.parameter[1]} plugin.")
                 remove(file_name)
                 await context.delete()
             else:
                 await edit_or_reply(context, lang('apt_not_exist'))
         else:
             await edit_or_reply(context, lang('arg_error'))
-    elif context.parameter[0] == "update":
-        unneed_update = lang('apt_no_update')
-        need_update = f"\n{lang('apt_updated')}:"
-        need_update_list = []
-        if not exists(f"{plugin_directory}version.json"):
-            await edit_or_reply(context, lang('apt_why_not_install_a_plugin'))
-            return
-        with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-            version_json = json.load(f)
-        plugin_list = await client.get(f"{git_source}list.json")
-        plugin_online = plugin_list.json()['list']
-        for key, value in version_json.items():
-            if value == "0.0":
-                continue
-            for i in plugin_online:
-                if key == i['name']:
-                    if (float(i['version']) - float(value)) <= 0:
-                        unneed_update += "\n`" + key + "`:Ver  " + value
-                    else:
-                        need_update_list.extend([key])
-                        need_update += "\n`" + key + "`:Ver  " + value + " --> Ver  " + i['version']
-                    continue
-        if unneed_update == f"{lang('apt_no_update')}:":
-            unneed_update = ''
-        if need_update == f"\n{lang('apt_updated')}:":
-            need_update = ''
-        if unneed_update == '' and need_update == '':
-            await edit_or_reply(context, lang('apt_why_not_install_a_plugin'))
-        else:
-            if len(need_update_list) == 0:
-                await edit_or_reply(context, lang('apt_loading_from_online_but_nothing_need_to_update'))
-            else:
-                print(6)
-                await edit_or_reply(context, lang('apt_loading_from_online_and_updating'))
-                plugin_directory = f"{working_dir}{sep}plugins{sep}"
-                for i in need_update_list:
-                    remove_plugin(i)
-                    await download(i)
-                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                        version_json = json.load(f)
-                    for m in plugin_online:
-                        if m['name'] == i:
-                            version_json[i] = m['version']
-                    with open(f"{plugin_directory}version.json", 'w') as f:
-                        json.dump(version_json, f)
-                result = await edit_or_reply(context, lang('apt_reading_list') + need_update)
-                exit(1)
-    elif context.parameter[0] == "search":
-        if len(context.parameter) == 1:
-            await edit_or_reply(context, lang('apt_search_no_name'))
-        elif len(context.parameter) == 2:
-            search_result = []
-            plugin_name = context.parameter[1]
-            plugin_list = await client.get(f"{git_source}list.json")
-            plugin_online = plugin_list.json()['list']
-            for i in plugin_online:
-                if search(plugin_name, i['name'], I):
-                    search_result.extend(['`' + i['name'] + '` / `' + i['version'] + '`\n  ' + i['des-short']])
-            if len(search_result) == 0:
-                await edit_or_reply(context, lang('apt_search_not_found'))
-            else:
-                await edit_or_reply(context, f"{lang('apt_search_result_hint')}:\n\n" + '\n\n'.join(search_result))
-        else:
-            await edit_or_reply(context, lang('arg_error'))
-    elif context.parameter[0] == "show":
-        if len(context.parameter) == 1:
-            await edit_or_reply(context, lang('apt_search_no_name'))
-        elif len(context.parameter) == 2:
-            search_result = ''
-            plugin_name = context.parameter[1]
-            plugin_list = await client.get(f"{git_source}list.json")
-            plugin_online = plugin_list.json()['list']
-            for i in plugin_online:
-                if plugin_name == i['name']:
-                    if i['supported']:
-                        search_support = lang('apt_search_supporting')
-                    else:
-                        search_support = lang('apt_search_not_supporting')
-                    search_result = f"{lang('apt_plugin_name')}:`{i['name']}`\n" \
-                                    f"{lang('apt_plugin_ver')}:`Ver  {i['version']}`\n" \
-                                    f"{lang('apt_plugin_section')}:`{i['section']}`\n" \
-                                    f"{lang('apt_plugin_maintainer')}:`{i['maintainer']}`\n" \
-                                    f"{lang('apt_plugin_size')}:`{i['size']}`\n" \
-                                    f"{lang('apt_plugin_support')}:{search_support}\n" \
-                                    f"{lang('apt_plugin_des_short')}:{i['des-short']}\n\n" \
-                                    f"{i['des']}"
-                    break
-            if search_result == '':
-                await edit_or_reply(context, lang('apt_search_not_found'))
-            else:
-                await edit_or_reply(context, search_result)
-    elif context.parameter[0] == "export":
-        if not exists(f"{plugin_directory}version.json"):
-            await edit_or_reply(context, lang('apt_why_not_install_a_plugin'))
-            return
-        await edit_or_reply(context, lang('stats_loading'))
-        list_plugin = []
-        with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-            version_json = json.load(f)
-        plugin_list = await client.get(f"{git_source}list.json")
-        plugin_online = plugin_list.json()['list']
-        for key, value in version_json.items():
-            if value == "0.0":
-                continue
-            for i in plugin_online:
-                if key == i['name']:
-                    list_plugin.append(key)
-                    break
-        if len(list_plugin) == 0:
-            await edit_or_reply(context, lang('apt_why_not_install_a_plugin'))
-        else:
-            await edit_or_reply(context, '-apt install ' + ' '.join(list_plugin))
     else:
         await edit_or_reply(context, lang('arg_error'))

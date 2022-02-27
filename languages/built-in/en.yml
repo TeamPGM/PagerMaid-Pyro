@@ -386,6 +386,7 @@ status_platform: Host platform
 status_release: Kernel version
 status_python: Python version
 status_telethon: Telethon version
+status_pyrogram: Pyrogram version
 status_db: Database status
 status_uptime: Uptime
 # stats

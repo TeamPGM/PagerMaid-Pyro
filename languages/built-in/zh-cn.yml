@@ -400,6 +400,7 @@ status_platform: 主机平台
 status_release: Kernel 版本
 status_python: Python 版本
 status_telethon: Telethon 版本
+status_pyrogram: Pyrogram 版本
 status_db: 数据库状态
 status_uptime: 运行时间
 ## stats
