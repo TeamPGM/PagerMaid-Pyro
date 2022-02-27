@@ -114,7 +114,7 @@ def listener(**args):
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 try:
-                    await message.reply(lang('run_error'), quote=True)
+                    await message.edit(lang('run_error'))
                 except BaseException:
                     pass
                 if not diagnostics:
@@ -166,7 +166,7 @@ def raw_listener(filter_s):
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 try:
-                    await message.reply(lang('run_error'), quote=True)
+                    await message.edit(lang('run_error'))
                 except BaseException:
                     pass
                 if Config.ERROR_REPORT:
