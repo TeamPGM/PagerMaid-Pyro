@@ -45,11 +45,11 @@ async def help_command(client: Client, message: Message):
                 result += "`" + str(command)
                 result += "`, "
         await message.edit(result[
-                                     :-2] + f"\n**{lang('help_send')} \"!help <{lang('command')}>\" {lang('help_see')}**\n"
-                                            f"[{lang('help_source')}](https://t.me/PagerMaid_Modify) "
-                                            f"[{lang('help_plugin')}](https://index.xtaolabs.com/) "
-                                            f"[{lang('help_module')}](https://wiki.xtaolabs.com/)",
-                            disable_web_page_preview=True)
+                           :-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}**\n"
+                                  f"[{lang('help_source')}](https://t.me/PagerMaid_Modify) "
+                                  f"[{lang('help_plugin')}](https://index.xtaolabs.com/) "
+                                  f"[{lang('help_module')}](https://wiki.xtaolabs.com/)",
+                           disable_web_page_preview=True)
 
 
 @listener(is_plugin=False, command=alias_command("help_raw"),
@@ -67,10 +67,9 @@ async def help_raw_command(client: Client, message: Message):
         for command in sorted(help_messages, reverse=False):
             result += "`" + str(command)
             result += "`, "
-        await edit_or_reply(message,
-                            result[:-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}** "
-                                          f"[{lang('help_source')}](https://t.me/PagerMaid_Modify)",
-                            disable_web_page_preview=True)
+        await message.edit(result[:-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}** "
+                                         f"[{lang('help_source')}](https://t.me/PagerMaid_Modify)",
+                           disable_web_page_preview=True)
 
 
 @listener(is_plugin=False, command=alias_command("lang"),
@@ -91,8 +90,8 @@ async def lang_change(client: Client, message: Message):
         await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
         exit(1)
     else:
-        await edit_or_reply(message,
-                            f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n{lang("lang_all_lang")}{"，".join(dir__)}')
+        await message.edit(f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n'
+                           f'{lang("lang_all_lang")}{"，".join(dir__)}')
 
 
 @listener(is_plugin=False, outgoing=True, command="alias",
