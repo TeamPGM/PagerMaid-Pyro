@@ -6,7 +6,7 @@ web_KeyError: 出错了呜呜呜 ~ 配置文件中缺少 Web 界面配置。
 PhoneNumberInvalidError: 出错了呜呜呜 ~ 输入的电话号码无效。 请确保附加国家代码。
 module: 模块
 error: 加载出错
-start: PagerMaid-Modify 已启动，在任何聊天中输入 ,help 以获得帮助消息。
+start: PagerMaid-Pyro 已启动，在任何聊天中输入 ,help 以获得帮助消息。
 
 # utils
 msg_ValueError: 出错了呜呜呜 ~ 没有成功获取到消息！
@@ -262,7 +262,7 @@ lang_all_lang: 所有可用的语言有：
 alias_des: 重定向原始命令。
 alias_list: 以下是重定向命令列表：
 alias_no: 您还没有重定向任何原始命令。
-alias_success: 编辑重定向命令成功，PagerMaid-Modify 正在重新启动。
+alias_success: 编辑重定向命令成功，PagerMaid-Pyro 正在重新启动。
 alias_exist: 出错了呜呜呜 ~ 重定向指向的命令已被占用。
 alias_no_exist: 出错了呜呜呜 ~ 原始命令没有被重定向。
 # message
@@ -313,13 +313,13 @@ hitokoto_type_meme: 抖机灵
 
 # plugin
 ## apt
-apt_des: 用于管理安装到 PagerMaid-Modify 的插件。
+apt_des: 用于管理安装到 PagerMaid-Pyro 的插件。
 apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <插件名称/文件>"
 apt_processing: 安装插件中 . . .
 apt_no_py: 出错了呜呜呜 ~ 无法从附件获取插件文件。
 apt_plugin: 插件
 apt_installed: 已安装
-apt_reboot: PagerMaid-Modify 正在重新启动。
+apt_reboot: PagerMaid-Pyro 正在重新启动。
 apt_install_success: 安装成功
 apt_not_found: 错误：没有找到插件
 apt_install_failed: 安装失败
@@ -387,14 +387,14 @@ fbcon_des: 拍摄当前绑定的帧缓冲控制台的屏幕截图。
 fbcon_processing: 拍摄帧缓冲控制台的屏幕截图中 . . .
 fbcon_no_fbdump: 出错了呜呜呜 ~ 此系统上没有安装 fbdump
 fbcon_no_ImageMagick: 出错了呜呜呜 ~ 此系统上没有安装 ImageMagick
-fbcon_no_permission: 出错了呜呜呜 ~ 运行 PagerMaid-Modify 的用户不在视频组中。
+fbcon_no_permission: 出错了呜呜呜 ~ 运行 PagerMaid-Pyro 的用户不在视频组中。
 fbcon_caption: 绑定的帧缓冲区的屏幕截图。
 fbcon_error: 出错了呜呜呜 ~ 由于发生意外错误，导致文件生成失败。请确保已安装 apt 包 fbcat 和 imagemagick，且你的机器有显卡。
 ## status
-status_des: 输出 PagerMaid-Modify 的运行状态。
+status_des: 输出 PagerMaid-Pyro 的运行状态。
 status_online: 在线
 status_offline: 离线
-status_hint: PagerMaid-Modify 运行状态
+status_hint: PagerMaid-Pyro 运行状态
 status_name: 主机名
 status_platform: 主机平台
 status_release: Kernel 版本
@@ -419,7 +419,7 @@ speedtest_processing: 执行测试脚本 . . .
 speedtest_ServerFailure: 无法确定最佳服务器。。。
 speedtest_ConnectFailure: speedtest API 服务器连接失败。。。
 ## connection
-connection_des: 显示运行 PagerMaid-Modify 的服务器和 Telegram 服务器之间的连接信息。
+connection_des: 显示运行 PagerMaid-Pyro 的服务器和 Telegram 服务器之间的连接信息。
 connection_hint: 连接信息
 connection_country: 地区
 connection_dc: 连接到的数据中心
@@ -432,7 +432,7 @@ pingdc_3: DC3(美国-迈阿密)
 pingdc_4: DC4(荷兰-阿姆斯特丹)
 pingdc_5: DC5(新加坡)
 ## ping
-ping_des: 计算 PagerMaid-Modify 与 Telegram 之间的封包和信息延迟。
+ping_des: 计算 PagerMaid-Pyro 与 Telegram 之间的封包和信息延迟。
 ## topcloud
 topcloud_des: 生成一张资源占用的词云图片。
 topcloud_processing: 生成图片中 . . .
@@ -440,7 +440,7 @@ topcloud_caption: 正在运行的进程。
 topcloud_success: 生成了一张资源占用的词云图片。
 
 # sudo
-sudo_des: 允许其他用户来使用你的 PagerMaid-Modify
+sudo_des: 允许其他用户来使用你的 PagerMaid-Pyro
 sudo_has_enabled: Sudo 模式没有关闭
 sudo_enable: Sudo 模式开启成功
 sudo_no_sudo: 请注意：你还没有添加 Sudo 管理员
@@ -493,21 +493,21 @@ sticker_search_result: 以下是查找到的 Sticker 包：
 ## sh
 sh_des: 在 Telegram 上远程执行 Shell 命令。
 sh_parameters: <命令>
-sh_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Modify 的配置禁止在频道中执行 Shell 命令。
+sh_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Pyro 的配置禁止在频道中执行 Shell 命令。
 sh_success: 远程执行 Shell 命令
 ## eval
 eval_des: 在 Telegram 上远程执行 Python 命令。
 eval_parameters: <命令>
-eval_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Modify 的配置禁止在频道中执行 Python 命令。
+eval_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Pyro 的配置禁止在频道中执行 Python 命令。
 eval_success: 远程执行 Python 命令
 eval_need_dev: '**请注意：此命令可以直接操作您的账户**
 
 此命令仅适用于开发者，如果您知道您在做什么的话，请手动在 Redis 数据库配置 dev 项为任意值或者在 data 文件夹下创建 dev 文件。'
 ## restart
-restart_des: 使 PagerMaid-Modify 重新启动
-restart_processing: 尝试重启 PagerMaid-Modify...
-restart_complete: PagerMaid-Modify 重启完成。
-restart_log: PagerMaid-Modify 重新启动。
+restart_des: 使 PagerMaid-Pyro 重新启动
+restart_processing: 尝试重启 PagerMaid-Pyro...
+restart_complete: PagerMaid-Pyro 重启完成。
+restart_log: PagerMaid-Pyro 重新启动。
 ## trace
 trace_des: 跟踪 URL 的重定向。
 trace_processing: 跟踪重定向中 . . .
@@ -515,7 +515,7 @@ trace_over128: 出错了呜呜呜 ~ 超过128次重定向，正在中止!
 trace_re: 重定向
 trace_http_error: 出错了呜呜呜 ~ 发出 HTTP 请求时出了点问题。
 ## chat
-chat_des: 加入 Pagermaid-Modify 用户群。
+chat_des: 加入 PagerMaid-Pyro 用户群。
 chat_message: 大家好，我是新人。
 chat_already_join1: 您早已成功加入
 chat_already_join2: 用户群。
@@ -524,7 +524,7 @@ chat_join_success: 您已成功加入
 
 #update
 ## update
-update_des: 从远程来源检查更新，并将其安装到 PagerMaid-Modify。
+update_des: 从远程来源检查更新，并将其安装到 PagerMaid-Pyro。
 update_processing: 正在检查远程源以进行更新 . . .
 update_platform_version: 系统版本号
 update_git_version: Git 版本号
@@ -532,7 +532,7 @@ update_local_git_change: 本地修改
 update_hash: 本地修改
 update_date: 提交时间
 update_NoSuchPathError: 目录不存在
-update_InvalidGitRepositoryError: 此 PagerMaid-Modify 实例不是从源安装,请通过您的本机软件包管理器进行升级。
+update_InvalidGitRepositoryError: 此 PagerMaid-Pyro 实例不是从源安装,请通过您的本机软件包管理器进行升级。
 update_GitCommandError: 出错了呜呜呜 ~ 收到了来自 git 的错误
 update_not_active_branch: 出错了呜呜呜 ~ 该分支未维护
 update_in_branch: 在分支
@@ -547,7 +547,7 @@ update_failed: 更新失败
 update_auto_upgrade_git_failed_ubuntu: 检测到您的系统是Ubuntu或Debain，尝试自动升级git但失败,请手动升级.
 update_auto_upgrade_git_failed_cent: 检测到您的系统是CentOS，尝试自动升级git但失败,请手动升级.
 update_auto_upgrade_git_hint: 您的git版本过低,已尝试为您自动升级. 如再次提醒此错误,请手动升级.
-update_master: 收到已知的 CVE ，正在强制更新 PagerMaid-Modify 实例
+update_master: 收到已知的 CVE ，正在强制更新 PagerMaid-Pyro 实例
 update_plugins: 收到已知的 CVE ，正在强制更新相关插件
 
 # sb

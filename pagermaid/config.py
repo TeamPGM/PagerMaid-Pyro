@@ -15,7 +15,7 @@ except FileNotFoundError:
 
 class Config(object):
     try:
-        API_ID = int(os.environ.get("API_ID", config["api_key"]))
+        API_ID = int(os.environ.get("API_ID", config["api_id"]))
         API_HASH = os.environ.get("API_HASH", config["api_hash"])
         STRING_SESSION = os.environ.get("STRING_SESSION", None)
         DEBUG = strtobool(os.environ.get("DEBUG", config["debug"]))
@@ -38,7 +38,7 @@ class Config(object):
             print(e)
             exit(1)
         try:
-            with open("data/alias.json", encoding="utf-8") as f:
+            with open(f"data{os.sep}alias.json", encoding="utf-8") as f:
                 alias_dict = load_json(f)
         except Exception as e:
             print(f"Reading alias file failed：{e}")

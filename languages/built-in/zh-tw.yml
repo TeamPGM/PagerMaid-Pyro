@@ -5,7 +5,7 @@ web_KeyError: Error！設定檔缺少Web介面配置。
 PhoneNumberInvalidError: Error！電話號碼無效，請確定添加了國家/地區代碼。
 module: 模組
 error: 載入錯誤
-start: PagerMaid-Modify 已經啟動，在任何聊天室輸入 ,help 取得說明。
+start: PagerMaid-Pyro 已經啟動，在任何聊天室輸入 ,help 取得說明。
 # utils
 msg_ValueError: Error！沒有成功獲取訊息！
 isinstance: Error！長度必須是整數!
@@ -250,7 +250,7 @@ lang_all_lang: 所有語言有這些：
 alias_des: 重定向原始命令。
 alias_list: 以下是重定向命令列表：
 alias_no: 您還沒有重定向任何原始命令。
-alias_success: 編輯重定向命令成功，PagerMaid-Modify 正在重新啟動。
+alias_success: 編輯重定向命令成功，PagerMaid-Pyro 正在重新啟動。
 alias_exist: 出錯了嗚嗚嗚 ~ 重定向指向的命令已被佔用。
 alias_no_exist: 出錯了嗚嗚嗚 ~ 原始命令沒有被重定向。
 # message
@@ -306,7 +306,7 @@ apt_processing: 安裝插件中…
 apt_no_py: Error！無法獲取插件文件。
 apt_plugin: 插件
 apt_installed: 已安裝
-apt_reboot: 正在重新啟動 PagerMaid-Modify。
+apt_reboot: 正在重新啟動 PagerMaid-Pyro。
 apt_install_success: 安裝成功
 apt_not_found: Error！沒有找到插件
 apt_install_failed: 安裝失敗
@@ -417,14 +417,14 @@ pingdc_3: DC3(美國-邁阿密)
 pingdc_4: DC4(荷蘭-阿姆斯特丹)
 pingdc_5: DC5(新加坡)
 # ping
-ping_des: 計算 PagerMaid-Modify 和 Telegram 之間的信息和數據包延遲。
+ping_des: 計算 PagerMaid-Pyro 和 Telegram 之間的信息和數據包延遲。
 # topcloud
 topcloud_des: 產生一張佔用資源的詞雲圖片。
 topcloud_processing: 正在產生…
 topcloud_caption: 正在運行的進度。
 topcloud_success: 生成了一張圖片！
 # sudo
-sudo_des: 允許其他用戶來使用你的 PagerMaid-Modify
+sudo_des: 允許其他用戶來使用你的 PagerMaid-Pyro
 sudo_has_enabled: Sudo 模式沒有關閉
 sudo_enable: Sudo 模式開啟成功
 sudo_no_sudo: 請注意：你還沒有添加 Sudo 管理員
@@ -489,8 +489,8 @@ eval_need_dev: '**請注意：此命令可以直接操作您的賬戶**
 # restart
 restart_des: 重新啟動
 restart_processing: 正在嘗試重新啟動
-restart_complete: PagerMaid-Modify 重新啟動完成
-restart_log: 重新啟動 PagerMaid-Modify
+restart_complete: PagerMaid-Pyro 重新啟動完成
+restart_log: 重新啟動 PagerMaid-Pyro
 # trace
 trace_des: 跟蹤URL的重新導向。
 trace_processing: 跟蹤中…
@@ -529,7 +529,7 @@ update_failed: 更新失敗
 update_auto_upgrade_git_failed_ubuntu: 檢測到您的系統為Ubuntu/Debian，嘗試自動升級Git失敗，請手動。
 update_auto_upgrade_git_failed_cent: 檢測到您的系統為CentOS/RedHat Linux，嘗試自動升級Git失敗，請手動。
 update_auto_upgrade_git_hint: 檢測到您Git版本過低，已嘗試自動升級。若此錯誤持續發生，請手動。
-update_master: 收到已知的 CVE ，正在強制更新 PagerMaid-Modify 實例
+update_master: 收到已知的 CVE ，正在強制更新 PagerMaid-Pyro 實例
 update_plugins: 收到已知的 CVE ，正在強制更新相關插件
 
 # sb

@@ -7,8 +7,8 @@
 #                \//_____/      \/              \/     \/        \/
 # ===================================================================
 
-# API Credentials of your telegram application created at https://my.telegram.org/apps | api_key is api_id
-api_key: "ID_HERE"
+# API Credentials of your telegram application created at https://my.telegram.org/apps
+api_id: "ID_HERE"
 api_hash: "HASH_HERE"
 
 # Either debug logging is enabled or not
@@ -21,12 +21,6 @@ web_interface:
   secret_key: "RANDOM_STRING_HERE"
   host: "127.0.0.1"
   port: "3333"
-
-# Redis connection information
-redis:
-  host: "localhost"
-  port: "6379"
-  db: "14"
 
 # Locale settings
 application_language: "zh-cn"
@@ -61,9 +55,8 @@ mtp_port: ""
 mtp_secret: ""
 
 # Apt Git source
-git_source: "https://raw.githubusercontent.com/Xtao-Labs/PagerMaid_Plugins/v2/"
-git_api: "https://github.com/Xtao-Labs/PagerMaid-Pyro/commits/master"
-git_ssh: "https://github.com/Xtao-Labs/PagerMaid-Pyro.git"
+git_source: "https://gitlab.com/Xtao-Labs/PagerMaid_Plugins/-/raw/v2/"
+git_ssh: "https://gitlab.com/Xtao-Labs/PagerMaid-Pyro.git"
 
 # Update Notice
 update_check: "True"
