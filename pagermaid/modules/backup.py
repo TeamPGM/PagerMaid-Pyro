@@ -7,7 +7,7 @@ from pyrogram import Client
 
 from pagermaid.config import Config
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, upload_attachment, lang, Message, edit_or_reply
+from pagermaid.utils import alias_command, upload_attachment, lang, Message
 
 pgm_backup_zip_name = "pagermaid_backup.tar.gz"
 
@@ -43,7 +43,7 @@ def un_tar_gz(filename, dirs):
 @listener(is_plugin=True, outgoing=True, command=alias_command("backup"),
           description=lang('back_des'))
 async def backup(client: Client, message: Message):
-    await edit_or_reply(message, lang('backup_process'))
+    await message.edit(lang('backup_process'))
 
     # Remove old backup
     if os.path.exists(pgm_backup_zip_name):
@@ -58,9 +58,9 @@ async def backup(client: Client, message: Message):
     make_tar_gz(pgm_backup_zip_name, ["data", "plugins", "config.yml"])
     if Config.LOG:
         await upload_attachment(pgm_backup_zip_name, Config.LOG_ID, None)
-        await edit_or_reply(message, lang("backup_success_channel"))
+        await message.edit(lang("backup_success_channel"))
     else:
-        await edit_or_reply(message, lang("backup_success"))
+        await message.edit(lang("backup_success"))
 
 
 @listener(is_plugin=True, outgoing=True, command=alias_command("recovery"),
@@ -71,28 +71,28 @@ async def recovery(client: Client, message: Message):
     if reply.document:  # Overwrite local backup
         try:
             if ".tar.gz" in reply.document.file_name:  # Verify filename
-                await edit_or_reply(message, lang('recovery_down'))
+                await message.edit(lang('recovery_down'))
                 # Start download process
                 pgm_backup_zip_name = await reply.download()  # noqa
             else:
-                return await edit_or_reply(message, lang('recovery_file_error'))
+                return await message.edit(lang('recovery_file_error'))
         except Exception as e:  # noqa
             print(e, format_exc())
-            return await edit_or_reply(message, lang('recovery_file_error'))
+            return await message.edit(lang('recovery_file_error'))
     else:
-        return await edit_or_reply(message, lang('recovery_file_error'))
+        return await message.edit(lang('recovery_file_error'))
 
     # Extract backup files
-    await edit_or_reply(message, lang('recovery_process'))
+    await message.edit(lang('recovery_process'))
     if not os.path.exists(pgm_backup_zip_name):
-        return await edit_or_reply(message, lang('recovery_file_not_found'))
+        return await message.edit(lang('recovery_file_not_found'))
     elif not un_tar_gz(pgm_backup_zip_name, ""):
         os.remove(pgm_backup_zip_name)
-        return await edit_or_reply(message, lang('recovery_file_error'))
+        return await message.edit(lang('recovery_file_error'))
 
     # Cleanup
     if os.path.exists(pgm_backup_zip_name):
         os.remove(pgm_backup_zip_name)
 
-    await edit_or_reply(message, lang('recovery_success') + " " + lang('apt_reboot'))
+    await message.edit(lang('recovery_success') + " " + lang('apt_reboot'))
     exit(1)

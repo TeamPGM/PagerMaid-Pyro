@@ -1,7 +1,7 @@
 import subprocess
 from importlib.util import find_spec
 from os.path import exists
-from typing import Optional
+from typing import Optional, List
 
 import httpx
 from os import remove
@@ -12,11 +12,23 @@ from asyncio.subprocess import PIPE
 from pyrogram import filters
 from pyrogram.types import Message
 from pagermaid.config import Config
-from pagermaid import bot, sqlite
+from pagermaid import bot
+from pagermaid.single_utils import _status_sudo, get_sudo_list
 
 
 class Message(Message):  # noqa
     arguments: str
+    parameter: List
+
+    async def safe_delete(self, revoke: bool = True):
+        try:
+            return await self._client.delete_messages(
+                chat_id=self.chat.id,
+                message_ids=self.message_id,
+                revoke=revoke
+            )
+        except Exception as e:  # noqa
+            return False
 
 
 def lang(text: str) -> str:
@@ -114,52 +126,12 @@ def pip_install(package: str, version: Optional[str] = "", alias: Optional[str] 
     return True
 
 
-def _get_sudo_list():
-    return sqlite.get("sudo_list", [])
-
-
-def _status_sudo():
-    return sqlite.get("sudo_enable", False)
-
-
-async def edit_or_reply(
-        message: Message,
-        text: str,
-        parse_mode: Optional[str] = object,
-        disable_web_page_preview: bool = None,
-):  # sourcery no-metrics
-    sudo_users = _get_sudo_list()
-    link_preview = disable_web_page_preview or False
-    reply_to = message.reply_to_message
-    from_id = message.from_user.id if message.from_user else message.sender_chat.id
-    is_self = message.from_user.is_self if message.from_user else False
-    if len(text) < 4096:
-        if from_id in sudo_users:
-            if reply_to and (not is_self):
-                return await reply_to.reply(
-                    text,
-                    parse_mode=parse_mode,
-                    disable_web_page_preview=link_preview
-                )
-            if is_self:
-                await message.edit(text, parse_mode=parse_mode, disable_web_page_preview=link_preview)
-                return message
-            return await message.reply(
-                text,
-                parse_mode=parse_mode,
-                disable_web_page_preview=link_preview
-            )
-        await message.edit(text, parse_mode=parse_mode, disable_web_page_preview=link_preview)
-        return message
-    return await attach_log(bot, text, message.chat.id, "output.log", message.message_id)
-
-
 async def edit_delete(message: Message,
                       text: str,
                       time: int = 5,
                       parse_mode: Optional[str] = object,
                       disable_web_page_preview: bool = None):
-    sudo_users = _get_sudo_list()
+    sudo_users = get_sudo_list()
     from_id = message.from_user.id if message.from_user else message.sender_chat.id
     if from_id in sudo_users:
         reply_to = message.reply_to_message
@@ -183,7 +155,7 @@ def if_sudo(message: Message):
         return False
     try:
         from_id = message.from_user.id if message.from_user else message.sender_chat.id
-        return from_id in _get_sudo_list()
+        return from_id in get_sudo_list()
     except Exception as e:
         return False
 

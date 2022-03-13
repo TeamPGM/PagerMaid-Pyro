@@ -6,7 +6,7 @@ from pyrogram.types import User
 
 from pagermaid import Config
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, lang, Message, edit_or_reply
+from pagermaid.utils import alias_command, lang, Message
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command('profile'),
@@ -15,14 +15,14 @@ from pagermaid.utils import alias_command, lang, Message, edit_or_reply
 async def profile(client: Client, message: Message):
     """ Queries profile of a user. """
     if len(message.parameter) > 1:
-        await edit_or_reply(message, f"{lang('error_prefix')}{lang('arg_error')}")
+        await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
-        await edit_or_reply(message, lang('profile_process'))
+        await message.edit(lang('profile_process'))
     if message.reply_to_message:
         user = message.reply_to_message.from_user
         if not user:
-            return await edit_or_reply(message, f"{lang('error_prefix')}{lang('profile_e_no')}")
+            return await message.edit(f"{lang('error_prefix')}{lang('profile_e_no')}")
     else:
         if len(message.parameter) == 1:
             user = message.parameter[0]
@@ -36,22 +36,22 @@ async def profile(client: Client, message: Message):
             elif message.entities[0].type == "phone_number":
                 user = int(message.parameter[0])
             else:
-                return await edit_or_reply(message, f"{lang('error_prefix')}{lang('arg_error')}")
+                return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         if not isinstance(user, User):
             try:
                 user = await client.get_users(user)
             except PeerIdInvalid:
-                return await edit_or_reply(message, f"{lang('error_prefix')}{lang('profile_e_nof')}")
+                return await message.edit(f"{lang('error_prefix')}{lang('profile_e_nof')}")
             except UsernameNotOccupied:
-                return await edit_or_reply(message, f"{lang('error_prefix')}{lang('profile_e_nou')}")
+                return await message.edit(f"{lang('error_prefix')}{lang('profile_e_nou')}")
             except OverflowError:
-                return await edit_or_reply(message, f"{lang('error_prefix')}{lang('profile_e_long')}")
+                return await message.edit(f"{lang('error_prefix')}{lang('profile_e_long')}")
             except Exception as exception:
                 raise exception
     user_type = "Bot" if user.is_bot else lang('profile_user')
     username_system = f"@{user.username}" if user.username is not None else lang('profile_noset')
     if not user.first_name:
-        await edit_or_reply(message, f"{lang('error_prefix')}{lang('profile_e_no')}")
+        await message.edit(f"{lang('error_prefix')}{lang('profile_e_no')}")
         return
     first_name = user.first_name.replace("\u2060", "")
     last_name = user.last_name.replace("\u2060", "") if user.last_name is not None else lang('profile_noset')
@@ -78,7 +78,7 @@ async def profile(client: Client, message: Message):
         await message.delete()
         return remove(photo)
     except TypeError:
-        await edit_or_reply(message, caption)
+        await message.edit(caption)
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command('block'),
@@ -88,10 +88,10 @@ async def block_user(client: Client, message: Message):
     """ Block a user. """
     current_chat = message.chat
     if len(message.parameter) > 1:
-        await edit_or_reply(message, f"{lang('error_prefix')}{lang('arg_error')}")
+        await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
-        await edit_or_reply(message, lang('block_process'))
+        await message.edit(lang('block_process'))
     user = None
     # Priority: reply > argument > current_chat
     if message.reply_to_message:  # Reply to a user
@@ -108,13 +108,13 @@ async def block_user(client: Client, message: Message):
     if not user and current_chat.type == "private":  # Current chat
         user = current_chat.id
     if not user:
-        return await edit_or_reply(message, f"{lang('error_prefix')}{lang('arg_error')}")
+        return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
     try:
         if await client.block_user(user):
-            await edit_or_reply(message, f"{lang('block_success')} `{user}`")
+            await message.edit(f"{lang('block_success')} `{user}`")
     except Exception:  # noqa
         pass
-    await edit_or_reply(message, f"`{user}` {lang('block_exist')}")
+    await message.edit(f"`{user}` {lang('block_exist')}")
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command('unblock'),
@@ -123,10 +123,10 @@ async def block_user(client: Client, message: Message):
 async def unblock_user(client: Client, message: Message):
     """ Unblock a user. """
     if len(message.parameter) > 1:
-        await edit_or_reply(message, f"{lang('error_prefix')}{lang('arg_error')}")
+        await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
-        await edit_or_reply(message, lang('unblock_process'))
+        await message.edit(lang('unblock_process'))
     user = None
     if message.reply_to_message:  # Reply to a user
         user = message.reply_to_message.from_user
@@ -142,10 +142,10 @@ async def unblock_user(client: Client, message: Message):
     if not user and message.chat.type == "private":  # Current chat
         user = message.chat.id
     if not user:
-        return await edit_or_reply(message, f"{lang('error_prefix')}{lang('arg_error')}")
+        return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
     try:
         if await client.unblock_user(user):
-            await edit_or_reply(message, f"{lang('unblock_success')} `{user}`")
+            await message.edit(f"{lang('unblock_success')} `{user}`")
     except Exception:  # noqa
         pass
-    await edit_or_reply(message, f"`{user}` {lang('unblock_exist')}")
+    await message.edit(f"`{user}` {lang('unblock_exist')}")

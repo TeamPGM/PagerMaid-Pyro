@@ -3,9 +3,8 @@ import os
 from coloredlogs import ColoredFormatter
 from logging import getLogger, StreamHandler, ERROR, INFO, basicConfig
 from datetime import datetime
-from os import getcwd, sep, mkdir
+from os import getcwd
 from os import path as os_path
-from sqlitedict import SqliteDict
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from pagermaid.config import Config
@@ -20,7 +19,6 @@ CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
 help_messages = {}
-sqlite = SqliteDict(f"data{sep}data.sqlite", autocommit=True)
 scheduler = AsyncIOScheduler()
 if not scheduler.running:
     scheduler.configure(timezone="Asia/ShangHai")

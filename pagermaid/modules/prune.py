@@ -6,7 +6,7 @@ from pyrogram import Client
 
 from pagermaid import log
 from pagermaid.listener import listener
-from pagermaid.utils import lang, alias_command, Message, edit_or_reply
+from pagermaid.utils import lang, alias_command, Message
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command('prune'),
@@ -14,7 +14,7 @@ from pagermaid.utils import lang, alias_command, Message, edit_or_reply
 async def prune(client: Client, message: Message):
     """ Purge every single message after the message you replied to. """
     if not message.reply_to_message:
-        await edit_or_reply(message, lang('not_reply'))
+        await message.edit(lang('not_reply'))
         return
     input_chat = message.chat.id
     messages = []
@@ -45,7 +45,7 @@ async def self_prune(client: Client, message: Message):
     count_buffer = 0
     if not len(message.parameter) == 1:
         if not message.reply_to_message:
-            return await edit_or_reply(message, lang('arg_error'))
+            return await message.edit(lang('arg_error'))
         async for msg in client.search_messages(
                 message.chat.id,
                 from_user="me",
@@ -70,7 +70,7 @@ async def self_prune(client: Client, message: Message):
         count = int(message.parameter[0])
         await message.delete()
     except ValueError:
-        await edit_or_reply(message, lang('arg_error'))
+        await message.edit(lang('arg_error'))
         return
     async for msg in client.search_messages(message.chat.id, from_user="me"):
         if count_buffer == count:
@@ -97,18 +97,18 @@ async def self_prune(client: Client, message: Message):
 async def your_prune(client: Client, message: Message):
     """ Deletes specific amount of messages someone sent. """
     if not message.reply_to_message:
-        return await edit_or_reply(message, lang('not_reply'))
+        return await message.edit(lang('not_reply'))
     target = message.reply_to_message
     if not target.from_user:
-        return await edit_or_reply(message, lang('not_reply'))
+        return await message.edit(lang('not_reply'))
     if not len(message.parameter) == 1:
-        return await edit_or_reply(message, lang('arg_error'))
+        return await message.edit(lang('arg_error'))
     count = 0
     try:
         count = int(message.parameter[0])
         await message.delete()
     except ValueError:
-        return await edit_or_reply(message, lang('arg_error'))
+        return await message.edit(lang('arg_error'))
     except:
         pass
     count_buffer = 0

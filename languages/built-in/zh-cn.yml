@@ -14,7 +14,7 @@ isinstance: 出错了呜呜呜 ~ 长度必须是整数!
 
 # init
 platform: 将平台检测为“
-platform_load: ，进入PagerMaid的早期加载过程。
+platform_load: ”，进入PagerMaid的早期加载过程。
 platform_unsupported: ，不支持运行 PagerMaid，请在Linux或 *BSD 上启动 PagerMaid。
 error_prefix: 出错了呜呜呜 ~
 python: 请将您的 python 升级到至少3.6版。

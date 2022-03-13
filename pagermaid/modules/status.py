@@ -15,19 +15,19 @@ from subprocess import Popen, PIPE
 
 from pagermaid import start_time, Config
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message, execute, alias_command, edit_or_reply
+from pagermaid.utils import lang, Message, execute, alias_command
 
 
 @listener(is_plugin=False, command=alias_command("sysinfo"),
           description=lang('sysinfo_des'))
 async def sysinfo(client: Client, message: Message):
     """ Retrieve system information via neofetch. """
-    message = await edit_or_reply(message, lang("sysinfo_loading"))
+    message = await message.edit(lang("sysinfo_loading"))
     if platform == 'win32':
-        await edit_or_reply(message, neofetch_win(), parse_mode='html')
+        await message.edit(neofetch_win(), parse_mode='html')
         return
     result = await execute("neofetch --config none --stdout")
-    await edit_or_reply(message, f"`{result}`")
+    await message.edit(f"`{result}`")
 
 
 @listener(is_plugin=False, command=alias_command("status"),
@@ -65,7 +65,7 @@ async def status(client: Client, message: Message):
             f"{lang('status_pyrogram')}: `{__version__}` \n"
             f"{lang('status_uptime')}: `{uptime}`"
             )
-    await edit_or_reply(message, text)
+    await message.edit(text)
 
 
 @listener(is_plugin=False, command=alias_command("ping"),
@@ -77,10 +77,10 @@ async def ping(client: Client, message: Message):
     end = datetime.now()
     ping_duration = (end - start).microseconds / 1000
     start = datetime.now()
-    message = await edit_or_reply(message, "Pong!")
+    message = await message.edit("Pong!")
     end = datetime.now()
     msg_duration = (end - start).microseconds / 1000
-    await edit_or_reply(message, f"Pong!| PING: {ping_duration} | MSG: {msg_duration}")
+    await message.edit(f"Pong!| PING: {ping_duration} | MSG: {msg_duration}")
 
 
 def wmic(command: str):

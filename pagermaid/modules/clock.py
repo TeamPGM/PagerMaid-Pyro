@@ -6,7 +6,7 @@ from pyrogram import Client
 from pytz import country_names, country_timezones, timezone
 from pagermaid.config import Config
 from pagermaid.listener import listener
-from pagermaid.utils import lang, alias_command, Message, edit_or_reply
+from pagermaid.utils import lang, alias_command, Message
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command('time'),
@@ -28,7 +28,7 @@ async def time(client: Client, message: Message):
         date_form = "%A %y/%m/%d"
     if not country:
         time_zone = await get_timezone(Config.REGION)
-        await edit_or_reply(message, 
+        await message.edit(
             f"**{Config.REGION} {lang('time_time')}：**\n"
             f"`{datetime.now(time_zone).strftime(date_form)} "
             f"{datetime.now(time_zone).strftime(time_form)}`"
@@ -38,7 +38,7 @@ async def time(client: Client, message: Message):
     time_zone = await get_timezone(country)
     if not time_zone:
         if len(message.parameter) < 1:
-            await edit_or_reply(message, lang('time_config'))
+            await message.edit(lang('time_config'))
             return
         try:
             time_num, utc_num = int(message.parameter[0]), int(message.parameter[0])
@@ -55,7 +55,7 @@ async def time(client: Client, message: Message):
             time_zone = timezone(f'Etc/GMT{time_num}')
             country_name = f'UTC{utc_num}'
         except ValueError:
-            await edit_or_reply(message, lang('arg_error'))
+            await message.edit(lang('arg_error'))
             return
     else:
         try:
@@ -63,7 +63,7 @@ async def time(client: Client, message: Message):
         except KeyError:
             country_name = country
 
-    await edit_or_reply(message, f"**{country_name} {lang('time_time')}：**\n"
+    await message.edit(f"**{country_name} {lang('time_time')}：**\n"
                        f"`{datetime.now(time_zone).strftime(date_form)} "
                        f"{datetime.now(time_zone).strftime(time_form)}`")
 

@@ -10,7 +10,7 @@ from pyrogram import Client
 
 from pagermaid import bot
 from pagermaid.listener import listener
-from pagermaid.utils import attach_log, execute, Message, lang, alias_command, edit_or_reply
+from pagermaid.utils import attach_log, execute, Message, lang, alias_command
 
 
 @listener(is_plugin=False, command=alias_command("sh"),
@@ -24,10 +24,10 @@ async def sh(client: Client, message: Message):
     hostname = node()
 
     if not command:
-        await edit_or_reply(message, lang('arg_error'))
+        await message.edit(lang('arg_error'))
         return
 
-    message = await edit_or_reply(message,
+    message = await message.edit(
                                   f"`{user}`@{hostname} ~"
                                   f"\n> `$` {command}"
                                   )
@@ -39,7 +39,7 @@ async def sh(client: Client, message: Message):
             await attach_log(bot, result, message.chat.id, "output.log", message.message_id)
             return
 
-        await edit_or_reply(message,
+        await message.edit(
                             f"`{user}`@{hostname} ~"
                             f"\n> `#` {command}"
                             f"\n`{result}`"
@@ -53,7 +53,7 @@ async def sh(client: Client, message: Message):
 async def restart(client: Client, message: Message):
     """ To re-execute PagerMaid. """
     if not message.text[0].isalpha():
-        await edit_or_reply(message, lang('restart_log'))
+        await message.edit(lang('restart_log'))
         exit(1)
 
 
@@ -66,7 +66,7 @@ async def sh_eval(client: Client, message: Message):
     try:
         cmd = message.text.split(" ", maxsplit=1)[1]
     except IndexError:
-        await edit_or_reply(message, lang('eval_need_dev'))
+        await message.edit(lang('eval_need_dev'))
         return
     old_stderr = sys.stderr
     old_stdout = sys.stdout
@@ -96,10 +96,10 @@ async def sh_eval(client: Client, message: Message):
         )
     )
     if len(final_output) > 4096:
-        await edit_or_reply(message, "**>>>** ```{}```".format(cmd))
+        await message.edit("**>>>** ```{}```".format(cmd))
         await attach_log(bot, evaluation, message.chat.id, "output.log", message.message_id)
     else:
-        await edit_or_reply(message, final_output)
+        await message.edit(final_output)
 
 
 async def aexec(code, event, client):

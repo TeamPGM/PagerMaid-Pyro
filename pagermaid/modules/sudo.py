@@ -1,8 +1,9 @@
 from pyrogram import Client
 
-from pagermaid import sqlite
+from pagermaid.single_utils import sqlite
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, lang, Message, _get_sudo_list, edit_delete, edit_or_reply, _status_sudo
+from pagermaid.utils import alias_command, lang, Message, edit_delete, _status_sudo
+from pagermaid.single_utils import get_sudo_list
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command("sudo"),
@@ -11,20 +12,18 @@ from pagermaid.utils import alias_command, lang, Message, _get_sudo_list, edit_d
 async def sudo_change(client: Client, message: Message):
     """ To enable or disable sudo of your userbot. """
     input_str = message.arguments
-    sudo = _get_sudo_list()
+    sudo = get_sudo_list()
     if input_str == "on":
         if _status_sudo():
             return await edit_delete(message, lang('sudo_has_enabled'))
         sqlite["sudo_enable"] = True
         text = f"__{lang('sudo_enable')}__\n"
         if len(sudo) != 0:
-            return await edit_or_reply(
-                message,
+            return await message.edit(
                 text,
             )
         text += f"**{lang('sudo_no_sudo')}**"
-        return await edit_or_reply(
-            message,
+        return await message.edit(
             text,
         )
     elif input_str == "off":
@@ -32,13 +31,11 @@ async def sudo_change(client: Client, message: Message):
             del sqlite["sudo_enable"]
             text = f"__{lang('sudo_disable')}__\n"
             if len(sudo) != 0:
-                return await edit_or_reply(
-                    message,
+                return await message.edit(
                     text,
                 )
             text += f"**{lang('sudo_no_sudo')}**"
-            return await edit_or_reply(
-                message,
+            return await message.edit(
                 text,
             )
         await edit_delete(message, lang('sudo_has_disabled'))
@@ -50,7 +47,7 @@ async def sudo_change(client: Client, message: Message):
                 return await edit_delete(message, f"__{lang('sudo_add')}__")
             sudo.append(from_id)
             sqlite["sudo_list"] = sudo
-            await edit_or_reply(message, f"__{lang('sudo_add')}__")
+            await message.edit(f"__{lang('sudo_add')}__")
         else:
             await edit_delete(message, f"__{lang('sudo_reply')}__")
     elif input_str == "remove":
@@ -61,7 +58,7 @@ async def sudo_change(client: Client, message: Message):
                 return await edit_delete(message, f"__{lang('sudo_no')}__")
             sudo.remove(from_id)
             sqlite["sudo_list"] = sudo
-            await edit_or_reply(message, f"__{lang('sudo_remove')}__")
+            await message.edit(f"__{lang('sudo_remove')}__")
         else:
             await edit_delete(message, f"__{lang('sudo_reply')}__")
     elif input_str == "list":
@@ -74,8 +71,7 @@ async def sudo_change(client: Client, message: Message):
                 text += f"• {user.mention()}\n"
             except:
                 text += f"• `{i}`\n"
-        return await edit_or_reply(
-            message,
+        return await message.edit(
             text,
         )
     else:

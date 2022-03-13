@@ -4,7 +4,7 @@ from pyrogram import Client
 from json import dump as json_dump
 from os import listdir, sep
 from pagermaid import help_messages, Config
-from pagermaid.utils import lang, Message, alias_command, edit_or_reply
+from pagermaid.utils import lang, Message, alias_command
 from pagermaid.listener import listener
 
 
@@ -29,9 +29,9 @@ async def help_command(client: Client, message: Message):
                         'trace', 'chat', 'update']
     if message.arguments:
         if message.arguments in help_messages:
-            await edit_or_reply(message, str(help_messages[message.arguments]))
+            await message.edit(str(help_messages[message.arguments]))
         else:
-            await edit_or_reply(message, lang('arg_error'))
+            await message.edit(lang('arg_error'))
     else:
         result = f"**{lang('help_list')}: \n**"
         for command in sorted(help_messages, reverse=False):
@@ -44,7 +44,7 @@ async def help_command(client: Client, message: Message):
             for command in sorted(help_messages, reverse=False):
                 result += "`" + str(command)
                 result += "`, "
-        await edit_or_reply(message, result[
+        await message.edit(result[
                                      :-2] + f"\n**{lang('help_send')} \"!help <{lang('command')}>\" {lang('help_see')}**\n"
                                             f"[{lang('help_source')}](https://t.me/PagerMaid_Modify) "
                                             f"[{lang('help_plugin')}](https://index.xtaolabs.com/) "
@@ -59,9 +59,9 @@ async def help_raw_command(client: Client, message: Message):
     """ The help raw command,"""
     if message.arguments:
         if message.arguments in help_messages:
-            await edit_or_reply(message, str(help_messages[message.arguments]))
+            await message.edit(str(help_messages[message.arguments]))
         else:
-            await edit_or_reply(message, lang('arg_error'))
+            await message.edit(lang('arg_error'))
     else:
         result = f"**{lang('help_list')}: \n**"
         for command in sorted(help_messages, reverse=False):
@@ -88,7 +88,7 @@ async def lang_change(client: Client, message: Message):
         file = file.replace(f'application_language: "{from_lang}"', f'application_language: "{to_lang}"')
         with open('config.yml', 'w') as f:
             f.write(file)
-        await edit_or_reply(message, f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
+        await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
         exit(1)
     else:
         await edit_or_reply(message,
