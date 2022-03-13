@@ -179,6 +179,8 @@ async def edit_delete(message: Message,
 
 
 def if_sudo(message: Message):
+    if not _status_sudo():
+        return False
     try:
         from_id = message.from_user.id if message.from_user else message.sender_chat.id
         return from_id in _get_sudo_list()

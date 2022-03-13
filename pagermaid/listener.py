@@ -13,7 +13,7 @@ from pyrogram.errors.exceptions.bad_request_400 import (
 from pyrogram.handlers import MessageHandler
 
 from pagermaid import help_messages, logs, Config, bot
-from pagermaid.utils import lang, attach_report, sudo_filter, _status_sudo
+from pagermaid.utils import lang, attach_report, sudo_filter
 
 
 def noop(*args, **kw):
@@ -132,7 +132,7 @@ def listener(**args):
                                         "Error report generated.")
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
-        if _status_sudo() and allow_sudo:
+        if allow_sudo:
             bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
 
         return handler

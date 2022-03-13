@@ -1,7 +1,6 @@
 """ Pagermaid backup and recovery plugin. """
 import os
 import tarfile
-from distutils.util import strtobool
 from traceback import format_exc
 
 from pyrogram import Client

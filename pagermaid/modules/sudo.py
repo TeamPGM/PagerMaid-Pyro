@@ -18,14 +18,10 @@ async def sudo_change(client: Client, message: Message):
         sqlite["sudo_enable"] = True
         text = f"__{lang('sudo_enable')}__\n"
         if len(sudo) != 0:
-            text += (
-                f"**Bot {lang('lang_reboot')}**"
-            )
-            await edit_or_reply(
+            return await edit_or_reply(
                 message,
                 text,
             )
-            exit(1)
         text += f"**{lang('sudo_no_sudo')}**"
         return await edit_or_reply(
             message,
@@ -34,16 +30,12 @@ async def sudo_change(client: Client, message: Message):
     elif input_str == "off":
         if _status_sudo():
             del sqlite["sudo_enable"]
-            text = f"__{lang('sudo_disable')}__"
+            text = f"__{lang('sudo_disable')}__\n"
             if len(sudo) != 0:
-                text += (
-                    f"**Bot {lang('lang_reboot')}**"
-                )
-                await edit_or_reply(
+                return await edit_or_reply(
                     message,
                     text,
                 )
-                exit(1)
             text += f"**{lang('sudo_no_sudo')}**"
             return await edit_or_reply(
                 message,
@@ -75,7 +67,7 @@ async def sudo_change(client: Client, message: Message):
     elif input_str == "list":
         if len(sudo) == 0:
             return await edit_delete(message, f"__{lang('sudo_no_one')}__")
-        text = f"**{lang('sudo_list')}**\n"
+        text = f"**{lang('sudo_list')}**\n\n"
         for i in sudo:
             try:
                 user = await client.get_users(i)
