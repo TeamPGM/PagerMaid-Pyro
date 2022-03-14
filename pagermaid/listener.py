@@ -1,4 +1,6 @@
 import sys
+import secrets
+from asyncio import sleep
 from time import strftime, gmtime, time
 from traceback import format_exc
 
@@ -12,8 +14,10 @@ from pyrogram.errors.exceptions.bad_request_400 import (
 )
 from pyrogram.handlers import MessageHandler
 
-from pagermaid import help_messages, logs, Config, bot
+from pagermaid import help_messages, logs, Config, bot, read_context
 from pagermaid.utils import lang, attach_report, sudo_filter
+
+secret_generator = secrets.SystemRandom()
 
 
 def noop(*args, **kw):
@@ -93,6 +97,12 @@ def listener(**args):
                 except BaseException:
                     message.parameter = None
                     message.arguments = None
+                # solve same process
+                await sleep(secret_generator.randint(1, 100) / 1000)
+                if (message.chat.id, message.message_id) in read_context:
+                    raise ContinuePropagation
+                read_context[(message.chat.id, message.message_id)] = True
+
                 await function(client, message)
             except StopPropagation:
                 raise StopPropagation
@@ -130,6 +140,9 @@ def listener(**args):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
+            finally:
+                if (message.chat.id, message.message_id) in read_context:
+                    del read_context[(message.chat.id, message.message_id)]
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
         if allow_sudo:

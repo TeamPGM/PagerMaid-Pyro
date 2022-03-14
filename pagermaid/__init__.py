@@ -18,6 +18,8 @@ if not os_path.exists("data"):
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
+# solve same process
+read_context = {}
 help_messages = {}
 scheduler = AsyncIOScheduler()
 if not scheduler.running:

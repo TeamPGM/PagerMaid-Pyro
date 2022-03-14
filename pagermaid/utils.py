@@ -1,7 +1,7 @@
 import subprocess
 from importlib.util import find_spec
 from os.path import exists
-from typing import Optional, List
+from typing import Optional
 
 import httpx
 from os import remove
@@ -10,25 +10,9 @@ from asyncio import create_subprocess_shell, sleep
 from asyncio.subprocess import PIPE
 
 from pyrogram import filters
-from pyrogram.types import Message
 from pagermaid.config import Config
 from pagermaid import bot
-from pagermaid.single_utils import _status_sudo, get_sudo_list
-
-
-class Message(Message):  # noqa
-    arguments: str
-    parameter: List
-
-    async def safe_delete(self, revoke: bool = True):
-        try:
-            return await self._client.delete_messages(
-                chat_id=self.chat.id,
-                message_ids=self.message_id,
-                revoke=revoke
-            )
-        except Exception as e:  # noqa
-            return False
+from pagermaid.single_utils import _status_sudo, get_sudo_list, Message
 
 
 def lang(text: str) -> str:

@@ -24,7 +24,7 @@ from typing import Optional, List
 
 import pyrogram
 
-from pagermaid.single_utils import get_sudo_list
+from pagermaid.single_utils import get_sudo_list, Message
 
 from ..utils import patch, patchable
 
@@ -39,7 +39,7 @@ pyrogram.errors.ListenerCanceled = ListenerCanceled
 
 
 @patch(pyrogram.client.Client)
-class Client():
+class Client:
     @patchable
     def __init__(self, *args, **kwargs):
         self.listening = {}
@@ -85,7 +85,7 @@ class Client():
 
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)
-class MessageHandler():
+class MessageHandler:
     @patchable
     def __init__(self, callback: callable, filters=None):
         self.user_callback = callback
@@ -167,7 +167,7 @@ class Message(pyrogram.types.Message):
             parse_mode: Optional[str] = object,
             entities: List["pyrogram.types.MessageEntity"] = None,
             disable_web_page_preview: bool = None,
-            reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None
+            reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
     ) -> "Message":
         sudo_users = get_sudo_list()
         reply_to = self.reply_to_message
@@ -177,13 +177,13 @@ class Message(pyrogram.types.Message):
         if len(text) < 4096:
             if from_id in sudo_users:
                 if reply_to and (not is_self):
-                    return await reply_to.reply(
+                    msg = await reply_to.reply(
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview
                     )
-                if is_self:
-                    return await self._client.edit_message_text(
+                elif is_self:
+                    msg = await self._client.edit_message_text(
                         chat_id=self.chat.id,
                         message_id=self.message_id,
                         text=text,
@@ -192,26 +192,32 @@ class Message(pyrogram.types.Message):
                         disable_web_page_preview=disable_web_page_preview,
                         reply_markup=reply_markup
                     )
-                return await self.reply(
+                else:
+                    msg = await self.reply(
+                        text=text,
+                        parse_mode=parse_mode,
+                        disable_web_page_preview=disable_web_page_preview
+                    )
+            else:
+                msg = await self._client.edit_message_text(
+                    chat_id=self.chat.id,
+                    message_id=self.message_id,
                     text=text,
                     parse_mode=parse_mode,
-                    disable_web_page_preview=disable_web_page_preview
+                    entities=entities,
+                    disable_web_page_preview=disable_web_page_preview,
+                    reply_markup=reply_markup
                 )
-            return await self._client.edit_message_text(
+        else:
+            with open("output.log", "w+") as file:
+                file.write(text)
+            msg = await self._client.send_document(
                 chat_id=self.chat.id,
-                message_id=self.message_id,
-                text=text,
-                parse_mode=parse_mode,
-                entities=entities,
-                disable_web_page_preview=disable_web_page_preview,
-                reply_markup=reply_markup
+                document="output.log",
+                reply_to_message_id=self.message_id
             )
-        with open("output.log", "w+") as file:
-            file.write(text)
-        return await self._client.send_document(
-            chat_id=self.chat.id,
-            document="output.log",
-            reply_to_message_id=self.message_id
-        )
+        msg.parameter = self.parameter
+        msg.arguments = self.arguments
+        return msg
 
     edit = edit_text
