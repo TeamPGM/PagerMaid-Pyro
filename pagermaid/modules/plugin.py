@@ -155,12 +155,13 @@ async def plugin(__: Client, context: Message):
             elif exists(f"{plugin_directory}{file_name}.disabled"):
                 copyfile(f"{plugin_directory}{file_name}.disabled", file_name)
             if exists(file_name):
-                context = await context.edit(lang('apt_uploading'))
+                await context.edit(lang('apt_uploading'))
                 await upload_attachment(file_name,
                                         context.chat.id, reply_id,
+                                        thumb=f"pagermaid{sep}assets{sep}logo.jpg",
                                         caption=f"PagerMaid-Pyro {context.parameter[1]} plugin.")
                 remove(file_name)
-                await context.delete()
+                await context.safe_delete()
             else:
                 await context.edit(lang('apt_not_exist'))
         else:
