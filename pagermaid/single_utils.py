@@ -1,4 +1,4 @@
-from os import sep
+from os import sep, remove
 from typing import List
 from pyrogram.types import Message
 from sqlitedict import SqliteDict
@@ -12,6 +12,13 @@ def get_sudo_list():
 
 def _status_sudo():
     return sqlite.get("sudo_enable", False)
+
+
+def safe_remove(name: str) -> None:
+    try:
+        remove(name)
+    except FileNotFoundError:
+        pass
 
 
 class Message(Message):  # noqa

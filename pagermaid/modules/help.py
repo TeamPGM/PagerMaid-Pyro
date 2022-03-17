@@ -97,42 +97,42 @@ async def lang_change(client: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="alias",
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
-async def alias_commands(context):
+async def alias_commands(client: Client, message: Message):
     source_commands = []
     to_commands = []
     texts = []
     for key, value in Config.alias_dict.items():
         source_commands.append(key)
         to_commands.append(value)
-    if len(context.parameter) == 0:
-        await context.edit(lang('arg_error'))
+    if len(message.parameter) == 0:
+        await message.edit(lang('arg_error'))
         return
-    elif len(context.parameter) == 1:
+    elif len(message.parameter) == 1:
         if not len(source_commands) == 0:
             for i in range(0, len(source_commands)):
                 texts.append(f'`{source_commands[i]}` --> `{to_commands[i]}`')
-            await context.edit(lang('alias_list') + '\n\n' + '\n'.join(texts))
+            await message.edit(lang('alias_list') + '\n\n' + '\n'.join(texts))
         else:
-            await context.edit(lang('alias_no'))
-    elif len(context.parameter) == 2:
-        source_command = context.parameter[1]
+            await message.edit(lang('alias_no'))
+    elif len(message.parameter) == 2:
+        source_command = message.parameter[1]
         try:
             del Config.alias_dict[source_command]
             with open(f"data{sep}alias.json", 'w') as f:
                 json_dump(Config.alias_dict, f)
-            result = await context.edit(lang('alias_success'))
+            await message.edit(lang('alias_success'))
             exit(1)
         except KeyError:
-            await context.edit(lang('alias_no_exist'))
+            await message.edit(lang('alias_no_exist'))
             return
-    elif len(context.parameter) == 3:
-        source_command = context.parameter[1]
-        to_command = context.parameter[2]
+    elif len(message.parameter) == 3:
+        source_command = message.parameter[1]
+        to_command = message.parameter[2]
         if to_command in help_messages:
-            await context.edit(lang('alias_exist'))
+            await message.edit(lang('alias_exist'))
             return
         Config.alias_dict[source_command] = to_command
         with open(f"data{sep}alias.json", 'w') as f:
             json_dump(Config.alias_dict, f)
-        result = await context.edit(lang('alias_success'))
+        await message.edit(lang('alias_success'))
         exit(1)

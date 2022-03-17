@@ -105,8 +105,8 @@ async def sh_eval(client: Client, message: Message):
 async def aexec(code, event, client):
     exec(
         f"async def __aexec(e, client): "
-        + "\n msg = context = e"
-        + "\n reply = context.reply_to_message"
+        + "\n msg = message = e"
+        + "\n reply = message.reply_to_message"
         + "\n chat = e.chat"
         + "".join(f"\n {x}" for x in code.split("\n")),
     )
