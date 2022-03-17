@@ -41,8 +41,8 @@ def listener(**args):
     if command is not None:
         if command in help_messages:
             raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
-        pattern = fr"^(,){command}(?: |$)([\s\S]*)"
-        sudo_pattern = fr"^(/){command}(?: |$)([\s\S]*)"
+        pattern = fr"^,{command}(?: |$)([\s\S]*)"
+        sudo_pattern = fr"^/{command}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith('(?i)'):
         args['pattern'] = f"(?i){pattern}"
     else:
