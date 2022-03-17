@@ -168,7 +168,9 @@ class Message(pyrogram.types.Message):
             entities: List["pyrogram.types.MessageEntity"] = None,
             disable_web_page_preview: bool = None,
             reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
+            no_reply: bool = None,
     ) -> "Message":
+        msg = None
         sudo_users = get_sudo_list()
         reply_to = self.reply_to_message
         from_id = self.from_user.id if self.from_user else self.sender_chat.id
@@ -176,7 +178,7 @@ class Message(pyrogram.types.Message):
 
         if len(text) < 4096:
             if from_id in sudo_users:
-                if reply_to and (not is_self):
+                if reply_to and (not is_self) and (not no_reply):
                     msg = await reply_to.reply(
                         text=text,
                         parse_mode=parse_mode,
@@ -193,11 +195,12 @@ class Message(pyrogram.types.Message):
                         reply_markup=reply_markup
                     )
                 else:
-                    msg = await self.reply(
-                        text=text,
-                        parse_mode=parse_mode,
-                        disable_web_page_preview=disable_web_page_preview
-                    )
+                    if not no_reply:
+                        msg = await self.reply(
+                            text=text,
+                            parse_mode=parse_mode,
+                            disable_web_page_preview=disable_web_page_preview
+                        )
             else:
                 msg = await self._client.edit_message_text(
                     chat_id=self.chat.id,
@@ -216,8 +219,11 @@ class Message(pyrogram.types.Message):
                 document="output.log",
                 reply_to_message_id=self.message_id
             )
-        msg.parameter = self.parameter
-        msg.arguments = self.arguments
-        return msg
+        if msg:
+            msg.parameter = self.parameter
+            msg.arguments = self.arguments
+            return msg
+        else:
+            return self
 
     edit = edit_text

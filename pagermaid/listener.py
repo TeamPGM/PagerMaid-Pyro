@@ -5,7 +5,7 @@ from time import strftime, gmtime, time
 from traceback import format_exc
 
 from pyrogram import ContinuePropagation, StopPropagation, filters, Client
-from pyrogram.types import Message
+from pagermaid.single_utils import Message
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid,
     MessageNotModified,
@@ -29,7 +29,7 @@ def listener(**args):
     command = args.get('command', None)
     description = args.get('description', None)
     parameters = args.get('parameters', None)
-    pattern = args.get('pattern', None)
+    pattern = sudo_pattern = args.get('pattern', None)
     diagnostics = args.get('diagnostics', True)
     ignore_edited = args.get('ignore_edited', False)
     is_plugin = args.get('is_plugin', True)
@@ -41,11 +41,14 @@ def listener(**args):
     if command is not None:
         if command in help_messages:
             raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
-        pattern = fr"^,{command}(?: |$)([\s\S]*)"
+        pattern = fr"^(,){command}(?: |$)([\s\S]*)"
+        sudo_pattern = fr"^(/){command}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith('(?i)'):
         args['pattern'] = f"(?i){pattern}"
     else:
         args['pattern'] = pattern
+    if sudo_pattern is not None and not sudo_pattern.startswith('(?i)'):
+        sudo_pattern = f"(?i){sudo_pattern}"
     base_filters = (
         filters.me
         & filters.regex(args['pattern'])
@@ -54,7 +57,7 @@ def listener(**args):
     )
     sudo_filters = (
         sudo_filter
-        & filters.regex(args['pattern'])
+        & filters.regex(sudo_pattern)
         & ~filters.via_bot
         & ~filters.forwarded
     )
@@ -98,10 +101,11 @@ def listener(**args):
                     message.parameter = None
                     message.arguments = None
                 # solve same process
-                await sleep(secret_generator.randint(1, 100) / 1000)
-                if (message.chat.id, message.message_id) in read_context:
-                    raise ContinuePropagation
-                read_context[(message.chat.id, message.message_id)] = True
+                if not message.outgoing:
+                    await sleep(secret_generator.randint(1, 100) / 1000)
+                    if (message.chat.id, message.message_id) in read_context:
+                        raise ContinuePropagation
+                    read_context[(message.chat.id, message.message_id)] = True
 
                 await function(client, message)
             except StopPropagation:
@@ -124,7 +128,7 @@ def listener(**args):
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 try:
-                    await message.edit(lang('run_error'))
+                    await message.edit(lang('run_error'), no_reply=True)  # noqa
                 except BaseException:
                     pass
                 if not diagnostics:
@@ -179,7 +183,7 @@ def raw_listener(filter_s):
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 try:
-                    await message.edit(lang('run_error'))
+                    await message.edit(lang('run_error'), no_reply=True)
                 except BaseException:
                     pass
                 if Config.ERROR_REPORT:
