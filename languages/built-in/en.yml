@@ -303,14 +303,14 @@ hitokoto_type_meme: trembling
 # apt
 apt_des: Used to manage plugins installed to PagerMaid-Pyro.
 apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <plugin name/file>"
+apt_name: "PagerMaid-Pyro Plugins Manager"
 apt_processing: Installing plugins...
 apt_no_py: Something went wrong ~ Failed to get the plug-in file from the attachment.
 apt_plugin: plugin
 apt_installed: installed
 apt_reboot: PagerMaid-Pyro is restarting.
 apt_install_success: successful installation
-apt_not_found: Error, No plugin found
-apt_install_failed: installation failed
+apt_not_found: not founded
 apt_no_update: no need to update
 apt_remove_success: The plugin was successfully removed
 apt_remove: remove plugin

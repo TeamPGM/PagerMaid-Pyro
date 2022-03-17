@@ -315,14 +315,14 @@ hitokoto_type_meme: 抖机灵
 ## apt
 apt_des: 用于管理安装到 PagerMaid-Pyro 的插件。
 apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <插件名称/文件>"
+apt_name: "PagerMaid-Pyro 插件管理器"
 apt_processing: 安装插件中 . . .
 apt_no_py: 出错了呜呜呜 ~ 无法从附件获取插件文件。
 apt_plugin: 插件
 apt_installed: 已安装
 apt_reboot: PagerMaid-Pyro 正在重新启动。
 apt_install_success: 安装成功
-apt_not_found: 错误：没有找到插件
-apt_install_failed: 安装失败
+apt_not_found: 没有找到
 apt_no_update: 无需更新 
 apt_remove_success: 成功删除插件
 apt_remove: 删除插件

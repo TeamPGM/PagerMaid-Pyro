@@ -30,6 +30,7 @@ class Config(object):
         DATE_FORM = os.environ.get("DATE_FORM", config["date_form"])
         START_FORM = os.environ.get("START_FORM", config["start_form"])
         SILENT = strtobool(os.environ.get("SILENT", config["silent"]))
+        GIT_SOURCE = os.environ.get("GIT_SOURCE", config["git_source"])
         try:
             with open(f"languages{os.sep}built-in{os.sep}{LANGUAGE}.yml", "r", encoding="utf-8") as f:
                 lang_dict = safe_load(f)

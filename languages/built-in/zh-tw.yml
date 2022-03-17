@@ -302,6 +302,7 @@ hitokoto_type_meme: 迷因
 # apt
 apt_des: 用於管理插件。
 apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <插件名稱/文件>"
+apt_name: "PagerMaid-Pyro 插件管理器"
 apt_processing: 安裝插件中…
 apt_no_py: Error！無法獲取插件文件。
 apt_plugin: 插件
