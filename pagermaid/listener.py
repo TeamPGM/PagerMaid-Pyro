@@ -115,6 +115,7 @@ def listener(**args):
                     read_context[(message.chat.id, message.message_id)] = True
 
                 await function(client, message)
+                await message.continue_propagation()
             except StopPropagation:
                 raise StopPropagation
             except KeyboardInterrupt:
