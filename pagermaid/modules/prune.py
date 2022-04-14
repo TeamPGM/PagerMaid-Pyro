@@ -125,7 +125,7 @@ async def your_prune(client: Client, message: Message):
 
 @listener(is_plugin=False, outgoing=True, command=alias_command("del"),
           description=lang('del_des'))
-async def delete(client: Client, message: Message):
+async def delete(_: Client, message: Message):
     """ Deletes the message you replied to. """
     target = message.reply_to_message
     if target:

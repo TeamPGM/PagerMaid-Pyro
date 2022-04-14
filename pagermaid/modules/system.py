@@ -17,7 +17,7 @@ from pagermaid.utils import attach_log, execute, Message, lang, alias_command
           allow_sudo=False,
           description=lang('sh_des'),
           parameters=lang('sh_parameters'))
-async def sh(client: Client, message: Message):
+async def sh(_: Client, message: Message):
     """ Use the command-line from Telegram. """
     user = getuser()
     command = message.text[4:]
@@ -50,7 +50,7 @@ async def sh(client: Client, message: Message):
 
 @listener(is_plugin=False, command=alias_command("restart"),
           description=lang('restart_des'))
-async def restart(client: Client, message: Message):
+async def restart(_: Client, message: Message):
     """ To re-execute PagerMaid. """
     if not message.text[0].isalpha():
         await message.edit(lang('restart_log'))
@@ -61,7 +61,7 @@ async def restart(client: Client, message: Message):
           allow_sudo=False,
           description=lang('eval_des'),
           parameters=lang('eval_parameters'))
-async def sh_eval(client: Client, message: Message):
+async def sh_eval(_: Client, message: Message):
     """ Run python commands from Telegram. """
     try:
         cmd = message.text.split(" ", maxsplit=1)[1]

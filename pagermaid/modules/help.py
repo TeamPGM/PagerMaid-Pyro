@@ -11,7 +11,7 @@ from pagermaid.listener import listener
 @listener(is_plugin=False, command=alias_command("help"),
           description=lang('help_des'),
           parameters=f"<{lang('command')}>")
-async def help_command(client: Client, message: Message):
+async def help_command(_: Client, message: Message):
     """ The help new command,"""
     support_commands = ['username', 'name', 'pfp', 'bio', 'rmpfp',
                         'profile', 'block', 'unblock', 'ghost', 'deny', 'convert',
@@ -55,7 +55,7 @@ async def help_command(client: Client, message: Message):
 @listener(is_plugin=False, command=alias_command("help_raw"),
           description=lang('help_des'),
           parameters=f"<{lang('command')}>")
-async def help_raw_command(client: Client, message: Message):
+async def help_raw_command(_: Client, message: Message):
     """ The help raw command,"""
     if message.arguments:
         if message.arguments in help_messages:
@@ -74,7 +74,7 @@ async def help_raw_command(client: Client, message: Message):
 
 @listener(is_plugin=False, command=alias_command("lang"),
           description=lang('lang_des'))
-async def lang_change(client: Client, message: Message):
+async def lang_change(_: Client, message: Message):
     to_lang = message.arguments
     from_lang = Config.LANGUAGE
     dir_, dir__ = listdir('languages/built-in'), []
@@ -97,7 +97,7 @@ async def lang_change(client: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="alias",
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
-async def alias_commands(client: Client, message: Message):
+async def alias_commands(_: Client, message: Message):
     source_commands = []
     to_commands = []
     texts = []

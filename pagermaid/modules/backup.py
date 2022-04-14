@@ -40,9 +40,9 @@ def un_tar_gz(filename, dirs):
         return False
 
 
-@listener(is_plugin=True, outgoing=True, command=alias_command("backup"),
+@listener(is_plugin=False, outgoing=True, command=alias_command("backup"),
           description=lang('back_des'))
-async def backup(client: Client, message: Message):
+async def backup(_: Client, message: Message):
     await message.edit(lang('backup_process'))
 
     # Remove old backup
@@ -63,9 +63,9 @@ async def backup(client: Client, message: Message):
         await message.edit(lang("backup_success"))
 
 
-@listener(is_plugin=True, outgoing=True, command=alias_command("recovery"),
+@listener(is_plugin=False, outgoing=True, command=alias_command("recovery"),
           description=lang('recovery_des'))
-async def recovery(client: Client, message: Message):
+async def recovery(_: Client, message: Message):
     reply = message.reply_to_message
 
     if reply.document:  # Overwrite local backup

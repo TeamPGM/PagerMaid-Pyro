@@ -10,7 +10,7 @@ from pagermaid.utils import alias_command, lang, Message
 
 @listener(is_plugin=False, outgoing=True, command=alias_command("id"),
           description=lang('id_des'))
-async def userid(client: Client, message: Message):
+async def userid(_: Client, message: Message):
     """ Query the UserID of the sender of the message you replied to. """
     reply = message.reply_to_message
     text = "Message ID: `" + str(message.message_id) + "`\n\n"
@@ -83,7 +83,7 @@ async def userid(client: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command=alias_command("uslog"),
           description=lang('uslog_des'),
           parameters="<string>")
-async def uslog(client: Client, message: Message):
+async def uslog(_: Client, message: Message):
     """ Forwards a message into log group """
     if Config.LOG:
         if message.reply_to_message:
@@ -101,7 +101,7 @@ async def uslog(client: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command=alias_command("log"),
           description=lang('log_des'),
           parameters="<string>")
-async def logging(client: Client, message: Message):
+async def logging(_: Client, message: Message):
     """ Forwards a message into log group """
     if Config.LOG:
         if message.reply_to_message:
@@ -130,9 +130,8 @@ async def re(client: Client, message: Message):
                 num = int(message.arguments)
                 if num > 100:
                     await message.edit(lang('re_too_big'))
-            except:
-                await message.edit(lang('re_arg_error'))
-                return True
+            except:  # noqa
+                return await message.edit(lang('re_arg_error'))
         await message.safe_delete()
         forward_allowed = True
         for nums in range(0, num):

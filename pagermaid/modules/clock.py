@@ -12,7 +12,7 @@ from pagermaid.utils import lang, alias_command, Message
 @listener(is_plugin=False, outgoing=True, command=alias_command('time'),
           description=lang('time_des'),
           parameters=lang('time_parameters'))
-async def time(client: Client, message: Message):
+async def time(_: Client, message: Message):
     """ For querying time. """
     if len(message.parameter) == 1:
         country = message.parameter[0].title()

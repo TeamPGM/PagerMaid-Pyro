@@ -20,7 +20,7 @@ from pagermaid.utils import lang, Message, execute, alias_command
 
 @listener(is_plugin=False, command=alias_command("sysinfo"),
           description=lang('sysinfo_des'))
-async def sysinfo(client: Client, message: Message):
+async def sysinfo(_: Client, message: Message):
     """ Retrieve system information via neofetch. """
     message = await message.edit(lang("sysinfo_loading"))
     if platform == 'win32':
@@ -32,7 +32,7 @@ async def sysinfo(client: Client, message: Message):
 
 @listener(is_plugin=False, command=alias_command("status"),
           description=lang('status_des'))
-async def status(client: Client, message: Message):
+async def status(_: Client, message: Message):
     # database
     # database = lang('status_online') if redis_status() else lang('status_offline')
     # uptime https://gist.github.com/borgstrom/936ca741e885a1438c374824efb038b3
@@ -88,7 +88,7 @@ def wmic(command: str):
     try:
         p = Popen(command.split(" "), stdout=PIPE)
     except FileNotFoundError:
-        print("WMIC.exe was not found... Make sure 'C:\Windows\System32\wbem' is added to PATH.")
+        return r"WMIC.exe was not found... Make sure 'C:\Windows\System32\wbem' is added to PATH."
 
     stdout, stderror = p.communicate()
 
