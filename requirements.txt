@@ -1,4 +1,4 @@
-pyrogram==1.4.8
+pyrogram==1.4.15
 TgCrypto>=1.2.3
 Pillow>=8.4.0
 pytz>=2021.3
@@ -6,5 +6,5 @@ PyYAML>=6.0
 coloredlogs>=15.0.1
 psutil>=5.8.0
 httpx
-apscheduler>=3.9.1
-sqlitedict>=1.7.0
+apscheduler
+sqlitedict

@@ -33,6 +33,8 @@ def listener(**args):
     diagnostics = args.get('diagnostics', True)
     ignore_edited = args.get('ignore_edited', False)
     is_plugin = args.get('is_plugin', True)
+    incoming = args.get('incoming', False)
+    outgoing = args.get('outgoing', True)
     allow_sudo = args.get('allow_sudo', True)
     owners_only = args.get("owners_only", False)
     admins_only = args.get("admins_only", False)
@@ -49,18 +51,23 @@ def listener(**args):
         args['pattern'] = pattern
     if sudo_pattern is not None and not sudo_pattern.startswith('(?i)'):
         sudo_pattern = f"(?i){sudo_pattern}"
-    base_filters = (
-        filters.me
-        & filters.regex(args['pattern'])
-        & ~filters.via_bot
-        & ~filters.forwarded
-    )
+    if outgoing and not incoming:
+        base_filters = ~filters.via_bot
+        base_filters &= ~filters.forwarded
+    elif incoming and not outgoing:
+        base_filters = filters.incoming
+        allow_sudo = False
+    else:
+        base_filters = filters.all
+        allow_sudo = False
     sudo_filters = (
         sudo_filter
-        & filters.regex(sudo_pattern)
         & ~filters.via_bot
         & ~filters.forwarded
     )
+    if args['pattern']:
+        base_filters &= filters.regex(args['pattern'])
+        sudo_filters &= filters.regex(sudo_pattern)
     if ignore_edited:
         base_filters &= ~filters.edited
         sudo_filters &= ~filters.edited
