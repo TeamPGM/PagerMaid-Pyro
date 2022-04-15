@@ -39,6 +39,7 @@ def listener(**args):
     owners_only = args.get("owners_only", False)
     admins_only = args.get("admins_only", False)
     groups_only = args.get("groups_only", False)
+    privates_only = args.get("privates_only", False)
 
     if command is not None:
         if command in help_messages:
@@ -71,6 +72,12 @@ def listener(**args):
     if ignore_edited:
         base_filters &= ~filters.edited
         sudo_filters &= ~filters.edited
+    if groups_only:
+        base_filters &= filters.group
+        sudo_filters &= filters.group
+    if privates_only:
+        base_filters &= filters.private
+        sudo_filters &= filters.private
     if 'ignore_edited' in args:
         del args['ignore_edited']
     if 'command' in args:
@@ -115,7 +122,7 @@ def listener(**args):
                     read_context[(message.chat.id, message.message_id)] = True
 
                 await function(client, message)
-                await message.continue_propagation()
+                message.continue_propagation()
             except StopPropagation:
                 raise StopPropagation
             except KeyboardInterrupt:
