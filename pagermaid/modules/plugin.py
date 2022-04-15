@@ -34,7 +34,7 @@ def move_plugin(file_path):
 
 
 async def download(name):
-    html = await client.get(f'{Config.GIT_SOURCE}{name}.py')
+    html = await client.get(f'{Config.GIT_SOURCE}{name}/main.py')
     with open(f'plugins{sep}{name}.py', mode='wb') as f:
         f.write(html.text.encode('utf-8'))
     return f'plugins{sep}{name}.py'
