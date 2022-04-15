@@ -50,6 +50,7 @@ def update_version(plugin_name, version):
 
 
 @listener(is_plugin=False, outgoing=True, command="apt",
+          allow_sudo=False,
           diagnostics=False,
           description=lang('apt_des'),
           parameters=lang('apt_parameters'))

@@ -54,8 +54,7 @@ def listener(**args):
     if sudo_pattern is not None and not sudo_pattern.startswith('(?i)'):
         sudo_pattern = f"(?i){sudo_pattern}"
     if outgoing and not incoming:
-        base_filters = ~filters.via_bot
-        base_filters &= ~filters.forwarded
+        base_filters = filters.outgoing & ~filters.via_bot & ~filters.forwarded
     elif incoming and not outgoing:
         base_filters = filters.incoming
         allow_sudo = False
