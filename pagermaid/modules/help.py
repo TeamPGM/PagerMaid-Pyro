@@ -4,11 +4,11 @@ from pyrogram import Client
 from json import dump as json_dump
 from os import listdir, sep
 from pagermaid import help_messages, Config
-from pagermaid.utils import lang, Message, alias_command
+from pagermaid.utils import lang, Message
 from pagermaid.listener import listener
 
 
-@listener(is_plugin=False, command=alias_command("help"),
+@listener(is_plugin=False, command="help",
           description=lang('help_des'),
           parameters=f"<{lang('command')}>")
 async def help_command(_: Client, message: Message):
@@ -52,7 +52,7 @@ async def help_command(_: Client, message: Message):
                            disable_web_page_preview=True)
 
 
-@listener(is_plugin=False, command=alias_command("help_raw"),
+@listener(is_plugin=False, command="help_raw",
           description=lang('help_des'),
           parameters=f"<{lang('command')}>")
 async def help_raw_command(_: Client, message: Message):
@@ -72,7 +72,7 @@ async def help_raw_command(_: Client, message: Message):
                            disable_web_page_preview=True)
 
 
-@listener(is_plugin=False, command=alias_command("lang"),
+@listener(is_plugin=False, command="lang",
           description=lang('lang_des'))
 async def lang_change(_: Client, message: Message):
     to_lang = message.arguments
@@ -95,6 +95,7 @@ async def lang_change(_: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="alias",
+          disallow_alias=True,
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
 async def alias_commands(_: Client, message: Message):

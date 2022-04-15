@@ -10,7 +10,7 @@ from pyrogram import Client
 
 from pagermaid import log, working_dir, Config
 from pagermaid.listener import listener
-from pagermaid.utils import upload_attachment, lang, alias_command, Message, client
+from pagermaid.utils import upload_attachment, lang, Message, client
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
 
 
@@ -49,7 +49,7 @@ def update_version(plugin_name, version):
         json.dump(version_json, f)
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command('apt'),
+@listener(is_plugin=False, outgoing=True, command="apt",
           diagnostics=False,
           description=lang('apt_des'),
           parameters=lang('apt_parameters'))

@@ -6,10 +6,10 @@ from pyrogram import Client
 
 from pagermaid import log
 from pagermaid.listener import listener
-from pagermaid.utils import lang, alias_command, Message
+from pagermaid.utils import lang, Message
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command('prune'),
+@listener(is_plugin=False, outgoing=True, command="prune",
           description=lang('prune_des'))
 async def prune(client: Client, message: Message):
     """ Purge every single message after the message you replied to. """
@@ -36,7 +36,7 @@ async def prune(client: Client, message: Message):
     await notification.delete()
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("selfprune"),
+@listener(is_plugin=False, outgoing=True, command="selfprune",
           description=lang('sp_des'),
           parameters=lang('sp_parameters'))
 async def self_prune(client: Client, message: Message):
@@ -91,7 +91,7 @@ async def self_prune(client: Client, message: Message):
         pass
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("yourprune"),
+@listener(is_plugin=False, outgoing=True, command="yourprune",
           description=lang('yp_des'),
           parameters=lang('sp_parameters'))
 async def your_prune(client: Client, message: Message):
@@ -123,7 +123,7 @@ async def your_prune(client: Client, message: Message):
     await notification.delete()
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("del"),
+@listener(is_plugin=False, outgoing=True, command="del",
           description=lang('del_des'))
 async def delete(_: Client, message: Message):
     """ Deletes the message you replied to. """

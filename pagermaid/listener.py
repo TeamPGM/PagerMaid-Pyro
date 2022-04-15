@@ -15,7 +15,7 @@ from pyrogram.errors.exceptions.bad_request_400 import (
 from pyrogram.handlers import MessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context
-from pagermaid.utils import lang, attach_report, sudo_filter
+from pagermaid.utils import lang, attach_report, sudo_filter, alias_command
 
 secret_generator = secrets.SystemRandom()
 
@@ -27,6 +27,7 @@ def noop(*args, **kw):
 def listener(**args):
     """ Register an event listener. """
     command = args.get('command', None)
+    disallow_alias = args.get('disallow_alias', False)
     description = args.get('description', None)
     parameters = args.get('parameters', None)
     pattern = sudo_pattern = args.get('pattern', None)
@@ -44,8 +45,8 @@ def listener(**args):
     if command is not None:
         if command in help_messages:
             raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
-        pattern = fr"^,{command}(?: |$)([\s\S]*)"
-        sudo_pattern = fr"^/{command}(?: |$)([\s\S]*)"
+        pattern = fr"^,{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
+        sudo_pattern = fr"^/{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith('(?i)'):
         args['pattern'] = f"(?i){pattern}"
     else:

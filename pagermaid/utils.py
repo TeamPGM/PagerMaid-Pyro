@@ -21,8 +21,10 @@ def lang(text: str) -> str:
     return result
 
 
-def alias_command(command: str) -> str:
+def alias_command(command: str, disallow_alias: bool = False) -> str:
     """ alias """
+    if disallow_alias:
+        return command
     return Config.alias_dict.get(command, command)
 
 

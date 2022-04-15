@@ -10,10 +10,10 @@ from pyrogram import Client
 
 from pagermaid import bot
 from pagermaid.listener import listener
-from pagermaid.utils import attach_log, execute, Message, lang, alias_command
+from pagermaid.utils import attach_log, execute, Message, lang
 
 
-@listener(is_plugin=False, command=alias_command("sh"),
+@listener(is_plugin=False, command="sh",
           allow_sudo=False,
           description=lang('sh_des'),
           parameters=lang('sh_parameters'))
@@ -48,7 +48,7 @@ async def sh(_: Client, message: Message):
         return
 
 
-@listener(is_plugin=False, command=alias_command("restart"),
+@listener(is_plugin=False, command="restart",
           description=lang('restart_des'))
 async def restart(_: Client, message: Message):
     """ To re-execute PagerMaid. """
@@ -57,7 +57,7 @@ async def restart(_: Client, message: Message):
         exit(1)
 
 
-@listener(is_plugin=False, command=alias_command("eval"),
+@listener(is_plugin=False, command="eval",
           allow_sudo=False,
           description=lang('eval_des'),
           parameters=lang('eval_parameters'))

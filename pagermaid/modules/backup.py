@@ -7,7 +7,7 @@ from pyrogram import Client
 
 from pagermaid.config import Config
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, upload_attachment, lang, Message
+from pagermaid.utils import upload_attachment, lang, Message
 
 pgm_backup_zip_name = "pagermaid_backup.tar.gz"
 
@@ -40,7 +40,7 @@ def un_tar_gz(filename, dirs):
         return False
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("backup"),
+@listener(is_plugin=False, outgoing=True, command="backup",
           description=lang('back_des'))
 async def backup(_: Client, message: Message):
     await message.edit(lang('backup_process'))
@@ -63,7 +63,7 @@ async def backup(_: Client, message: Message):
         await message.edit(lang("backup_success"))
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("recovery"),
+@listener(is_plugin=False, outgoing=True, command="recovery",
           description=lang('recovery_des'))
 async def recovery(_: Client, message: Message):
     reply = message.reply_to_message

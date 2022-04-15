@@ -2,11 +2,11 @@ from pyrogram import Client
 
 from pagermaid.single_utils import sqlite
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, lang, Message, edit_delete, _status_sudo
+from pagermaid.utils import lang, Message, edit_delete, _status_sudo
 from pagermaid.single_utils import get_sudo_list
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("sudo"),
+@listener(is_plugin=False, outgoing=True, command="sudo",
           parameters="{on|off|add|remove|list}",
           description=lang('sudo_des'))
 async def sudo_change(client: Client, message: Message):

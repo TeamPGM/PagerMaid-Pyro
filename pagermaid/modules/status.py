@@ -15,10 +15,10 @@ from subprocess import Popen, PIPE
 
 from pagermaid import start_time, Config
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message, execute, alias_command
+from pagermaid.utils import lang, Message, execute
 
 
-@listener(is_plugin=False, command=alias_command("sysinfo"),
+@listener(is_plugin=False, command="sysinfo",
           description=lang('sysinfo_des'))
 async def sysinfo(_: Client, message: Message):
     """ Retrieve system information via neofetch. """
@@ -30,7 +30,7 @@ async def sysinfo(_: Client, message: Message):
     await message.edit(f"`{result}`")
 
 
-@listener(is_plugin=False, command=alias_command("status"),
+@listener(is_plugin=False, command="status",
           description=lang('status_des'))
 async def status(_: Client, message: Message):
     # database
@@ -68,7 +68,7 @@ async def status(_: Client, message: Message):
     await message.edit(text)
 
 
-@listener(is_plugin=False, command=alias_command("ping"),
+@listener(is_plugin=False, command="ping",
           description=lang('ping_des'))
 async def ping(client: Client, message: Message):
     """ Calculates latency between PagerMaid and Telegram. """
@@ -127,7 +127,7 @@ def get_uptime():
 
 
 def readable(num, suffix='B'):
-    """ Convert Bytes into human readable formats """
+    """ Convert Bytes into human-readable formats """
     for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)

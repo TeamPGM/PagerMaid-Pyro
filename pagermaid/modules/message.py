@@ -5,11 +5,11 @@ from pyrogram.errors import Forbidden, FloodWait
 from pagermaid import log
 from pagermaid.config import Config
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, lang, Message
+from pagermaid.utils import lang, Message
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("id"),
-          description=lang('id_des'))
+@listener(is_plugin=False, outgoing=True, command="id",
+          description=lang("id_des"))
 async def userid(_: Client, message: Message):
     """ Query the UserID of the sender of the message you replied to. """
     reply = message.reply_to_message
@@ -80,7 +80,7 @@ async def userid(_: Client, message: Message):
     await message.edit(text)
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("uslog"),
+@listener(is_plugin=False, outgoing=True, command="uslog",
           description=lang('uslog_des'),
           parameters="<string>")
 async def uslog(_: Client, message: Message):
@@ -98,7 +98,7 @@ async def uslog(_: Client, message: Message):
         await message.edit(lang('uslog_log_disable'))
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("log"),
+@listener(is_plugin=False, outgoing=True, command="log",
           description=lang('log_des'),
           parameters="<string>")
 async def logging(_: Client, message: Message):
@@ -116,7 +116,7 @@ async def logging(_: Client, message: Message):
         await message.edit(lang('uslog_log_disable'))
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command("re"),
+@listener(is_plugin=False, outgoing=True, command="re",
           description=lang('re_des'),
           parameters=lang('re_parameters'))
 async def re(client: Client, message: Message):

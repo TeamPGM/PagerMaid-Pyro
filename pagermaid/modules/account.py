@@ -6,10 +6,10 @@ from pyrogram.types import User
 
 from pagermaid import Config
 from pagermaid.listener import listener
-from pagermaid.utils import alias_command, lang, Message
+from pagermaid.utils import lang, Message
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command('profile'),
+@listener(is_plugin=False, outgoing=True, command="profile",
           description=lang('profile_des'),
           parameters="<username>")
 async def profile(client: Client, message: Message):
@@ -81,7 +81,7 @@ async def profile(client: Client, message: Message):
         await message.edit(caption)
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command('block'),
+@listener(is_plugin=False, outgoing=True, command="block",
           description=lang('block_des'),
           parameters="(username/uid/reply)")
 async def block_user(client: Client, message: Message):
@@ -117,7 +117,7 @@ async def block_user(client: Client, message: Message):
     await message.edit(f"`{user}` {lang('block_exist')}")
 
 
-@listener(is_plugin=False, outgoing=True, command=alias_command('unblock'),
+@listener(is_plugin=False, outgoing=True, command="unblock",
           description=lang('unblock_des'),
           parameters="<username/uid/reply>")
 async def unblock_user(client: Client, message: Message):
