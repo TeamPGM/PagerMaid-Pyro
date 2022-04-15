@@ -142,7 +142,7 @@ def if_sudo(message: Message):
         return False
     try:
         from_id = message.from_user.id if message.from_user else message.sender_chat.id
-        return from_id in get_sudo_list()
+        return (from_id in get_sudo_list()) or (message.chat.id in get_sudo_list())
     except Exception as e:
         return False
 

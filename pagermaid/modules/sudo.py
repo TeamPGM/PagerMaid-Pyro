@@ -43,36 +43,42 @@ async def sudo_change(client: Client, message: Message):
         reply = message.reply_to_message
         if reply:
             from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
-        elif message.chat.type == "private":
-            from_id = message.chat.id
         else:
-            return await edit_delete(message, f"__{lang('sudo_reply')}__")
+            from_id = message.from_user.id
         if from_id in sudo:
             return await edit_delete(message, f"__{lang('sudo_add')}__")
         sudo.append(from_id)
         sqlite["sudo_list"] = sudo
-        await message.edit(f"__{lang('sudo_add')}__")
+        if from_id > 0:
+            await message.edit(f"__{lang('sudo_add')}__")
+        else:
+            await message.edit(f"__{lang('sudo_add_chat')}__")
     elif input_str == "remove":
         reply = message.reply_to_message
         if reply:
             from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
-        elif message.chat.type == "private":
-            from_id = message.chat.id
         else:
-            return await edit_delete(message, f"__{lang('sudo_reply')}__")
+            from_id = message.chat.id
         if from_id not in sudo:
             return await edit_delete(message, f"__{lang('sudo_no')}__")
         sudo.remove(from_id)
         sqlite["sudo_list"] = sudo
-        await message.edit(f"__{lang('sudo_remove')}__")
+        if from_id > 0:
+            await message.edit(f"__{lang('sudo_remove')}__")
+        else:
+            await message.edit(f"__{lang('sudo_remove_chat')}__")
     elif input_str == "list":
         if len(sudo) == 0:
             return await edit_delete(message, f"__{lang('sudo_no_one')}__")
         text = f"**{lang('sudo_list')}**\n\n"
         for i in sudo:
             try:
-                user = await client.get_users(i)
-                text += f"• {user.mention()}\n"
+                if i > 0:
+                    user = await client.get_users(i)
+                    text += f"• {user.mention()}\n"
+                else:
+                    chat = await client.get_chat(i)
+                    text += f"• {chat.title}\n"
             except:
                 text += f"• `{i}`\n"
         await message.edit(text)
