@@ -177,7 +177,7 @@ class Message(pyrogram.types.Message):
         is_self = self.from_user.is_self if self.from_user else False
 
         if len(text) < 4096:
-            if from_id in sudo_users:
+            if from_id in sudo_users or self.chat.id in sudo_users:
                 if reply_to and (not is_self) and (not no_reply):
                     msg = await reply_to.reply(
                         text=text,
