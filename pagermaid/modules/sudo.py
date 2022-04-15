@@ -44,7 +44,7 @@ async def sudo_change(client: Client, message: Message):
         if reply:
             from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
         else:
-            from_id = message.from_user.id
+            from_id = message.chat.id
         if from_id in sudo:
             return await edit_delete(message, f"__{lang('sudo_add')}__")
         sudo.append(from_id)
