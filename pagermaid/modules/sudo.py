@@ -43,24 +43,28 @@ async def sudo_change(client: Client, message: Message):
         reply = message.reply_to_message
         if reply:
             from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
-            if from_id in sudo:
-                return await edit_delete(message, f"__{lang('sudo_add')}__")
-            sudo.append(from_id)
-            sqlite["sudo_list"] = sudo
-            await message.edit(f"__{lang('sudo_add')}__")
+        elif message.chat.type == "private":
+            from_id = message.chat.id
         else:
-            await edit_delete(message, f"__{lang('sudo_reply')}__")
+            return await edit_delete(message, f"__{lang('sudo_reply')}__")
+        if from_id in sudo:
+            return await edit_delete(message, f"__{lang('sudo_add')}__")
+        sudo.append(from_id)
+        sqlite["sudo_list"] = sudo
+        await message.edit(f"__{lang('sudo_add')}__")
     elif input_str == "remove":
         reply = message.reply_to_message
         if reply:
             from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
-            if from_id not in sudo:
-                return await edit_delete(message, f"__{lang('sudo_no')}__")
-            sudo.remove(from_id)
-            sqlite["sudo_list"] = sudo
-            await message.edit(f"__{lang('sudo_remove')}__")
+        elif message.chat.type == "private":
+            from_id = message.chat.id
         else:
-            await edit_delete(message, f"__{lang('sudo_reply')}__")
+            return await edit_delete(message, f"__{lang('sudo_reply')}__")
+        if from_id not in sudo:
+            return await edit_delete(message, f"__{lang('sudo_no')}__")
+        sudo.remove(from_id)
+        sqlite["sudo_list"] = sudo
+        await message.edit(f"__{lang('sudo_remove')}__")
     elif input_str == "list":
         if len(sudo) == 0:
             return await edit_delete(message, f"__{lang('sudo_no_one')}__")
@@ -71,8 +75,6 @@ async def sudo_change(client: Client, message: Message):
                 text += f"• {user.mention()}\n"
             except:
                 text += f"• `{i}`\n"
-        return await message.edit(
-            text,
-        )
+        await message.edit(text)
     else:
         await edit_delete(message, lang('arg_error'))
