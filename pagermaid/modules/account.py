@@ -10,6 +10,7 @@ from pagermaid.utils import lang, Message
 
 
 @listener(is_plugin=False, outgoing=True, command="profile",
+          level=51,
           description=lang('profile_des'),
           parameters="<username>")
 async def profile(client: Client, message: Message):
@@ -82,7 +83,7 @@ async def profile(client: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="block",
-          level=50,
+          level=74,
           description=lang('block_des'),
           parameters="(username/uid/reply)")
 async def block_user(client: Client, message: Message):
@@ -119,7 +120,7 @@ async def block_user(client: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="unblock",
-          level=50,
+          level=74,
           description=lang('unblock_des'),
           parameters="<username/uid/reply>")
 async def unblock_user(client: Client, message: Message):

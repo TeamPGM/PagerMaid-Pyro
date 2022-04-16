@@ -19,7 +19,7 @@ from pagermaid.utils import lang, Message, execute
 
 
 @listener(is_plugin=False, command="sysinfo",
-          level=1,
+          level=51,
           description=lang('sysinfo_des'))
 async def sysinfo(_: Client, message: Message):
     """ Retrieve system information via neofetch. """
@@ -32,6 +32,7 @@ async def sysinfo(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="status",
+          level=51,
           description=lang('status_des'))
 async def status(_: Client, message: Message):
     # database
@@ -70,6 +71,7 @@ async def status(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="ping",
+          level=51,
           description=lang('ping_des'))
 async def ping(client: Client, message: Message):
     """ Calculates latency between PagerMaid and Telegram. """

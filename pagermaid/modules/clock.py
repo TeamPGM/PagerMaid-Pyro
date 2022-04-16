@@ -10,6 +10,7 @@ from pagermaid.utils import lang, Message
 
 
 @listener(is_plugin=False, outgoing=True, command="time",
+          level=51,
           description=lang('time_des'),
           parameters=lang('time_parameters'))
 async def time(_: Client, message: Message):

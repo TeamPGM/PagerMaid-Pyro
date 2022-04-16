@@ -117,6 +117,7 @@ help_des: 显示命令列表或单个命令的帮助。
 help_list: 命令列表
 help_send: 发送
 help_see: 以查看特定命令的帮助
+help_no_permission: 很抱歉，您暂时无权查看此命令的帮助信息
 help_source: 🖥 源代码
 help_plugin: 🔅 插件列表
 help_module: 💠 內置模块

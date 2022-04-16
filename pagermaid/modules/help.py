@@ -4,8 +4,17 @@ from pyrogram import Client
 from json import dump as json_dump
 from os import listdir, sep
 from pagermaid import help_messages, Config
-from pagermaid.utils import lang, Message
+from pagermaid.single_utils import get_sudo_list
+from pagermaid.utils import lang, Message, command_level, get_level, check_level
 from pagermaid.listener import listener
+
+
+def from_msg_get_sudo_uid(message: Message) -> int:
+    """ Get the sudo uid from the message. """
+    from_id = message.from_user.id if message.from_user else message.sender_chat.id
+    if from_id in get_sudo_list():
+        return from_id
+    return message.chat.id
 
 
 @listener(is_plugin=False, command="help",
@@ -29,7 +38,11 @@ async def help_command(_: Client, message: Message):
                         'trace', 'chat', 'update']
     if message.arguments:
         if message.arguments in help_messages:
-            await message.edit(str(help_messages[message.arguments]))
+            if check_level(from_msg_get_sudo_uid(message), command_level(help_messages, message.arguments)) or \
+                    message.outgoing:
+                await message.edit(f"{help_messages[message.arguments]['use']}")
+            else:
+                await message.edit(lang('help_no_permission'))
         else:
             await message.edit(lang('arg_error'))
     else:
@@ -41,9 +54,10 @@ async def help_command(_: Client, message: Message):
             result += "`, "
         if result == f"**{lang('help_list')}: \n**":
             """ The help raw command,"""
+            level = get_level(from_msg_get_sudo_uid(message))
             for command in sorted(help_messages, reverse=False):
-                result += "`" + str(command)
-                result += "`, "
+                if command_level(help_messages, command) <= level or message.outgoing:
+                    result += f"`{command}`, "
         await message.edit(result[
                            :-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}**\n"
                                   f"[{lang('help_source')}](https://t.me/PagerMaid_Modify) "
@@ -59,21 +73,26 @@ async def help_raw_command(_: Client, message: Message):
     """ The help raw command,"""
     if message.arguments:
         if message.arguments in help_messages:
-            await message.edit(str(help_messages[message.arguments]))
+            if check_level(from_msg_get_sudo_uid(message), command_level(help_messages, message.arguments)) or \
+                    message.outgoing:
+                await message.edit(f"{help_messages[message.arguments]['use']}")
+            else:
+                await message.edit(lang('help_no_permission'))
         else:
             await message.edit(lang('arg_error'))
     else:
         result = f"**{lang('help_list')}: \n**"
+        level = get_level(from_msg_get_sudo_uid(message))
         for command in sorted(help_messages, reverse=False):
-            result += "`" + str(command)
-            result += "`, "
+            if command_level(help_messages, command) <= level or message.outgoing:
+                result += f"`{command}`, "
         await message.edit(result[:-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}** "
                                          f"[{lang('help_source')}](https://t.me/PagerMaid_Modify)",
                            disable_web_page_preview=True)
 
 
 @listener(is_plugin=False, command="lang",
-          level=10,
+          level=75,
           description=lang('lang_des'))
 async def lang_change(_: Client, message: Message):
     to_lang = message.arguments
@@ -97,7 +116,7 @@ async def lang_change(_: Client, message: Message):
 
 @listener(is_plugin=False, outgoing=True, command="alias",
           disallow_alias=True,
-          level=50,
+          level=75,
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
 async def alias_commands(_: Client, message: Message):

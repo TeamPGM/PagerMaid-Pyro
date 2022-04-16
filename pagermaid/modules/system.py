@@ -49,7 +49,7 @@ async def sh(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="restart",
-          level=99,
+          level=75,
           description=lang('restart_des'))
 async def restart(_: Client, message: Message):
     """ To re-execute PagerMaid. """

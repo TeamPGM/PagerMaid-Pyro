@@ -168,8 +168,8 @@ def listener(**args):
         if parameters is None:
             parameters = ""
         help_messages.update({
-            f"{command}": f"**{lang('use_method')}:** `,{command} {parameters}`\
-                \n{description}"
+            f"{command}": {"level": level, "use": f"**{lang('use_method')}:** `,{command} {parameters}`  `lv.{level}`\n"
+                                                  f"{description}"}
         })
 
     return decorator

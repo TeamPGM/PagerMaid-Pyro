@@ -41,7 +41,7 @@ def un_tar_gz(filename, dirs):
 
 
 @listener(is_plugin=False, outgoing=True, command="backup",
-          level=50,
+          level=51,
           description=lang('back_des'))
 async def backup(_: Client, message: Message):
     await message.edit(lang('backup_process'))

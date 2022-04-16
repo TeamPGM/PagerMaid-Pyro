@@ -147,6 +147,11 @@ def check_level(cid: int, level: int) -> bool:
     return level <= get_level(cid)
 
 
+def command_level(data: dict, command: str) -> int:
+    """ Get command level. """
+    return data.get(command, {}).get("level", 0)
+
+
 def sudo_filter(level: int):
     async def if_sudo(flt, _, message: Message):
         if not _status_sudo():
