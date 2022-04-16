@@ -2,11 +2,20 @@ from pyrogram import Client
 
 from pagermaid.single_utils import sqlite
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message, edit_delete, _status_sudo
-from pagermaid.single_utils import get_sudo_list
+from pagermaid.utils import lang, Message, edit_delete, _status_sudo, get_level
+from pagermaid.single_utils import get_sudo_list, get_sudo_level
+
+
+def from_msg_get_sudo_id(message: Message) -> int:
+    reply = message.reply_to_message
+    if reply:
+        return reply.from_user.id if reply.from_user else reply.sender_chat.id
+    else:
+        return message.chat.id
 
 
 @listener(is_plugin=False, outgoing=True, command="sudo",
+          level=99,
           parameters="{on|off|add|remove|list}",
           description=lang('sudo_des'))
 async def sudo_change(client: Client, message: Message):
@@ -40,11 +49,7 @@ async def sudo_change(client: Client, message: Message):
             )
         await edit_delete(message, lang('sudo_has_disabled'))
     elif input_str == "add":
-        reply = message.reply_to_message
-        if reply:
-            from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
-        else:
-            from_id = message.chat.id
+        from_id = from_msg_get_sudo_id(message)
         if from_id in sudo:
             return await edit_delete(message, f"__{lang('sudo_add')}__")
         sudo.append(from_id)
@@ -54,11 +59,7 @@ async def sudo_change(client: Client, message: Message):
         else:
             await message.edit(f"__{lang('sudo_add_chat')}__")
     elif input_str == "remove":
-        reply = message.reply_to_message
-        if reply:
-            from_id = reply.from_user.id if reply.from_user else reply.sender_chat.id
-        else:
-            from_id = message.chat.id
+        from_id = from_msg_get_sudo_id(message)
         if from_id not in sudo:
             return await edit_delete(message, f"__{lang('sudo_no')}__")
         sudo.remove(from_id)
@@ -75,12 +76,28 @@ async def sudo_change(client: Client, message: Message):
             try:
                 if i > 0:
                     user = await client.get_users(i)
-                    text += f"• {user.mention()}\n"
+                    text += f"• {user.mention()} - lv.{get_level(user.id)}\n"
                 else:
                     chat = await client.get_chat(i)
-                    text += f"• {chat.title}\n"
+                    text += f"• {chat.title} - lv.{get_level(chat.id)}\n"
             except:
-                text += f"• `{i}`\n"
+                text += f"• `{i}` - lv.{get_level(i)}\n"
         await message.edit(text)
+    elif len(message.parameter) > 0:
+        if message.parameter[0] == "set":
+            if len(message.parameter) == 1:
+                return await edit_delete(message, lang('arg_error'))
+            if not message.parameter[1].isdigit():
+                return await edit_delete(message, lang('arg_error'))
+            level = int(message.parameter[1])
+            if level < 0 or level > 99:
+                return await edit_delete(message, lang('arg_error'))
+            from_id = from_msg_get_sudo_id(message)
+            levels = get_sudo_level()
+            levels[from_id] = level
+            sqlite["sudo_level"] = levels
+            await message.edit(f"__{lang('sudo_set_level')} {level}__")
+        else:
+            await edit_delete(message, lang('arg_error'))
     else:
         await edit_delete(message, lang('arg_error'))

@@ -14,7 +14,7 @@ from pagermaid.utils import attach_log, execute, Message, lang
 
 
 @listener(is_plugin=False, command="sh",
-          allow_sudo=False,
+          level=99,
           description=lang('sh_des'),
           parameters=lang('sh_parameters'))
 async def sh(_: Client, message: Message):
@@ -49,6 +49,7 @@ async def sh(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="restart",
+          level=99,
           description=lang('restart_des'))
 async def restart(_: Client, message: Message):
     """ To re-execute PagerMaid. """
@@ -58,7 +59,7 @@ async def restart(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="eval",
-          allow_sudo=False,
+          level=99,
           description=lang('eval_des'),
           parameters=lang('eval_parameters'))
 async def sh_eval(_: Client, message: Message):

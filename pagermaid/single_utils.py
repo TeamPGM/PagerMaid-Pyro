@@ -10,6 +10,10 @@ def get_sudo_list():
     return sqlite.get("sudo_list", [])
 
 
+def get_sudo_level():
+    return sqlite.get("sudo_level", {})
+
+
 def _status_sudo():
     return sqlite.get("sudo_enable", False)
 

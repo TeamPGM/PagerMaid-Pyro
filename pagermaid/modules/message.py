@@ -82,6 +82,7 @@ async def userid(_: Client, message: Message):
 
 @listener(is_plugin=False, outgoing=True, command="uslog",
           description=lang('uslog_des'),
+          level=50,
           parameters="<string>")
 async def uslog(_: Client, message: Message):
     """ Forwards a message into log group """
@@ -99,6 +100,7 @@ async def uslog(_: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="log",
+          level=50,
           description=lang('log_des'),
           parameters="<string>")
 async def logging(_: Client, message: Message):
@@ -117,6 +119,7 @@ async def logging(_: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="re",
+          level=1,
           description=lang('re_des'),
           parameters=lang('re_parameters'))
 async def re(client: Client, message: Message):

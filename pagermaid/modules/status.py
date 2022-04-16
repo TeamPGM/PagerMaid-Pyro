@@ -19,6 +19,7 @@ from pagermaid.utils import lang, Message, execute
 
 
 @listener(is_plugin=False, command="sysinfo",
+          level=1,
           description=lang('sysinfo_des'))
 async def sysinfo(_: Client, message: Message):
     """ Retrieve system information via neofetch. """

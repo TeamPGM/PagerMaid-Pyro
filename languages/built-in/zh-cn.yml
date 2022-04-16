@@ -452,6 +452,7 @@ sudo_no: 此用户不存在于 Sudo 管理员列表
 sudo_remove: 成功将此用户移出 Sudo 管理员列表
 sudo_remove_chat: 成功将此会话移出 Sudo 管理员列表
 sudo_no_one: 你还没有添加任何用户到 Sudo 管理员列表
+sudo_set_level: 成功设置此 Sudo 管理员的权限等级为
 sudo_list: Sudo 管理员列表：
 
 # sticker

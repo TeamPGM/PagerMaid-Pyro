@@ -73,6 +73,7 @@ async def help_raw_command(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="lang",
+          level=10,
           description=lang('lang_des'))
 async def lang_change(_: Client, message: Message):
     to_lang = message.arguments
@@ -96,6 +97,7 @@ async def lang_change(_: Client, message: Message):
 
 @listener(is_plugin=False, outgoing=True, command="alias",
           disallow_alias=True,
+          level=50,
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
 async def alias_commands(_: Client, message: Message):

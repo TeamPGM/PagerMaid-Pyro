@@ -28,6 +28,7 @@ def listener(**args):
     """ Register an event listener. """
     command = args.get('command', None)
     disallow_alias = args.get('disallow_alias', False)
+    level = args.get('level', 0)
     description = args.get('description', None)
     parameters = args.get('parameters', None)
     pattern = sudo_pattern = args.get('pattern', None)
@@ -36,7 +37,6 @@ def listener(**args):
     is_plugin = args.get('is_plugin', True)
     incoming = args.get('incoming', False)
     outgoing = args.get('outgoing', True)
-    allow_sudo = args.get('allow_sudo', True)
     owners_only = args.get("owners_only", False)
     admins_only = args.get("admins_only", False)
     groups_only = args.get("groups_only", False)
@@ -57,12 +57,10 @@ def listener(**args):
         base_filters = filters.me & ~filters.via_bot & ~filters.forwarded
     elif incoming and not outgoing:
         base_filters = filters.incoming
-        allow_sudo = False
     else:
         base_filters = filters.all
-        allow_sudo = False
     sudo_filters = (
-        sudo_filter
+        sudo_filter(level)
         & ~filters.via_bot
         & ~filters.forwarded
     )
@@ -96,8 +94,6 @@ def listener(**args):
         del args['admins_only']
     if 'groups_only' in args:
         del args['groups_only']
-    if 'allow_sudo' in args:
-        del args['allow_sudo']
 
     def decorator(function):
 
@@ -164,8 +160,7 @@ def listener(**args):
                     del read_context[(message.chat.id, message.message_id)]
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
-        if allow_sudo:
-            bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
+        bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
 
         return handler
 

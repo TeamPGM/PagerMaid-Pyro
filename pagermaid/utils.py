@@ -12,7 +12,7 @@ from asyncio.subprocess import PIPE
 from pyrogram import filters
 from pagermaid.config import Config
 from pagermaid import bot
-from pagermaid.single_utils import _status_sudo, get_sudo_list, Message
+from pagermaid.single_utils import _status_sudo, get_sudo_list, get_sudo_level, Message
 
 
 def lang(text: str) -> str:
@@ -137,14 +137,32 @@ async def edit_delete(message: Message,
     return await event.delete()
 
 
-def if_sudo(message: Message):
-    if not _status_sudo():
-        return False
-    try:
-        from_id = message.from_user.id if message.from_user else message.sender_chat.id
-        return (from_id in get_sudo_list()) or (message.chat.id in get_sudo_list())
-    except Exception as e:
-        return False
+def get_level(cid: int) -> int:
+    levels = get_sudo_level()
+    return levels.get(cid, 0)
+
+
+def check_level(cid: int, level: int) -> bool:
+    """ Check user level. """
+    return level <= get_level(cid)
+
+
+def sudo_filter(level: int):
+    async def if_sudo(flt, _, message: Message):
+        if not _status_sudo():
+            return False
+        try:
+            from_id = message.from_user.id if message.from_user else message.sender_chat.id
+            sudo_list = get_sudo_list()
+            if from_id not in sudo_list:
+                if message.chat.id in sudo_list:
+                    return check_level(message.chat.id, flt.level)
+                return False
+            return check_level(from_id, flt.level)
+        except Exception as e:
+            return False
+
+    return filters.create(if_sudo, level=level)
 
 
 """ Init httpx client """
@@ -153,4 +171,3 @@ headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36"
 }
 client = httpx.AsyncClient(timeout=10.0, headers=headers)
-sudo_filter = filters.create(lambda _, __, message: if_sudo(message))
