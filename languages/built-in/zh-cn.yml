@@ -32,6 +32,7 @@ too_long: 出错了呜呜呜 ~ 生成的输出太长，无法显示。
 run_error: 出错了呜呜呜 ~ 执行此命令时发生错误。
 report_error: 上报错误出错了呜呜呜 ~
 use_method: 使用方法
+need_permission: 所需权限
 
 # account
 ## username
@@ -453,7 +454,14 @@ sudo_no: 此用户不存在于 Sudo 管理员列表
 sudo_remove: 成功将此用户移出 Sudo 管理员列表
 sudo_remove_chat: 成功将此会话移出 Sudo 管理员列表
 sudo_no_one: 你还没有添加任何用户到 Sudo 管理员列表
-sudo_set_level: 成功设置此 Sudo 管理员的权限等级为
+sudo_group_list: 权限组有以下权限：
+sudo_group_list_no: 不存在此权限组或此权限组无权限
+sudo_group_add_user: 添加此用户到此权限组成功
+sudo_group_del_user: 从此权限组删除此用户成功
+sudo_group_add_per: 从此权限组中添加此权限成功
+sudo_group_del_per: 从此权限组中移除此权限成功
+sudo_user_add_per: 从此用户中添加此权限成功
+sudo_user_del_per: 从此用户中移除此权限成功
 sudo_list: Sudo 管理员列表：
 
 # sticker

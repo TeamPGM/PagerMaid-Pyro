@@ -8,3 +8,4 @@ psutil>=5.8.0
 httpx
 apscheduler
 sqlitedict
+casbin

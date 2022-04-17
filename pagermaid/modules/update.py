@@ -7,7 +7,7 @@ from pagermaid.utils import lang, execute, Message, alias_command
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command("update"),
-          level=75,
+          need_admin=True,
           description=lang('update_des'),
           parameters="<true/debug>")
 async def update(_: Client, message: Message):

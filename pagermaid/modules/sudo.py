@@ -2,8 +2,11 @@ from pyrogram import Client
 
 from pagermaid.single_utils import sqlite
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message, edit_delete, _status_sudo, get_level
-from pagermaid.single_utils import get_sudo_list, get_sudo_level
+from pagermaid.group_manager import add_permission_for_group, Permission, remove_permission_for_group, \
+    add_user_to_group, remove_user_from_group, add_permission_for_user, remove_permission_for_user, \
+    permissions
+from pagermaid.utils import lang, Message, edit_delete, _status_sudo
+from pagermaid.single_utils import get_sudo_list
 
 
 def from_msg_get_sudo_id(message: Message) -> int:
@@ -15,8 +18,8 @@ def from_msg_get_sudo_id(message: Message) -> int:
 
 
 @listener(is_plugin=False, outgoing=True, command="sudo",
-          level=99,
-          parameters="{on|off|add|remove|list}",
+          need_admin=True,
+          parameters="{on|off|add|remove|gaddp|gaddu|gdelp|gdelu|glist|uaddp|udelp|list}",
           description=lang('sudo_des'))
 async def sudo_change(client: Client, message: Message):
     """ To enable or disable sudo of your userbot. """
@@ -54,6 +57,7 @@ async def sudo_change(client: Client, message: Message):
             return await edit_delete(message, f"__{lang('sudo_add')}__")
         sudo.append(from_id)
         sqlite["sudo_list"] = sudo
+        add_user_to_group(str(from_id), "default")  # 添加到默认组
         if from_id > 0:
             await message.edit(f"__{lang('sudo_add')}__")
         else:
@@ -76,27 +80,52 @@ async def sudo_change(client: Client, message: Message):
             try:
                 if i > 0:
                     user = await client.get_users(i)
-                    text += f"• {user.mention()} - lv.{get_level(user.id)}\n"
+                    text += f"• {user.mention()} - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
                 else:
                     chat = await client.get_chat(i)
-                    text += f"• {chat.title} - lv.{get_level(chat.id)}\n"
+                    text += f"• {chat.title} - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
+                for j in permissions.get_permissions_for_user(str(i)):
+                    text += f"    • {'-' if j[2] == 'ejection' else ''}{j[1]}\n"
             except:
-                text += f"• `{i}` - lv.{get_level(i)}\n"
+                text += f"• `{i}` - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
         await message.edit(text)
     elif len(message.parameter) > 0:
-        if message.parameter[0] == "set":
-            if len(message.parameter) == 1:
-                return await edit_delete(message, lang('arg_error'))
-            if not message.parameter[1].isdigit():
-                return await edit_delete(message, lang('arg_error'))
-            level = int(message.parameter[1])
-            if level < 0 or level > 99:
-                return await edit_delete(message, lang('arg_error'))
+        if len(message.parameter) == 2:
             from_id = from_msg_get_sudo_id(message)
-            levels = get_sudo_level()
-            levels[from_id] = level
-            sqlite["sudo_level"] = levels
-            await message.edit(f"__{lang('sudo_set_level')} {level}__")
+            if message.parameter[0] == "glist":
+                data = permissions.get_permissions_for_user(str(message.parameter[1]))
+                if data:
+                    text = f"**{message.parameter[1]} {lang('sudo_group_list')}**\n\n"
+                    for i in data:
+                        text += f"  • `{'-' if i[2] == 'ejection' else ''}{i[1]}`\n"
+                    return await message.edit(text)
+                else:
+                    return await edit_delete(message, f"__{lang('sudo_group_list')}__")
+            if from_id not in sudo:
+                return await edit_delete(message, f"__{lang('sudo_no')}__")
+            elif message.parameter[0] == "gaddu":
+                add_user_to_group(str(from_id), message.parameter[1])
+                return await message.edit(lang("sudo_group_add_user"))
+            elif message.parameter[0] == "gdelu":
+                remove_user_from_group(str(from_id), message.parameter[1])
+                return await message.edit(lang("sudo_group_del_user"))
+            elif message.parameter[0] == "uaddp":
+                add_permission_for_user(str(from_id), Permission(message.parameter[1]))
+                return await message.edit(lang("sudo_user_add_per"))
+            elif message.parameter[0] == "udelp":
+                remove_permission_for_user(str(from_id), Permission(message.parameter[1]))
+                return await message.edit(lang("sudo_user_del_per"))
+            else:
+                return await edit_delete(message, lang('arg_error'))
+        if len(message.parameter) == 3:
+            if message.parameter[0] == "gaddp":
+                add_permission_for_group(message.parameter[1], Permission(message.parameter[2]))
+                return await message.edit(lang("sudo_group_add_per"))
+            elif message.parameter[0] == "gdelp":
+                remove_permission_for_group(message.parameter[1], Permission(message.parameter[2]))
+                return await message.edit(lang("sudo_group_del_per"))
+            else:
+                return await edit_delete(message, lang('arg_error'))
         else:
             await edit_delete(message, lang('arg_error'))
     else:

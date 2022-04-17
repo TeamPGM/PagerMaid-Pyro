@@ -4,8 +4,9 @@ from pyrogram import Client
 from json import dump as json_dump
 from os import listdir, sep
 from pagermaid import help_messages, Config
+from pagermaid.group_manager import enforce_permission
 from pagermaid.single_utils import get_sudo_list
-from pagermaid.utils import lang, Message, command_level, get_level, check_level
+from pagermaid.utils import lang, Message
 from pagermaid.listener import listener
 
 
@@ -38,7 +39,7 @@ async def help_command(_: Client, message: Message):
                         'trace', 'chat', 'update']
     if message.arguments:
         if message.arguments in help_messages:
-            if check_level(from_msg_get_sudo_uid(message), command_level(help_messages, message.arguments)) or \
+            if enforce_permission(from_msg_get_sudo_uid(message), help_messages[message.arguments]["permission"]) or \
                     message.outgoing:
                 await message.edit(f"{help_messages[message.arguments]['use']}")
             else:
@@ -50,13 +51,14 @@ async def help_command(_: Client, message: Message):
         for command in sorted(help_messages, reverse=False):
             if str(command) in support_commands:
                 continue
-            result += "`" + str(command)
-            result += "`, "
+            if enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]) or \
+                    message.outgoing:
+                result += f"`{command}`, "
         if result == f"**{lang('help_list')}: \n**":
             """ The help raw command,"""
-            level = get_level(from_msg_get_sudo_uid(message))
             for command in sorted(help_messages, reverse=False):
-                if command_level(help_messages, command) <= level or message.outgoing:
+                if enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]) or \
+                        message.outgoing:
                     result += f"`{command}`, "
         await message.edit(result[
                            :-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}**\n"
@@ -73,7 +75,7 @@ async def help_raw_command(_: Client, message: Message):
     """ The help raw command,"""
     if message.arguments:
         if message.arguments in help_messages:
-            if check_level(from_msg_get_sudo_uid(message), command_level(help_messages, message.arguments)) or \
+            if enforce_permission(from_msg_get_sudo_uid(message), help_messages[message.arguments]["permission"]) or \
                     message.outgoing:
                 await message.edit(f"{help_messages[message.arguments]['use']}")
             else:
@@ -82,9 +84,9 @@ async def help_raw_command(_: Client, message: Message):
             await message.edit(lang('arg_error'))
     else:
         result = f"**{lang('help_list')}: \n**"
-        level = get_level(from_msg_get_sudo_uid(message))
         for command in sorted(help_messages, reverse=False):
-            if command_level(help_messages, command) <= level or message.outgoing:
+            if enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]) or \
+                    message.outgoing:
                 result += f"`{command}`, "
         await message.edit(result[:-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}** "
                                          f"[{lang('help_source')}](https://t.me/PagerMaid_Modify)",
@@ -92,7 +94,7 @@ async def help_raw_command(_: Client, message: Message):
 
 
 @listener(is_plugin=False, command="lang",
-          level=75,
+          need_admin=True,
           description=lang('lang_des'))
 async def lang_change(_: Client, message: Message):
     to_lang = message.arguments
@@ -116,7 +118,7 @@ async def lang_change(_: Client, message: Message):
 
 @listener(is_plugin=False, outgoing=True, command="alias",
           disallow_alias=True,
-          level=75,
+          need_admin=True,
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
 async def alias_commands(_: Client, message: Message):

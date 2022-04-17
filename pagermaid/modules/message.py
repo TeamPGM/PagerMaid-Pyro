@@ -9,7 +9,6 @@ from pagermaid.utils import lang, Message
 
 
 @listener(is_plugin=False, outgoing=True, command="id",
-          level=51,
           description=lang("id_des"))
 async def userid(_: Client, message: Message):
     """ Query the UserID of the sender of the message you replied to. """
@@ -83,7 +82,6 @@ async def userid(_: Client, message: Message):
 
 @listener(is_plugin=False, outgoing=True, command="uslog",
           description=lang('uslog_des'),
-          level=51,
           parameters="<string>")
 async def uslog(_: Client, message: Message):
     """ Forwards a message into log group """
@@ -101,7 +99,6 @@ async def uslog(_: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="log",
-          level=51,
           description=lang('log_des'),
           parameters="<string>")
 async def logging(_: Client, message: Message):
@@ -120,7 +117,6 @@ async def logging(_: Client, message: Message):
 
 
 @listener(is_plugin=False, outgoing=True, command="re",
-          level=51,
           description=lang('re_des'),
           parameters=lang('re_parameters'))
 async def re(client: Client, message: Message):

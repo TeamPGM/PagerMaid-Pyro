@@ -12,7 +12,8 @@ from asyncio.subprocess import PIPE
 from pyrogram import filters
 from pagermaid.config import Config
 from pagermaid import bot
-from pagermaid.single_utils import _status_sudo, get_sudo_list, get_sudo_level, Message
+from pagermaid.group_manager import enforce_permission
+from pagermaid.single_utils import _status_sudo, get_sudo_list, Message
 
 
 def lang(text: str) -> str:
@@ -137,22 +138,21 @@ async def edit_delete(message: Message,
     return await event.delete()
 
 
-def get_level(cid: int) -> int:
-    levels = get_sudo_level()
-    return levels.get(cid, 0)
+def get_permission_name(is_plugin: bool, need_admin: bool, command: str) -> str:
+    """ Get permission name. """
+    if is_plugin:
+        if need_admin:
+            return f"plugins_root.{command}"
+        else:
+            return f"plugins.{command}"
+    else:
+        if need_admin:
+            return f"system.{command}"
+        else:
+            return f"modules.{command}"
 
 
-def check_level(cid: int, level: int) -> bool:
-    """ Check user level. """
-    return level <= get_level(cid)
-
-
-def command_level(data: dict, command: str) -> int:
-    """ Get command level. """
-    return data.get(command, {}).get("level", 0)
-
-
-def sudo_filter(level: int):
+def sudo_filter(permission: str):
     async def if_sudo(flt, _, message: Message):
         if not _status_sudo():
             return False
@@ -161,13 +161,13 @@ def sudo_filter(level: int):
             sudo_list = get_sudo_list()
             if from_id not in sudo_list:
                 if message.chat.id in sudo_list:
-                    return check_level(message.chat.id, flt.level)
+                    return enforce_permission(message.chat.id, flt.permission)
                 return False
-            return check_level(from_id, flt.level)
+            return enforce_permission(from_id, flt.permission)
         except Exception as e:
             return False
 
-    return filters.create(if_sudo, level=level)
+    return filters.create(if_sudo, permission=permission)
 
 
 """ Init httpx client """

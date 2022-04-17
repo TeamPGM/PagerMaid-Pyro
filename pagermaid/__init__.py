@@ -1,7 +1,8 @@
 import os
 
+from shutil import copyfile
 from coloredlogs import ColoredFormatter
-from logging import getLogger, StreamHandler, ERROR, INFO, basicConfig
+from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig
 from datetime import datetime
 from os import getcwd
 from os import path as os_path
@@ -14,6 +15,9 @@ from pyrogram import Client
 # init folders
 if not os_path.exists("data"):
     os.mkdir("data")
+# init permissions
+if not os_path.exists(f"data{os_path.sep}gm_policy.csv"):
+    copyfile(f"{__path__[0]}{os_path.sep}assets{os_path.sep}gm_policy.csv", f"data{os_path.sep}gm_policy.csv")
 
 CMD_LIST = {}
 module_dir = __path__[0]
@@ -21,6 +25,7 @@ working_dir = getcwd()
 # solve same process
 read_context = {}
 help_messages = {}
+all_permissions = []
 scheduler = AsyncIOScheduler()
 if not scheduler.running:
     scheduler.configure(timezone="Asia/ShangHai")
@@ -30,7 +35,7 @@ logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
 root_logger = getLogger()
-root_logger.setLevel(ERROR)
+root_logger.setLevel(CRITICAL)
 root_logger.addHandler(logging_handler)
 basicConfig(level=INFO)
 logs.setLevel(INFO)

@@ -14,8 +14,9 @@ from pyrogram.errors.exceptions.bad_request_400 import (
 )
 from pyrogram.handlers import MessageHandler
 
-from pagermaid import help_messages, logs, Config, bot, read_context
-from pagermaid.utils import lang, attach_report, sudo_filter, alias_command
+from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
+from pagermaid.group_manager import Permission
+from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name
 
 secret_generator = secrets.SystemRandom()
 
@@ -28,7 +29,7 @@ def listener(**args):
     """ Register an event listener. """
     command = args.get('command', None)
     disallow_alias = args.get('disallow_alias', False)
-    level = args.get('level', 0)
+    need_admin = args.get('need_admin', False)
     description = args.get('description', None)
     parameters = args.get('parameters', None)
     pattern = sudo_pattern = args.get('pattern', None)
@@ -59,10 +60,11 @@ def listener(**args):
         base_filters = filters.incoming
     else:
         base_filters = filters.all
+    permission_name = get_permission_name(is_plugin, need_admin, command)
     sudo_filters = (
-        sudo_filter(level)
-        & ~filters.via_bot
-        & ~filters.forwarded
+            sudo_filter(permission_name)
+            & ~filters.via_bot
+            & ~filters.forwarded
     )
     if args['pattern']:
         base_filters &= filters.regex(args['pattern'])
@@ -94,6 +96,8 @@ def listener(**args):
         del args['admins_only']
     if 'groups_only' in args:
         del args['groups_only']
+    if 'need_admin' in args:
+        del args['need_admin']
 
     def decorator(function):
 
@@ -168,15 +172,19 @@ def listener(**args):
         if parameters is None:
             parameters = ""
         help_messages.update({
-            f"{command}": {"level": level, "use": f"**{lang('use_method')}:** `,{command} {parameters}`  `lv.{level}`\n"
-                                                  f"{description}"}
+            f"{command}": {"permission": permission_name,
+                           "use": f"**{lang('use_method')}:** `,{command} {parameters}`\n"
+                                  f"**{lang('need_permission')}:** `{permission_name}`\n"
+                                  f"{description}"}
         })
+        all_permissions.append(Permission(permission_name))
 
     return decorator
 
 
 def raw_listener(filter_s):
     """Simple Decorator To Handel Custom Filters"""
+
     def decorator(function):
         async def handler(client, message):
             try:
