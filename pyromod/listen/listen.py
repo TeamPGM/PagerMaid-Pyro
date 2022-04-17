@@ -202,15 +202,27 @@ class Message(pyrogram.types.Message):
                             disable_web_page_preview=disable_web_page_preview
                         )
             else:
-                msg = await self._client.edit_message_text(
-                    chat_id=self.chat.id,
-                    message_id=self.message_id,
-                    text=text,
-                    parse_mode=parse_mode,
-                    entities=entities,
-                    disable_web_page_preview=disable_web_page_preview,
-                    reply_markup=reply_markup
-                )
+                try:
+                    msg = await self._client.edit_message_text(
+                        chat_id=self.chat.id,
+                        message_id=self.message_id,
+                        text=text,
+                        parse_mode=parse_mode,
+                        entities=entities,
+                        disable_web_page_preview=disable_web_page_preview,
+                        reply_markup=reply_markup
+                    )
+                except pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired:  # noqa
+                    if no_reply:
+                        pass
+                    else:
+                        msg = await self.reply(
+                            text=text,
+                            parse_mode=parse_mode,
+                            entities=entities,
+                            disable_web_page_preview=disable_web_page_preview,
+                            reply_markup=reply_markup
+                        )
         else:
             with open("output.log", "w+") as file:
                 file.write(text)
