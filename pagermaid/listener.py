@@ -122,7 +122,6 @@ def listener(**args):
                     read_context[(message.chat.id, message.message_id)] = True
 
                 await function(client, message)
-                message.continue_propagation()
             except StopPropagation:
                 raise StopPropagation
             except KeyboardInterrupt:
@@ -162,6 +161,7 @@ def listener(**args):
             finally:
                 if (message.chat.id, message.message_id) in read_context:
                     del read_context[(message.chat.id, message.message_id)]
+                message.continue_propagation()
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
         bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
@@ -215,6 +215,7 @@ def raw_listener(filter_s):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
+            finally:
                 message.continue_propagation()
 
         bot.add_handler(MessageHandler(handler, filters=filter_s), group=0)
