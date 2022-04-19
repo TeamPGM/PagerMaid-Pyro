@@ -125,7 +125,7 @@ def listener(**args):
             except StopPropagation:
                 raise StopPropagation
             except KeyboardInterrupt:
-                pass
+                raise KeyboardInterrupt
             except MessageNotModified:
                 pass
             except MessageIdInvalid:
@@ -137,7 +137,7 @@ def listener(**args):
             except ContinuePropagation:
                 raise ContinuePropagation
             except SystemExit:
-                exit(1)
+                exit(0)
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
@@ -158,10 +158,9 @@ def listener(**args):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
-            finally:
-                if (message.chat.id, message.message_id) in read_context:
-                    del read_context[(message.chat.id, message.message_id)]
-                message.continue_propagation()
+            if (message.chat.id, message.message_id) in read_context:
+                del read_context[(message.chat.id, message.message_id)]
+            message.continue_propagation()
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
         bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
@@ -193,6 +192,8 @@ def raw_listener(filter_s):
                 raise StopPropagation
             except ContinuePropagation:
                 raise ContinuePropagation
+            except SystemExit:
+                exit(0)
             except UserNotParticipant:
                 pass
             except MessageEmpty:
@@ -215,10 +216,9 @@ def raw_listener(filter_s):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
-            finally:
-                message.continue_propagation()
+            message.continue_propagation()
 
-        bot.add_handler(MessageHandler(handler, filters=filter_s), group=0)
+        bot.add_handler(MessageHandler(handler, filters=filter_s), group=2)
 
         return handler
 

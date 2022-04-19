@@ -55,7 +55,7 @@ async def restart(_: Client, message: Message):
     """ To re-execute PagerMaid. """
     if not message.text[0].isalpha():
         await message.edit(lang('restart_log'))
-        exit(1)
+        exit(0)
 
 
 @listener(is_plugin=False, command="eval",
