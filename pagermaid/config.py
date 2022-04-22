@@ -30,6 +30,14 @@ class Config(object):
         DATE_FORM = os.environ.get("DATE_FORM", config["date_form"])
         START_FORM = os.environ.get("START_FORM", config["start_form"])
         SILENT = strtobool(os.environ.get("SILENT", config["silent"]))
+        PROXY_ADDRESS = os.environ.get("PROXY_ADDRESS", config["proxy_addr"])
+        PROXY_PORT = os.environ.get("PROXY_PORT", config["proxy_port"])
+        PROXY = None
+        if PROXY_ADDRESS and PROXY_PORT:
+            PROXY = dict(
+                hostname=PROXY_ADDRESS,
+                port=PROXY_PORT,
+            )
         GIT_SOURCE = os.environ.get("GIT_SOURCE", config["git_source"])
         try:
             with open(f"languages{os.sep}built-in{os.sep}{LANGUAGE}.yml", "r", encoding="utf-8") as f:
