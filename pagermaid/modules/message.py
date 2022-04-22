@@ -133,13 +133,12 @@ async def re(client: Client, message: Message):
             except:  # noqa
                 return await message.edit(lang('re_arg_error'))
         await message.safe_delete()
-        forward_allowed = True
         for nums in range(0, num):
             try:
-                if forward_allowed:
+                if not message.chat.has_protected_content:
                     await reply.forward(reply.chat.id)
                 else:
-                    await client.send_message(reply.chat.id, reply.text)
+                    await reply.copy(reply.chat.id)
             except Forbidden:
                 return
             except FloodWait:
