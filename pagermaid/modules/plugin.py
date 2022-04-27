@@ -96,7 +96,7 @@ async def plugin(__: Client, message: Message):
                         version_json = json.load(f)
                     try:
                         plugin_version = version_json[i]
-                    except:
+                    except:  # noqa
                         plugin_version = 0
                 else:
                     temp_dict = {}
@@ -220,7 +220,7 @@ async def plugin(__: Client, message: Message):
             file_name = f"{message.parameter[1]}.py"
             reply_id = None
             if reply:
-                reply_id = reply.message_id
+                reply_id = reply.id
             if exists(f"{plugin_directory}{file_name}"):
                 copyfile(f"{plugin_directory}{file_name}", file_name)
             elif exists(f"{plugin_directory}{file_name}.disabled"):

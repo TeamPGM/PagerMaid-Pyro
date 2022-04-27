@@ -12,7 +12,7 @@ from pyrogram.errors.exceptions.bad_request_400 import (
     MessageEmpty,
     UserNotParticipant
 )
-from pyrogram.handlers import MessageHandler
+from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.group_manager import Permission
@@ -69,9 +69,6 @@ def listener(**args):
     if args['pattern']:
         base_filters &= filters.regex(args['pattern'])
         sudo_filters &= filters.regex(sudo_pattern)
-    if ignore_edited:
-        base_filters &= ~filters.edited
-        sudo_filters &= ~filters.edited
     if groups_only:
         base_filters &= filters.group
         sudo_filters &= filters.group
@@ -117,9 +114,9 @@ def listener(**args):
                 # solve same process
                 if not message.outgoing:
                     await sleep(secret_generator.randint(1, 100) / 1000)
-                    if (message.chat.id, message.message_id) in read_context:
+                    if (message.chat.id, message.id) in read_context:
                         raise ContinuePropagation
-                    read_context[(message.chat.id, message.message_id)] = True
+                    read_context[(message.chat.id, message.id)] = True
 
                 await function(client, message)
             except StopPropagation:
@@ -158,12 +155,15 @@ def listener(**args):
                              f"# Error: \"{str(exc_info)}\". \n"
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
-            if (message.chat.id, message.message_id) in read_context:
-                del read_context[(message.chat.id, message.message_id)]
+            if (message.chat.id, message.id) in read_context:
+                del read_context[(message.chat.id, message.id)]
             message.continue_propagation()
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
         bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
+        if not ignore_edited:
+            bot.add_handler(EditedMessageHandler(handler, filters=base_filters), group=2)
+            bot.add_handler(EditedMessageHandler(handler, filters=sudo_filters), group=3)
 
         return handler
 

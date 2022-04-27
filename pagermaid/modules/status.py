@@ -5,6 +5,7 @@ from sys import platform
 
 from pyrogram import Client, __version__
 from pyrogram.raw.functions import Ping
+from pyrogram.enums.parse_mode import ParseMode
 
 from getpass import getuser
 from socket import gethostname
@@ -24,7 +25,7 @@ async def sysinfo(_: Client, message: Message):
     """ Retrieve system information via neofetch. """
     message = await message.edit(lang("sysinfo_loading"))
     if platform == 'win32':
-        await message.edit(neofetch_win(), parse_mode='html')
+        await message.edit(neofetch_win(), parse_mode=ParseMode.HTML)
         return
     result = await execute("neofetch --config none --stdout")
     await message.edit(f"`{result}`")
@@ -73,7 +74,7 @@ async def status(_: Client, message: Message):
 async def ping(client: Client, message: Message):
     """ Calculates latency between PagerMaid and Telegram. """
     start = datetime.now()
-    await client.send(Ping(ping_id=0))
+    await client.invoke(Ping(ping_id=0))
     end = datetime.now()
     ping_duration = (end - start).microseconds / 1000
     start = datetime.now()

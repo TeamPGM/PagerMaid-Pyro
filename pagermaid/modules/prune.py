@@ -20,11 +20,14 @@ async def prune(client: Client, message: Message):
     input_chat = message.chat.id
     messages = []
     count = 0
-    async for msg in client.iter_history(input_chat, offset_id=message.reply_to_message.message_id, reverse=True):
-        messages.append(msg.message_id)
+    async for msg in client.get_chat_history(input_chat,
+                                             limit=message.id - message.reply_to_message.id + 1):
+        if msg.id < message.reply_to_message.id:
+            break
+        messages.append(msg.id)
         count += 1
         if msg.reply_to_message:
-            messages.append(msg.reply_to_message.message_id)
+            messages.append(msg.reply_to_message.id)
         if len(messages) == 100:
             await client.delete_messages(input_chat, messages)
             messages = []
@@ -51,9 +54,9 @@ async def self_prune(client: Client, message: Message):
         async for msg in client.search_messages(
                 message.chat.id,
                 from_user="me",
-                offset=message.reply_to_message.message_id,
+                offset=message.reply_to_message.id,
         ):
-            msgs.append(msg.message_id)
+            msgs.append(msg.id)
             count_buffer += 1
             if len(msgs) == 100:
                 await client.delete_messages(message.chat.id, msgs)
@@ -77,7 +80,7 @@ async def self_prune(client: Client, message: Message):
     async for msg in client.search_messages(message.chat.id, from_user="me"):
         if count_buffer == count:
             break
-        msgs.append(msg.message_id)
+        msgs.append(msg.id)
         count_buffer += 1
         if len(msgs) == 100:
             await client.delete_messages(message.chat.id, msgs)
@@ -112,7 +115,7 @@ async def your_prune(client: Client, message: Message):
         await message.delete()
     except ValueError:
         return await message.edit(lang('arg_error'))
-    except:
+    except Exception:  # noqa
         pass
     count_buffer = 0
     async for msg in client.search_messages(message.chat.id, from_user=target.from_user.id):

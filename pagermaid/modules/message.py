@@ -13,7 +13,7 @@ from pagermaid.utils import lang, Message
 async def userid(_: Client, message: Message):
     """ Query the UserID of the sender of the message you replied to. """
     reply = message.reply_to_message
-    text = "Message ID: `" + str(message.message_id) + "`\n\n"
+    text = "Message ID: `" + str(message.id) + "`\n\n"
     text += "**Chat**\nid:`" + str(message.chat.id) + "`\n"
     msg_from = message.chat
     if msg_from.type == "private":
@@ -34,7 +34,7 @@ async def userid(_: Client, message: Message):
             return await message.edit(lang("leave_not_group"))
         text += "protected: `" + str(msg_from.has_protected_content) + "`\n"
     if reply:
-        text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(reply.message_id) + \
+        text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(reply.id) + \
                 "`\n\n**User**\nid: `" + str(reply.from_user.id) + "`"
         try:
             if reply.from_user.is_bot:
@@ -119,7 +119,7 @@ async def logging(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="re",
           description=lang('re_des'),
           parameters=lang('re_parameters'))
-async def re(client: Client, message: Message):
+async def re(_: Client, message: Message):
     """ Forwards a message into this group """
     reply = message.reply_to_message
     if reply:

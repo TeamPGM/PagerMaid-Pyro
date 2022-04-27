@@ -73,7 +73,7 @@ async def profile(client: Client, message: Message):
             message.chat.id,
             photo,
             caption=caption,
-            reply_to_message_id=reply_to.message_id if reply_to else None
+            reply_to_message_id=reply_to.id if reply_to else None
         )
         await message.delete()
         return remove(photo)

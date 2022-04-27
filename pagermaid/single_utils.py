@@ -29,7 +29,7 @@ class Message(Message):  # noqa
         try:
             return await self._client.delete_messages(
                 chat_id=self.chat.id,
-                message_ids=self.message_id,
+                message_ids=self.id,
                 revoke=revoke
             )
         except Exception as e:  # noqa

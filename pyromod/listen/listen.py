@@ -154,7 +154,7 @@ class Message(pyrogram.types.Message):
         try:
             return await self._client.delete_messages(
                 chat_id=self.chat.id,
-                message_ids=self.message_id,
+                message_ids=self.id,
                 revoke=revoke
             )
         except Exception as e:  # noqa
@@ -164,7 +164,7 @@ class Message(pyrogram.types.Message):
     async def edit_text(
             self,
             text: str,
-            parse_mode: Optional[str] = object,
+            parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
             entities: List["pyrogram.types.MessageEntity"] = None,
             disable_web_page_preview: bool = None,
             reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
@@ -187,7 +187,7 @@ class Message(pyrogram.types.Message):
                 elif is_self:
                     msg = await self._client.edit_message_text(
                         chat_id=self.chat.id,
-                        message_id=self.message_id,
+                        message_id=self.id,
                         text=text,
                         parse_mode=parse_mode,
                         entities=entities,
@@ -205,7 +205,7 @@ class Message(pyrogram.types.Message):
                 try:
                     msg = await self._client.edit_message_text(
                         chat_id=self.chat.id,
-                        message_id=self.message_id,
+                        message_id=self.id,
                         text=text,
                         parse_mode=parse_mode,
                         entities=entities,
@@ -229,7 +229,7 @@ class Message(pyrogram.types.Message):
             msg = await self._client.send_document(
                 chat_id=self.chat.id,
                 document="output.log",
-                reply_to_message_id=self.message_id
+                reply_to_message_id=self.id
             )
         if msg:
             msg.parameter = self.parameter
