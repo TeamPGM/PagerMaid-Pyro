@@ -1,8 +1,12 @@
-from os import sep, remove
+from os import sep, remove, mkdir
+from os.path import exists
 from typing import List
 from pyrogram.types import Message
 from sqlitedict import SqliteDict
 
+# init folders
+if not exists("data"):
+    mkdir("data")
 sqlite = SqliteDict(f"data{sep}data.sqlite", autocommit=True)
 
 

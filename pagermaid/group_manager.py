@@ -1,9 +1,14 @@
 import casbin
+from shutil import copyfile
+from os import path as os_path
 from re import findall
 from os import sep
 from typing import List
-from pagermaid import all_permissions
+from pagermaid import all_permissions, module_dir
 
+# init permissions
+if not os_path.exists(f"data{os_path.sep}gm_policy.csv"):
+    copyfile(f"{module_dir}{os_path.sep}assets{os_path.sep}gm_policy.csv", f"data{os_path.sep}gm_policy.csv")
 permissions = casbin.Enforcer(f"pagermaid{sep}assets{sep}gm_model.conf", f"data{sep}gm_policy.csv")
 
 

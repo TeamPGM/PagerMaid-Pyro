@@ -1,23 +1,12 @@
-import os
-
-from shutil import copyfile
 from coloredlogs import ColoredFormatter
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig
 from datetime import datetime
 from os import getcwd
-from os import path as os_path
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from pagermaid.config import Config
 import pyromod.listen
 from pyrogram import Client
-
-# init folders
-if not os_path.exists("data"):
-    os.mkdir("data")
-# init permissions
-if not os_path.exists(f"data{os_path.sep}gm_policy.csv"):
-    copyfile(f"{__path__[0]}{os_path.sep}assets{os_path.sep}gm_policy.csv", f"data{os_path.sep}gm_policy.csv")
 
 CMD_LIST = {}
 module_dir = __path__[0]
