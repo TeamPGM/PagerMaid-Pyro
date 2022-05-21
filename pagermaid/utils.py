@@ -170,6 +170,14 @@ def sudo_filter(permission: str):
     return filters.create(if_sudo, permission=permission)
 
 
+def from_self(message: Message) -> bool:
+    if message.outgoing:
+        return True
+    if message.from_user:
+        return message.from_user.is_self
+    return False
+
+
 """ Init httpx client """
 # 使用自定义 UA
 headers = {

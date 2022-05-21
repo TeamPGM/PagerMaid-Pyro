@@ -6,7 +6,7 @@ from os import listdir, sep
 from pagermaid import help_messages, Config
 from pagermaid.group_manager import enforce_permission
 from pagermaid.single_utils import get_sudo_list
-from pagermaid.utils import lang, Message
+from pagermaid.utils import lang, Message, from_self
 from pagermaid.listener import listener
 
 
@@ -39,7 +39,7 @@ async def help_command(_: Client, message: Message):
                         'trace', 'chat', 'update']
     if message.arguments:
         if message.arguments in help_messages:
-            if message.outgoing or \
+            if from_self(message) or \
                     enforce_permission(from_msg_get_sudo_uid(message), help_messages[message.arguments]["permission"]):
                 await message.edit(f"{help_messages[message.arguments]['use']}")
             else:
@@ -51,13 +51,13 @@ async def help_command(_: Client, message: Message):
         for command in sorted(help_messages, reverse=False):
             if str(command) in support_commands:
                 continue
-            if message.outgoing or \
+            if from_self(message) or \
                     enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]):
                 result += f"`{command}`, "
         if result == f"**{lang('help_list')}: \n**":
             """ The help raw command,"""
             for command in sorted(help_messages, reverse=False):
-                if message.outgoing or \
+                if from_self(message) or \
                         enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]):
                     result += f"`{command}`, "
         await message.edit(result[
@@ -75,7 +75,7 @@ async def help_raw_command(_: Client, message: Message):
     """ The help raw command,"""
     if message.arguments:
         if message.arguments in help_messages:
-            if message.outgoing or \
+            if from_self(message) or \
                     enforce_permission(from_msg_get_sudo_uid(message), help_messages[message.arguments]["permission"]):
                 await message.edit(f"{help_messages[message.arguments]['use']}")
             else:
@@ -85,7 +85,7 @@ async def help_raw_command(_: Client, message: Message):
     else:
         result = f"**{lang('help_list')}: \n**"
         for command in sorted(help_messages, reverse=False):
-            if message.outgoing or \
+            if from_self(message) or \
                     enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]):
                 result += f"`{command}`, "
         await message.edit(result[:-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}** "
