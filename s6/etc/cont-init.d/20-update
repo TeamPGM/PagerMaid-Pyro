@@ -1,0 +1,11 @@
+#!/usr/bin/with-contenv bash
+
+cd /pagermaid/workdir
+git remote set-url origin https://gitlab.com/Xtao-Labs/pagermaid-modify.git
+git pull
+
+pip install -r requirements.txt
+if [ -s requirements2.txt ]; then
+    pip install -r requirements2.txt
+fi
+exit 0

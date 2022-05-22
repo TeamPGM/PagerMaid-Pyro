@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv bash
+
+perl -i -pe "{
+    s|^dir /var/lib/redis|dir /pagermaid/workdir|;
+    s|^save \d+ 1|save 60 1|;
+}" /etc/redis/redis.conf
+
+cd /pagermaid/workdir
+redis-server /etc/redis/redis.conf
