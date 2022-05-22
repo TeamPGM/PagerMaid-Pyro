@@ -11,9 +11,10 @@ from pagermaid.utils import lang, execute, Message, alias_command
           description=lang('update_des'),
           parameters="<true/debug>")
 async def update(_: Client, message: Message):
+    await execute('git fetch --all')
     if len(message.parameter) > 0:
-        await execute('git reset --hard HEAD')
-    await execute('git pull')
+        await execute('git reset --hard origin/master')
+    await execute('git pull --all')
     await execute(f"{executable} -m pip install -r requirements.txt --upgrade")
     await execute(f"{executable} -m pip install -r requirements.txt")
     await message.edit(lang('update_success'))
