@@ -1,0 +1,555 @@
+---
+#Chinese (Simplified)
+#main
+web_TypeError: Error！Web 介面綁定了一個無效網址。
+web_KeyError: Error！設定檔缺少Web介面配置。
+PhoneNumberInvalidError: Error！電話號碼無效，請確定添加了國家/地區代碼。
+module: 模組
+error: 載入錯誤
+start: PagerMaid-Pyro 已經啟動，在任何聊天室輸入 ,help 取得說明。
+#utils
+msg_ValueError: Error！沒有成功獲取訊息！
+isinstance: Error！長度必須是整數!
+#init
+platform: 將平台檢測為「
+platform_load: '，進入早期載入進度。'
+platform_unsupported: 不支援的平台！請在Linux 或 BSD 系統運行！
+error_prefix: Error！
+python: 請升級Python 3到最新版。
+config_error: Error！請在應用程式目錄裡放一個有效的設定檔。
+save_id: 設定用戶標示成功。
+#modules_init
+modules_init_loading_modules: 載入內建模組
+modules_init_loading_plugins: 載入插件
+#listener
+command: 指令
+has_reg: 已被註冊
+too_long: Error！產生的輸出太長，無法顯示。
+run_error: Error！執行這個指令時發生錯誤。
+report_error: 上報錯誤Error！
+use_method: 使用方法
+need_permission: 所需權限
+#account
+## username
+username_des: 透過指令設定用戶名（不支援回覆）
+arg_error: 您貌似輸入了一個無效的參數。
+username_exist: 用戶名已經存在。
+username_vaild: 您貌似輸入了一個無效的用戶名…
+username_set: 用戶名設定成功！
+username_cancel: 用戶名已被取消。
+username_whatset: 用戶名已被設定為
+## name
+name_des: 換個名稱。（不支援回覆）
+name_vaild: 您貌似輸入了一個無效的名字。
+name_set: 顯示名稱成功更改！
+name_whatset: 顯示名稱已被更改為
+## pfp
+pfp_des: 回覆某條包含附件的訊息然後把他變成新的頭貼。
+pfp_process: 設定頭貼中...
+pfp_e_notp: 無法將此附件解析為圖片。
+pfp_e_size: 圖片太小了啦！
+pfp_e_img: 圖片損毀了啦！
+## bio
+bio_des: 設定我的介紹
+bio_too_lang: 太長！
+bio_set: 介紹設定成功！
+bio_cancel: 進度已取消。
+bio_whatset: 介紹已被設定為
+## rmpfp
+rmpfp_des: 刪除我指定數量的頭貼
+int: 數字
+rmpfp_p: 刪除了
+rmpfp_l: 張頭貼
+## profile
+profile_des: 生成一位用戶的介紹（訊息有點長）
+profile_process: 生成用戶介紹摘要中…
+profile_e_no: 指定的用戶不存在。
+profile_e_nou: 指定的用戶名不存在。
+profile_e_nof: 無法透過此UserID找到對應的用戶。
+profile_e_long: 指定的UserID已超出長度限制，錯了吧？
+profile_user: 用戶
+profile_noset: 好像沒有設定OAO
+profile_nobio: 沒有公開的介紹
+profile_yes: "是"
+profile_no: "否"
+profile_name: 用戶介紹
+profile_username: 用戶名
+profile_fname: 名字
+profile_lname: 姓氏
+profile_bio: 用戶介紹
+profile_gic: 共同的群組
+profile_verified: 官方認證
+profile_restricted: 受到限制
+profile_type: 類型
+## block
+block_des: 拉黑一個用戶
+block_process: 正在拉黑中 . . .
+block_success: 成功拉黑
+block_exist: 已存在黑名單中。
+## unblock
+unblock_des: 取消拉黑一個用戶
+unblock_process: 正在取消拉黑中 . . .
+unblock_success: 成功取消拉黑
+unblock_exist: 不存在黑名單中。
+#avoid
+## ghost
+ghost_des: 開啟對話的自動已讀，需要Redis
+redis_dis: Error！Redis離線qwq
+ghost_e_mark: 為什麼要在我的收藏裡面用？
+ghost_set_f: 已成功將
+ghost_set_l: 添加到自動已讀名單中。
+ghost_cancel: 從自動已讀名單中移除。
+ghost_e_noexist: Emm...當前聊天室不存在自動已讀名單中。
+ghost_e_exist: Emm...當前聊天室存在自動已讀名單中。
+## deny
+deny_des: 拒絕聊天功能，需要Redis
+deny_set: 已經加到自動拒絕聊天名單中。
+deny_cancel: 已經從自動拒絕聊天名單中移除。
+deny_e_noexist: Emm...當前聊天室不存在自動拒絕聊天名單中。
+deny_e_exist: Emm...當前聊天室存在自動拒絕聊天名單中。
+#help
+help_des: 顯示指令列表或者單一指令的用途。
+help_list: 指令列表
+help_send: 發送
+help_see: 以查看特定指令的幫助
+help_no_permission: 很抱歉，您暫時無權查看此命令的幫助信息
+help_source: '🖥 原始碼'
+help_plugin: '🔅 插件列表'
+help_module: '💠 內置模塊'
+#qr
+## genqr
+genqr_des: 生成 QR 扣。
+genqr_process: 正在生成QR 扣。。。
+genqr_e_encode: 解析目標訊息的字符出現錯誤。
+genqr_ok: 生成了一個QR 扣。
+## parseqr
+parseqr_des: 回覆一張QR 扣進行解析並發送QR 扣的內容。
+parseqr_nofile: 回覆的訊息裡面沒有附件。
+parseqr_content: 內容
+parseqr_e_noqr: 回覆的附件錯誤！
+parseqr_log: 已解析QR 扣的內容，如下：
+#backup
+## backup
+backup_des: 備份數據文件到本地以及日誌頻道，支援數據庫備份，安全可靠。
+backup_process: 備份中，請耐心等待備份程序完成...
+backup_success_channel: 數據文件備份完成並已打包發送到 Log 頻道！
+backup_success: 數據文件備份完成！
+## recovery
+recovery_des: 從本地備份或者所回复的備份文件中恢復數據，支持數據庫的全量恢復，方便快速。
+recovery_file_error: 未知的文件，可能並不是通過 PagerMaid 所備份的文件類型。
+recovery_down: 正在下載備份文件到本地... 備份的過程中，建議減少使用 PagerMaid
+recovery_process: 開始恢復，可能需要一定的時間。。
+recovery_file_not_found: 找不到備份文件。
+recovery_success: 備份恢復完成！
+#captions
+## convert
+convert_des: 回覆附件訊息並轉換為圖片
+convert_process: 正在轉換……
+convert_no_file: Error！回覆的消息沒有附件。
+convert_error: Error！轉換期間發生錯誤！
+convert_invalid: Error！圖片尺寸無效！
+## caption
+caption_des: 將兩行字幕添加到回覆的照片中，分別位於底部和頂部，請以逗號分割兩句。
+caption_process: 正在渲染照片…
+caption_error_grammer: Error！文法錯誤。
+caption_no_file: Error！目標訊息沒有附件
+caption_error: Error！轉換期間發生了錯誤。
+caption_success1: 成功將字幕
+caption_success2: 添加到了一張圖片。
+## ocr
+ocr_des: 從回覆的圖片中提取文字
+ocr_psm_len_error: Error！psm取值為0-13
+ocr_processing: 正在處理圖片，等下…
+ocr_no_file: Error！回覆的訊息沒有附件。
+ocr_no_result: 沒有提取到任何文字。
+ocr_result_hint: 以下是提取到的文字
+## highlight
+highlight_des: 生成有文法Highlight的圖片
+highlight_processing: 正在渲染圖片，等下…
+highlight_no_file: Error！無法檢索目標訊息。
+highlight_uploading: 正在上傳圖片…
+## handle_failure
+handle_failure_error: Error！請報告此問題。
+#clock
+## time
+time_des: 顯示特定區域的時間。
+time_parameters: <地區>
+time_time: 時間
+time_config: 出錯了嗚嗚嗚 ~ 配置文件填寫錯誤
+#external
+## translate
+translate_des: 透過Google翻譯把目標訊息翻譯成指定的語言。（支援回覆）
+translate_parameters: <文字>
+translate_processing: 正在生成翻譯…
+translate_ValueError: Error！找不到目標語言，請更正設定檔！
+translate_ImportError: Error！請先安裝 translators 模組！
+translate_hits: 文字翻譯
+translate_original_lang: 源語言
+translate_tg_limit_uploading_file: 輸出超過限制，正在嘗試上傳檔案。
+translate_get: 把一條訊息
+translate_from: 從
+translate_to: 翻譯到了
+#tts
+tts_des: 透過Google文字轉語音生成語音訊息。
+tts_processing: 生成語音中…
+tts_AssertionError: Error！無效參數。
+tts_ValueError: Error！找不到目標語言，請更正設定檔。
+tts_RuntimeError: Error！載入語言時出錯。
+tts_success: 生成了一條語音訊息。
+#google
+google_des: 使用Google查詢
+google_processing: 正在取得結果…
+google_connection_error: 連接伺服器失敗
+google_success: 在Google查詢了
+#fetchaudio
+fetchaudio_des: 從多個平台獲取音頻文件。
+fetchaudio_error_grammer: Error！錯誤的文法。
+fetchaudio_processing: 獲取音頻中…
+fetchaudio_error_downloading: Error！原聲帶下載失敗。
+fetchaudio_success: 從連結中獲取了一條音頻
+fetchaudio_link: 連結
+#fun
+## animate
+animate_des: 使用訊息製作文字動畫。
+## teletype
+teletype_des: 透過編輯訊息來製作打字動畫，大量日誌警告！
+## mock
+mock_des: 怪異的大寫。
+## widen
+widen_des: monospace all
+widen_already: 已被monospace
+## fox
+fox_des: 使用狐狸改掉您的訊息
+## owo
+owo_des: 將訊息轉換成OwO
+## flip
+flip_des: 反轉文字
+## ship
+ship_des: 產生隨機好友，也支援指定目標。
+ship_processing: 正在產生好友。。。
+ship_BaseException: Error！獲取用戶時出錯
+ship_hint: 恭喜兩位
+## rng
+rng_des: 生成特定長度的隨機文字
+## aaa
+aaa_des: 發送一條由大小寫A組成的訊息
+## asciiart
+asciiart_des: 為指定的文字產生ASCII聞言文字
+## tuxsay
+tuxsay_des: 生成企鵝說話。
+## coin
+coin_des: 擲硬幣。
+coin_processing: 正在擲硬幣…
+coin_lost: 我擲了硬幣
+#help
+## lang
+lang_des: 切換語言
+lang_change_to: 語言已切換到
+lang_reboot: 正在重新啟動。
+lang_current_lang: 目前語言是
+lang_all_lang: 所有語言有這些：
+## alias
+alias_des: 重定向原始命令。
+alias_list: '以下是重定向命令列表：'
+alias_no: 您還沒有重定向任何原始命令。
+alias_success: 編輯重定向命令成功，PagerMaid-Pyro 正在重新啟動。
+alias_exist: 出錯了嗚嗚嗚 ~ 重定向指向的命令已被佔用。
+alias_no_exist: 出錯了嗚嗚嗚 ~ 原始命令沒有被重定向。
+#message
+## id
+id_des: 獲取一條訊息的所有資訊。
+id_hint: 以下：
+id_is_bot_yes: "是"
+id_da: 死號
+## uslog
+uslog_des: 傳傳一條訊息到日誌。
+uslog_success: 紀錄了。
+uslog_log_disable: Error！日誌紀錄被禁用。
+## log
+log_des: 安靜的傳傳一條訊息到日誌。
+## re
+re_des: 在目前聊天室復讀回覆的訊息。
+re_parameters: <次數>
+re_too_big: Error！數字過大
+re_arg_error: Error！不是數字！
+re_forbidden: Error！您没有权限！
+not_reply: Error！您沒有回覆訊息！
+## leave
+leave_res: 說再見並離開聊天室。
+leave_bye: 抱歉，暫時離開…
+leave_not_group: Error！目前聊天不是群組。
+## meter2feet
+m2f_des: 把公尺轉換成英呎。
+m2f_get: 將
+m2f_meter: 公尺
+m2f_convert_to: 轉換成了
+m2f_feet: 英呎
+## feet2meter
+f2m_des: 把英呎轉換成公尺
+## hitokoto
+hitokoto_des: 每日一言
+hitokoto_type_anime: 動畫
+hitokoto_type_manga: 漫畫
+hitokoto_type_game: 遊戲
+hitokoto_type_article: 文學
+hitokoto_type_original: 原創
+hitokoto_type_web: 網路
+hitokoto_type_other: 其他
+hitokoto_type_movie: 電影
+hitokoto_type_poem: 詩詞
+hitokoto_type_netease_music: 網易
+hitokoto_type_philosophy: 哲學
+hitokoto_type_meme: 迷因
+#plugin
+## apt
+apt_des: 用於管理插件。
+apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <插件名稱/文件>"
+apt_name: "PagerMaid-Pyro 插件管理器"
+apt_processing: 安裝插件中…
+apt_no_py: Error！無法獲取插件文件。
+apt_plugin: 插件
+apt_installed: 已安裝
+apt_reboot: 正在重新啟動 PagerMaid-Pyro。
+apt_install_success: 安裝成功
+apt_not_found: Error！沒有找到插件
+apt_no_update: 沒必要更新
+apt_remove_success: 成功刪除插件
+apt_remove: 刪除插件
+apt_removed_plugins: 已刪除的插件
+apt_not_exist: Error！指定的插件不存在。
+apt_no_running_plugins: 沒有執行中的插件。
+apt_no_load_failed_plugins: 沒有加載失敗的插件
+apt_no_disabled_plugins: 沒有關閉的插件。
+apt_plugin_list: 插件列表
+apt_plugin_running: 執行中
+apt_plugin_disabled: 已關閉
+apt_plugin_failed: 載入失敗
+apt_enable: 已啟用
+apt_disable: 已禁用
+apt_uploading: 上傳插件中…
+apt_updated: 已更新
+apt_why_not_install_a_plugin: 安裝一個倉庫裡的插件再試試？
+apt_loading_from_online_but_nothing_need_to_update: "正在獲取雲端插件列表（1/2）\n正在讀取本地插件版本訊息（2/2）\n**沒有需要更新的插件**"
+apt_loading_from_online_and_updating: "正在獲取雲端插件列表（1/3）\n正在讀取本地插件版本訊息（2/3）\n正在更新插件（3/3）"
+apt_reading_list: "正在獲取雲端插件列表（1/2）\n正在讀取本地插件版本訊息（2/2）"
+apt_search_no_name: 沒有插件名！
+apt_search_not_found: 未搜索到您指定的插件。
+apt_search_result_hint: 以下是搜索結果。
+apt_search_supporting: 仍在支援週期中。
+apt_search_not_supporting: 已不被支援。
+apt_plugin_name: 插件名
+apt_plugin_ver: 版本
+apt_plugin_section: 分類
+apt_plugin_maintainer: 作者
+apt_plugin_size: 容量
+apt_plugin_support: 支援週期
+apt_plugin_des_short: 說明
+#prune
+## prune
+prune_des: 刪除回覆的訊息後的所有消息。
+prune_hint1: 批量刪除了
+prune_hint2: 條訊息
+## selfprune
+sp_des: 刪除您發送的特定數量訊息。
+sp_parameters: <數量>
+sp_hint: 自行發送的
+## yourprune
+yp_des: 刪除您回覆用戶的特定數量訊息。
+yp_hint: 回覆用戶所發送的
+## del
+del_des: 刪除您回覆的訊息
+del_notification: 刪除了一條訊息。
+del_BadRequestError: Error！沒有權限。
+## send_prune_notify
+spn_deleted: 刪除了
+#status
+## sysinfo
+sysinfo_des: 透過neofetch檢索系統資訊。
+sysinfo_loading: 正在載入系統資訊…
+## fortune
+fortune_des: 讀取 Fortune Cookies資訊。
+fortune_not_exist: Error！系統沒有Fortune Cookies
+## fbcon
+fbcon_des: 拍攝當前綁定的幀緩衝控制台的螢幕截圖。
+fbcon_processing: 正在拍攝當前綁定的幀緩衝控制台的螢幕截圖…
+fbcon_no_fbdump: Error！此系統未安裝FBdump
+fbcon_no_ImageMagick: Error！沒有ImageMagick
+fbcon_no_permission: Error！用戶不在視頻群組中。
+fbcon_caption: 綁定的幀緩衝區的螢幕截圖。
+fbcon_error: Error！請安裝fbcat and ImageMagick
+## status
+status_des: 輸出運行狀態
+status_online: 掛在網上
+status_offline: 離線
+status_hint: 運行狀態
+status_name: 主機名
+status_platform: 主機平台
+status_release: Kernel 版本
+status_python: Python 版本
+status_telethon: Telethon 版本
+status_pyrogram: Pyrogram 版本
+status_pgm: PagerMaid 版本
+status_uptime: 運行時間
+## stats
+stats_des: 查看我的對話統計信息。
+stats_loading: 加載中 . . .
+stats_hint: 對話統計
+stats_dialogs: 對話總數
+stats_private: 您擁有的私聊數為
+stats_group: 您擁有的普通群組數為
+stats_supergroup: 您擁有的超級群組數為
+stats_channel: 您擁有的頻道數為
+stats_bot: 您激活的機器人數為
+## speedtest
+speedtest_des: 執行Speedtest腳本然後發送結果
+speedtest_processing: 執行腳本
+speedtest_ServerFailure: Unable to determine the best server.
+speedtest_ConnectFailure: 連接失敗。
+## connection
+connection_des: 顯示伺服器和Telegram之間的資訊。
+connection_hint: 連接資訊
+connection_country: 地區
+connection_dc: 連到的DC
+connection_nearest_dc: 最近的DC
+## pingdc
+pingdc_des: 計算伺服器Delays
+pingdc_1: DC1(美國-邁阿密)
+pingdc_2: DC2(荷蘭-阿姆斯特丹)
+pingdc_3: DC3(美國-邁阿密)
+pingdc_4: DC4(荷蘭-阿姆斯特丹)
+pingdc_5: DC5(新加坡)
+## ping
+ping_des: 計算 PagerMaid-Pyro 和 Telegram 之間的信息和數據包延遲。
+## topcloud
+topcloud_des: 產生一張佔用資源的詞雲圖片。
+topcloud_processing: 正在產生…
+topcloud_caption: 正在運行的進度。
+topcloud_success: 生成了一張圖片！
+#sudo
+sudo_des: 允許其他用戶來使用你的 PagerMaid-Pyro
+sudo_has_enabled: Sudo 模式沒有關閉
+sudo_enable: Sudo 模式開啟成功
+sudo_no_sudo: '請注意：你還沒有添加 Sudo 管理員'
+sudo_disable: Sudo 模式關閉成功
+sudo_has_disabled: Sudo 模式沒有開啟
+sudo_add: 成功添加此用戶到 Sudo 管理員列表
+sudo_add_chat: 成功添加此會話到 Sudo 管理員列表
+sudo_no: 此用戶不存在於 Sudo 管理員列表
+sudo_remove: 成功將此用戶移出 Sudo 管理員列表
+sudo_remove_chat: 成功將此會話移出 Sudo 管理員列表
+sudo_no_one: 你還沒有添加任何用戶到 Sudo 管理員列表
+sudo_group_list: '權限組有以下權限：'
+sudo_group_list_no: 不存在此權限組或此權限組無權限
+sudo_group_add_user: 添加此用戶到此權限組成功
+sudo_group_del_user: 從此權限組刪除此用戶成功
+sudo_group_add_per: 從此權限組中添加此權限成功
+sudo_group_del_per: 從此權限組中移除此權限成功
+sudo_user_add_per: 從此用戶中添加此權限成功
+sudo_user_del_per: 從此用戶中移除此權限成功
+sudo_list: 'Sudo 管理員列表：'
+#sticker
+## sticker
+sticker_des: 收集圖片作為貼圖並指定Emoji
+sticker_processing: 正在收集…
+sticker_downloading: 正在下載…
+sticker_type_not_support: Error！不支援這個文件類型。
+sticker_reply_not_sticker: Error！回覆圖片！
+sticker_pack_title: 的自用貼圖
+sticker_resizing: 調整中…
+sticker_telegram_server_error: 連接Telegram失敗！
+sticker_change_pack_to: 切換到自用貼圖
+sticker_last_is_full: ' 上一個貼圖包滿了…'
+sticker_has_been_added: 這個貼圖被加到了
+sticker_this: 這個
+sticker_pack: 貼圖包
+sticker_another_running: 已經開啟了一個指令，正在重試
+sticker_no_pack_exist_creating: 貼圖包不存在，正在創建…
+sticker_to_no: Error！沒有指定貼圖包
+sticker_to_full: Error！這個貼圖包已滿
+## upload_sticker
+us_animated_uploading: 上傳動圖中…
+us_static_uploading: 上傳圖片中…
+us_static_rounding: 圖片圓角處理中…
+us_change_rounding_true: 已開啟貼紙自動轉換圓角功能
+us_change_rounding_false: 已關閉貼紙自動轉換圓角功能
+## merge
+merge_command_error: 命令參數錯誤！
+merge_processing_left: 正在處理第【
+merge_processing_right: '】條消息。'
+merge_total_processed_left: 共處理了【
+merge_total_processed_right: '】張貼紙。'
+## search
+sticker_search_des: 通過關鍵詞查找 Sticker 包。
+sticker_search_no: 沒有找到任何 Sticker 包。
+sticker_search_result: '以下是查找到的 Sticker 包：'
+#system
+## sh
+sh_des: 執行 Shell 指令
+sh_parameters: <指令>
+sh_channel: Error！不能在頻道執行指令。
+sh_success: 執行Shell指令
+## eval
+eval_des: 執行 Python 指令
+eval_parameters: <指令>
+eval_channel: Error！不能在頻道執行指令。
+eval_success: 執行 Python 指令
+eval_need_dev: '**請注意：此命令可以直接操作您的賬戶** 此命令僅適用於開發者，如果您知道您在做什麼的話，請手動在 Redis 數據庫配置 dev 項為任意值或者在 data 文件夾下創建 dev 文件。'
+## restart
+restart_des: 重新啟動
+restart_processing: 正在嘗試重新啟動
+restart_complete: PagerMaid-Pyro 重新啟動完成
+restart_log: 重新啟動 PagerMaid-Pyro
+## trace
+trace_des: 跟蹤URL的重新導向。
+trace_processing: 跟蹤中…
+trace_over128: Error！重新導向超過128次！
+trace_re: 重新導向
+trace_http_error: Error！發送要求時出了問題OAO
+## chat
+chat_des: 加入用戶群。
+chat_message: 嗨大家好～
+chat_already_join1: 您早就加入過了！
+chat_already_join2: 用戶群組。
+chat_error: Error！請手動加入 @PagerMaid_Modify
+chat_join_success: 您已成功加入
+#update
+## update
+update_des: 檢查更新並安裝
+update_processing: 正在檢查源…
+update_platform_version: 系統版本號
+update_git_version: Git 版本號
+update_local_git_change: 本地修改
+update_hash: HASH
+update_date: 提交時間
+update_NoSuchPathError: 目錄不存在
+update_InvalidGitRepositoryError: Error！請手動升級
+update_GitCommandError: Error！Git報錯
+update_not_active_branch: Error！分支沒有維護
+update_in_branch: 在分支
+update_is_updated: 中已是最新
+update_found_update_in_branch: 找到了更新，存在於分支
+update_change_log: 更新日誌
+update_log_too_big: 更新日誌太長，正在產生文件
+update_hint: 請使用以下命令更新
+update_found_pulling: 找到更新，正在獲取
+update_success: 更新成功。
+update_failed: 更新失敗
+update_auto_upgrade_git_failed_ubuntu: 檢測到您的系統為Ubuntu/Debian，嘗試自動升級Git失敗，請手動。
+update_auto_upgrade_git_failed_cent: 檢測到您的系統為CentOS/RedHat Linux，嘗試自動升級Git失敗，請手動。
+update_auto_upgrade_git_hint: 檢測到您Git版本過低，已嘗試自動升級。若此錯誤持續發生，請手動。
+update_master: 收到已知的 CVE ，正在強制更新 PagerMaid-Pyro 實例
+update_plugins: 收到已知的 CVE ，正在強制更新相關插件
+#sb
+sb_des: 在自己擁有管理員權限的共同群組中封禁一位用戶。
+sb_des_auto: 管理自動封禁列表。
+sb_pause: 暫停
+sb_no: 沒有在任何群封禁用戶
+sb_per: 在
+sb_in: 個群封禁了用戶
+sb_pro: '受影響的群組'
+sb_no_per: 沒有封禁用戶權限。
+sb_set: 已被添加到自動封禁列表中。
+sb_remove: 已被移除自動封禁列表。
+sb_exist: 此群組存在於自動封禁列表中。
+sb_no_exist: 此群組不存在於自動封禁列表中。
+sb_channel: 成功在本群封禁此頻道。

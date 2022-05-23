@@ -1,0 +1,20 @@
+p, owner, system, access, allow
+p, owner, plugins_root, access, allow
+p, admin, modules, access, allow
+p, builder, modules.profile, access, allow
+p, builder, modules.ghost, access, allow
+p, builder, modules.backup, access, allow
+p, builder, modules.uslog, access, allow
+p, builder, modules.log, access, allow
+p, builder, modules.sysinfo, access, allow
+p, builder, modules.status, access, allow
+p, builder, modules.re, access, allow
+p, default, plugins, access, allow
+p, default, modules.help, access, allow
+p, default, modules.help_raw, access, allow
+p, default, modules.ping, access, allow
+p, default, modules.id, access, allow
+p, default, modules.time, access, allow
+g, owner, admin
+g, admin, builder
+g, builder, default

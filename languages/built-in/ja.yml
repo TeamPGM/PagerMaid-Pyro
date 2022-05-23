@@ -1,0 +1,555 @@
+---
+#Chinese (Simplified)
+#main
+web_TypeError: Oops - Web interface is configured to bind to an invalid address。
+web_KeyError: Oops - Web interface configuration is mising in the config file。
+PhoneNumberInvalidError: Oops ~ The phone number entered is invalid. Please make sure to append country code.
+module: モジュール管理
+error: loading error
+start: PagerMaid-Pyro have started, type ,help in any chat for help message.
+#utils
+msg_ValueError: Oops ~ No messages were successfully obtained!
+isinstance: Oops ~ Length must be an integer!
+#init
+platform: Detected latform
+platform_load: 'proceeding to early process of PagerMaid。'
+platform_unsupported: not support, please start PagerMaid Linux or *BSD.
+error_prefix: Oops -
+python: Please upgrade your python interpreter to at least version 3.6。
+config_error: Oops - Please place a valid configuration file in the working directory。
+save_id: The user ID is get successfully.
+#modules_init
+modules_init_loading_modules: Load built-in modulesの
+modules_init_loading_plugins: Load plugin
+#listener
+command: command
+has_reg: このアルready registered.
+too_long: Oops - The output generated too long and could not be presented.
+run_error: Oops - An error occurd while executing this command.
+report_error: Oops - report error。
+use_method: Usage
+need_permission: Required Permission
+#account
+## username
+username_des: usernameがセットされました。
+arg_error: Invalid argument.
+username_exist: Username is Taken.
+username_vaild: Invalid username.
+username_set: Username have been updated.
+username_cancel: Username has been unset.
+username_whatset: Username has been セット
+## name
+name_des: Alters the display name.
+name_vaild: Invalid first name.
+name_set: Displayname is successfully altered.
+name_whatset: Changed display name to
+## pfp
+pfp_des: Set attachment of message replied to profile picture.
+pfp_process: Setting profile picture .
+pfp_e_notp: '"unable to parse attachment image"'
+pfp_e_size: The image dimensions are smaller than minimum requirement.
+pfp_e_img: An error occurd while the server is interpreting the command。
+## bio
+bio_des: Sets the biography to the string in the parameter。
+bio_too_lang: Provided string is too long.
+bio_set: Bio has been altered successfully.
+bio_cancel: ビオハット・ベティ・unset.
+bio_whatset: ビオハス・ベレンset to
+## rmpfp
+rmpfp_des: Deletes defined amount of profile pictures。
+int: integer
+rmpfp_p: Removed
+rmpfp_l: profile pictures。
+## profile
+profile_des: Shows user profile in a large message。
+profile_process: Generating user profile summary 。
+profile_e_no: The specified user does not exist。
+profile_e_nou: ユーザー名 specified does not exist。
+profile_e_nof: ユーザーID specified does not correspond to a user.
+profile_e_long: UserID specified have exceeded integer limit。
+profile_user: ユーザー
+profile_noset: Not set.
+profile_nobio: Not set.
+profile_yes: "Yes"
+profile_no: "No"
+profile_name: プロファイル管理
+profile_username: ユーザ ID
+profile_fname: First name
+profile_lname: シェルター名
+profile_bio: ベオロ
+profile_gic: Group in common
+profile_verified: Verified
+profile_restricted: Restrict
+profile_type: Type
+## block
+block_des: ブロック･ユーザーです
+block_process: Processing.
+block_success: Success block (参照)
+block_exist: is already blacklist.
+## unblock
+unblock_des: Unblockan user.
+unblock_process: Processing.
+unblock_success: Success unblock (参照)
+unblock_exist: isn't in a blacklist.
+#avoid
+## ghost
+ghost_des: Toggles ghosting of chat, requires redis.
+redis_dis: Redis is offline, cannot operate。
+ghost_e_mark: Unable to set flag on sef 。
+ghost_set_f: ChatID
+ghost_set_l: added to ghosted chats.
+ghost_cancel: removed from ghosted chats.
+ghost_e_noexist: Current t is not ghosted.
+ghost_e_exist: Current t is ghosted.
+## deny
+deny_des: Toggles denying of chat、requires redis。
+deny_set: added to denied chats。
+deny_cancel: removed from denied chats.
+deny_e_noexist: Current t is not denied.
+deny_e_exist: Current t is denied.
+#help
+help_des: Shows a list of commands or help string of a single command。
+help_list: Commands
+help_send: 問題
+help_see: to vview help for a specific command.*
+help_no_permission: Sorry, you don't have perission to vビューのhelp information for this command。
+help_source: '🖥 Source'
+help_plugin: '🔅 Plugins'
+help_module: '💠 Modules'
+#qr
+## genqr
+genqr_des: Generates a QRコード sticker from a specific string。
+genqr_process: Generating QRコード ...
+genqr_e_encode: Invalid characers in target string.
+genqr_ok: Generated QRコードfor
+## parseqr
+parseqr_des: Parse attachment of replied message a QR コード and output results
+parseqr_nofile: There are no attachments in the message。
+parseqr_content: コンテンツ型
+parseqr_e_noqr: ターゲットそばにあるマイスターマイQR コード
+parseqr_log: 通常の Parsed QRコード
+#backup
+## backup
+backup_des: バックグループ data files to locale, support database backup, safe and reliable.
+backup_process: Processing backup... It may take some time to complete。
+backup_success_channel: complete！Zipped backup backup has been sent to log channel。
+backup_success: Backup complete!
+## recovery
+recovery_des: Restore data from local backup or replied backup file, and support full database reasily and quickly.
+recovery_file_error: Unknown backup file. It may not be type of file backed up by PagerMaid.
+recovery_down: Downloading backup file to local... It is recommended to reduce the use of PagerMaid in the backup powerSave.process。
+recovery_process: Redstoring backup... It may take some time to complete。
+recovery_file_not_found: No backup file found.
+recovery_success: Backup restored!
+#captions
+## convert
+convert_des: Reply to an attachment message and convert it to image output
+convert_process: Converting...
+convert_no_file: Something went wrong. There seems to be no attachment in the reply message。
+convert_error: Something went wrong, woooo ~ An error occuring the conversion.
+convert_invalid: Something went wrong, woooo ~ The photo dimensions are invalid。
+## caption
+caption_des: Add two lines of cations to the reply picture。 ザ・captions will be added to the top and bottom respectively. The cations need to be parated by commas.
+caption_process: The image is being rendered...
+caption_error_grammer: Something went wrong - Wrong grammar。
+caption_no_file: Something went wrong, woo~ There is no attachment in the target message message
+caption_error: Something went wrong, woo~ An error occurd during the conversion.
+caption_success1: caption successfully
+caption_success2: Added to a picture。
+## ocr
+ocr_des: Extract text from the reply image
+ocr_psm_len_error: h, something went wrong...psm value is 0-13
+ocr_processing: アイデアコレクションズ（please wait... 最初のpicture is being processed...
+ocr_no_file: Something went wrong. There is no attachment in the reply message。
+ocr_no_result: Did not identify any text。
+ocr_result_hint: The following is the extracted text
+## highlight
+highlight_des: Generate a picture with syntax highlighting。
+highlight_processing: The image is being rendered, please wait...
+highlight_no_file: Something went wrong, woo~ The target message could not be retrieved.
+highlight_uploading: Uploading pictures...
+## handle_failure
+handle_failure_error: Something went wrong oh woo woo - Please report this problem。
+#clock
+## time
+time_des: Display the time in a specific area. If the parameter is empty, the configuration value will be displayed by default.
+time_parameters: <area>
+time_time: time
+time_config: Something went wrong oh woo woo - Please check your config file。
+#external
+## translate
+translate_des: Translate the target message into the specified language through Google Translate. (Support reply)
+translate_parameters: <text>
+translate_processing: translation is being generated...
+translate_ValueError: Something went wrong ~ The target language could not be found, please corerect the configuration file.
+translate_ImportError: Something went wrong - The translators module could not be found.
+translate_hits: text translation
+translate_original_lang: source language
+translate_tg_limit_uploading_file: The output exceeds the TG limit, and it is trying to upload a file。
+translate_get: メッセンジャー
+translate_from: from
+translate_to: translated to
+#tts
+tts_des: Generate voice messages based on characterings via Google Text to Speech.
+tts_processing: generating speech...
+tts_AssertionError: Something went wrong - Invalid parameter。
+tts_ValueError: Something went wrong ~ The target language could not be found, please corerect the configuration file.
+tts_RuntimeError: Something went wrong, wooh 〜An error occurd while loading the language array.
+tts_success: A text-to-speech audio message is generated
+#google
+google_des: Up Google query
+google_processing: Pulling results...
+google_connection_error: failed to connect to google server
+google_success: queried on Google search engine
+#fetchaudio
+fetchaudio_des: fetch audio files from multiple platforms.
+fetchaudio_error_grammer: Something went wrong - Wrong grammar。
+fetchaudio_processing: Fetching audio...
+fetchaudio_error_downloading: Something went wrong, woo~ The original soundtrack failed to download.
+fetchaudio_success: fetched an audio from the link
+fetchaudio_link: LinkedInだ
+#fun
+## animate
+animate_des: Use messages to animate text。
+## teletype
+teletype_des: Make typing animation by editing the message. Will generate a lot of operation records!
+## mock
+mock_des: mockpeople through weird capital letters.
+## widen
+widen_des: widen each characer in the string.
+widen_already: This message has been widened.
+## fox
+fox_des: Use fox to make your message look complete
+## owo
+owo_des: Convert the message to OwO.
+## flip
+flip_des: Flip the message。
+## ship
+ship_des: Generate random friends, and also support designated targets.
+ship_processing: Generate base friends...
+ship_BaseException: Something went wrong, woo~ An erroroccurd while acquiring users.
+ship_hint: コンgratulations to both
+## rng
+rng_des: Generate a random string with a specific length。
+## aaa
+aaa_des: send a message containing A and A
+## asciiart
+asciiart_des: Generate ASCII text for the specified string.
+## tuxsay
+tuxsay_des: Generate an ASCII art message that looks like a penguin talking
+## coin
+coin_des: Throw a coin。
+coin_processing: Throwing coin...
+coin_lost: I lost my coin
+#help
+## lang
+lang_des: switchlanguage.
+lang_change_to: The language has been switchedto
+lang_reboot: Restarting.
+lang_current_lang: 拡張カードの pubage is
+lang_all_lang: All available languages are
+## alias
+alias_des: Redirect original command。
+alias_list: 'The following is a list of redirect commands:'
+alias_no: You have not redirected any original commands.
+alias_success: Edit redirection command success,PagerMaid-Pyro is restarting.
+alias_exist: Something went wrong, woo~ The commd that is redirected is already occupied。
+alias_no_exist: Something went wrong, woo~ The original commd is not redirected.
+#message
+## id
+id_des: Get various information about a message。
+id_hint: The following is the information of the reply message in
+id_is_bot_yes: "Yes"
+id_da: dead number
+## uslog
+uslog_des: forward message to the log.
+uslog_success: ログル
+uslog_log_disable: Something went wrong, woo~ Loging has been disabled.
+## log
+log_des: silently forward a message to the log。
+## re
+re_des: Reread the reply message in the current conversation. (Need to reply to a message)
+re_parameters: <number of times>
+re_too_big: oh something went wrong... this number is too big to provoke
+re_arg_error: Oh, something went wrong...maybe the parameter contains symbols other than numbers
+re_forbidden: Oh, something went wrong...you do not have permission to forward messages from this group.
+not_reply: Something went wrong - You don't seem to reply to a message。
+## leave
+leave_res: say "gooddby and leave the session"
+leave_bye: You are wastee of my time, goodby e.
+leave_not_group: Something went wrong h~ The current t does not seem to be a group chat.
+## meter2feet
+m2f_des: Convert meters to feet.
+m2f_get: will
+m2f_meter: メーター
+m2f_convert_to: convert to
+m2f_feet: feet
+## feet2meter
+f2m_des: Convert feet to meters.
+## hitokoto
+hitokoto_des: Aword of the day
+hitokoto_type_anime: animation
+hitokoto_type_manga: manga
+hitokoto_type_game: game
+hitokoto_type_article: Literature
+hitokoto_type_original: original
+hitokoto_type_web: from the web
+hitokoto_type_other: other
+hitokoto_type_movie: Movie
+hitokoto_type_poem: ポエム
+hitokoto_type_netease_music: Nete Cloud
+hitokoto_type_philosophy: philosophy
+hitokoto_type_meme: trembling
+#plugin
+## apt
+apt_des: Used to manage plugins installed to PagerMaid-Pyro.
+apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <plugin name/file>"
+apt_name: "PagerMaid-Pyro Plugins Manager"
+apt_processing: Installing plugins...
+apt_no_py: Something went wrong ~ Failed to get the plug-in file from the attachment.
+apt_plugin: plugin
+apt_installed: installed
+apt_reboot: PagerMaid-Pyro is restarting。
+apt_install_success: successful installation
+apt_not_found: not founded
+apt_no_update: no need to update
+apt_remove_success: The plugin was successfully removed
+apt_remove: remove plugin
+apt_removed_plugins: removed plugins
+apt_not_exist: Something went wrong - The specified plug-in does not exist.
+apt_no_running_plugins: There are no running plugins.
+apt_no_load_failed_plugins: No failed plugins loaded
+apt_no_disabled_plugins: Plugins that are not disabled
+apt_plugin_list: plug-in list
+apt_plugin_running: running
+apt_plugin_disabled: disabled
+apt_plugin_failed: failed to load
+apt_enable: enabled
+apt_disable: disabled
+apt_uploading: uploading plugin...
+apt_updated: updated
+apt_why_not_install_a_plugin: Install a plug-in the warehouse and try again?
+apt_loading_from_online_but_nothing_need_to_update: "Reading cloud plug-in list...Done\nReading locl plug-in version information...Done\n**There are no plug-ins that nto be updated**"
+apt_loading_from_online_and_updating: "Reading cloud plug-in list...complete\nreading local plug-in version information...complete\nupdating plug-in..."
+apt_reading_list: "Reading cloud plug-in list...complete\nreading local plug-in version information...complete\n"
+apt_search_no_name: How can I Search without a plug-in name?
+apt_search_not_found: No related plugins were foundin the plugin repository.
+apt_search_result_hint: The following are the results of the plugin repository (足止め)
+apt_search_supporting: それを学べる時
+apt_search_not_supporting: Abandoned treatment
+apt_plugin_name: plug-in name
+apt_plugin_ver: version
+apt_plugin_section: category
+apt_plugin_maintainer: Author
+apt_plugin_size: size
+apt_plugin_support: support period
+apt_plugin_des_short: descriptionの
+#prune
+## prune
+prune_des: Replying to a message with this command will delete all messages between the latest message and the message. Limit, 1000 messages based on message ID, more than 1000 messages may trigger the limit of deleting messages too quickly. (Non-group administrators only delete their messages)
+prune_hint1: Deleted in bulk
+prune_hint2: messages.
+## selfprune
+sp_des: delete a specific number of messages sent by you in the current conversation. Limit, 1000 messages based on message ID, more than 1000 may trigger the limit of deleting messages too quickly. Non-administrators cannot delete the group message. (Reverse order) When the number is large enough, all messages can deleted.
+sp_parameters: <quantity>
+sp_hint: self-sent
+## yourprune
+yp_des: delete the current conversation you reply to a specific number of messages sent by the user. Limit, 1000 messages based on message ID, more than 1000 may trigger the limit of deleting messages too quickly. (Reverse order, need to delete message permission) When the number is large enough, all messages can be deleted.
+yp_hint: Reply to what the user sene
+## del
+del_des: Delete the message you replied to in the current conversation. (Need to reply to a message)
+del_notification: A message was deleted.
+del_BadRequestError: Something went wrong, woo~ I don
+## send_prune_notify
+spn_deleted: deleted
+#status
+## sysinfo
+sysinfo_des: Retrieve system through neofetch.
+sysinfo_loading: Loading system information...
+## fortune
+fortune_des: read fortune クッキーのフォーマットです。
+fortune_not_exist: Something went wrong, woo~ There are no fortune Cookieies on this system
+## fbcon
+fbcon_des: Take a screenshotof the currently bound frame buffer console.
+fbcon_processing: Taking a screenshotof the frame buffer console...
+fbcon_no_fbdump: Something went wrong ~ woof ~ fbdump is not installed on this system
+fbcon_no_ImageMagick: Something went wrong, woooo ~ ImageMagick is not installed on this system
+fbcon_no_permission: Something went wrong. The user running PagerMaid-Pyro is not in the video group.
+fbcon_caption: Ascreenshot of the bound frame buffer。
+fbcon_error: Something went wrong - The file generation failed due to an unexpected error。 Please make sure that the apt packages fbcat and imagemagick have been installed, and your machine has a graphics card。
+## status
+status_des: Output the running status of PagerMaid-Pyro.
+status_online: online
+status_offline: off行
+status_hint: PagerMaid-Pyro running status
+status_name: ホスト名
+status_platform: Host platform
+status_release: Kernel version
+status_python: Python version
+status_telethon: Telethon version
+status_pyrogram: Pyrogram version
+status_pgm: PagerMaid version
+status_uptime: Utime
+## stats
+stats_des: Viewconversation statistics.
+stats_loading: ロードリング...
+stats_hint: Conversations Status
+stats_dialogs: Total
+stats_private: PM
+stats_group: Group
+stats_supergroup: SuperGroup
+stats_channel: Channel
+stats_bot: ボット
+## speedtest
+speedtest_des: Execute the speedtest script and send the result。
+speedtest_processing: Execute test scripts ...
+speedtest_ServerFailure: Enable to determine the best server。
+speedtest_ConnectFailure: Connection failure.
+## connection
+connection_des: Display the connection information between the server running PagerMaid-Pyro and the Telegram server.
+connection_hint: Connection information
+connection_country: Area
+connection_dc: データセント connectto
+connection_nearest_dc: nearest data center
+## pingdc
+pingdc_des: Test your server to the delay of the telegram data servers。
+pingdc_1: DC1(Miami FL,USA)
+pingdc_2: DC2(Amsterdam, NL)
+pingdc_3: DC3 (Miami FL,USA)
+pingdc_4: DC4 (Amsterdam, NL)
+pingdc_5: DC5(Singapore)
+## ping
+ping_des: Estimate ping between Telegram and PagerMaid-Pyro (Message and Packet)
+## topcloud
+topcloud_des: Generate a wordcloud picture of resource usage.
+topcloud_processing: generating pictures...
+topcloud_caption: The running process。
+topcloud_success: A wordcloud picture of resource usage is generated.
+#sudo
+sudo_des: Allow other users to use your PagerMaid-Pyro.
+sudo_has_enabled: Sudo Mode not turned off。
+sudo_enable: Sudo Mode on successfully.
+sudo_no_sudo: 'Please not haven''t added a Sudo administratoryet。'
+sudo_disable: Sudo Mode off successfully.
+sudo_has_disabled: Sudo Mode is not on。
+sudo_add: Successfully added this user to the Sudo Administrators リスト
+sudo_add_chat: Successfully added this chat to Sudo admin list.
+sudo_no: This user does not exist in the Sudo Administrators list。
+sudo_remove: Successful removeal of this user from the Sudo administration list.
+sudo_remove_chat: Successfully removed this chat from Sudo admin list
+sudo_no_one: You haven't added any users to Sudo admin list
+sudo_group_list: 'Group have the following permissions:'
+sudo_group_list_no: There is no permission for this permission group or this permission group
+sudo_group_add_user: Add this user to this permission group successfully.
+sudo_group_del_user: Successfully removed this user from this permission group.
+sudo_group_add_per: 一つのグループSuccessfully added this perission to this permission - グループ。
+sudo_group_del_per: Successfully removed this perission from this permission グループ。
+sudo_user_add_per: This permissionwas added to this
+sudo_user_del_per: Successfully removed this perission from this user.
+sudo_list: 'Sudo Administrator List:'
+#sticker
+## sticker
+sticker_des: llect the replied images/stickers as stickers and specify Logh parameters to セット a non-default の絵文字の絵文字。
+sticker_processing: images/stickers, Collection
+sticker_downloading: Downloading the picture...
+sticker_type_not_support: Something went wrong, woo~ This file type is not supported.
+sticker_reply_not_sticker: Something went wrong - Please reply to the message with pictures/stickers。
+sticker_pack_title: private possion
+sticker_resizing: Reizing the image...
+sticker_telegram_server_error: Failed to connect to Telegram server...
+sticker_change_pack_to: switchto private collection
+sticker_last_is_full: 'The last sticker pack is full...'
+sticker_has_been_added: This picture/sticker has been added to
+sticker_this: セス
+sticker_pack: sticker pack
+sticker_another_running: Another command is adding a sticker, trying again
+sticker_no_pack_exist_creating: The sticker pack does not exist, it is being created...
+sticker_to_no: Please specify a sticker pack.Something went wrong - Please a sticker pack
+sticker_to_full: Something went wrong - This sticker pack is full.
+## upload_sticker
+us_animated_uploading: Upload animations...
+us_static_uploading: Uploading pictures...
+us_static_rounding: ロンドing in progress...
+us_change_rounding_true: オートマティベーション of rounded corners for stickers has been turned on .
+us_change_rounding_false: オートマティベリー conversion of rounded corners for stickers has been turned offの形式
+## merge
+merge_command_error: Command parameter error!
+merge_processing_left: Process, D.
+merge_processing_right: '】st message。'
+merge_total_processed_left: 報告
+merge_total_processed_right: '】 stickers were processed。'
+## search
+sticker_search_des: Find a Sticker set by keyword.
+sticker_search_no: Did not find any sticker set.
+sticker_search_result: 'The following are the sticker sets we found:'
+#system
+## sh
+sh_des: remoely execute Shell commands on Telegram
+sh_parameters: <command>
+sh_channel: Something went wrong ~ The current Maid-Pyro configuration prohibits the execution of Shell commands in the channel.
+sh_success: execute Shell commands remotey
+## eval
+eval_des: remoely execute Python commands on Telegram
+eval_parameters: <command>
+eval_channel: Something went wrong ~ The current Maid-Pyro configuration prohibits the execution of Python commands in the channel.
+eval_success: execute Python commands remotey
+eval_need_dev: '**Please note: This command can directly operate your account** This command is only for developers. If you know what you are doing, and please manually configure the `dev` item in the Redis database to any value or create the `dev` file in the `data` folder。'
+## restart
+restart_des: Restart PagerMaid-Pyro
+restart_processing: to restart PagerMaid-Pyro.
+restart_complete: PagerMaid-Pyro has been restarted.
+restart_log: PagerMaid-Pyro restarts 。
+## trace
+trace_des: Torace the redirection of the URL です。
+trace_processing: Tracking redirection...
+trace_over128: Something went wrong, woo~ More than 128redirects, aborting!
+trace_re: rect
+trace_http_error: Something went wrong - There was a problem when sending the HTTP request.
+## chat
+chat_des: Join the PagerMaid-Pyro user group.
+chat_message: Hello everyone、I am a newcomer。
+chat_already_join1: You have already successfully joined
+chat_already_join2: User グループです。
+chat_error: Something went wrong - Please try to manually add @PagerMaid_Modify
+chat_join_success: You have successfully joined
+#update
+## update
+update_des: Check for updates from remote sources and install them to PagerMaid-Pyro.
+update_processing: Checking the remote source for update...
+update_platform_version: セリフなし
+update_git_version: Git version number
+update_local_git_change: local modification
+update_hash: local modification
+update_date: submission time
+update_NoSuchPathError: The directory does not exist
+update_InvalidGitRepositoryError: This PagerMaid-Pyro instance is not installed from source, please upgrade it through your local package manager。
+update_GitCommandError: Something went wrong - I received an error from git
+update_not_active_branch: Something went wrong, woo~ This branch is not maintained
+update_in_branch: in the branch
+update_is_updated: sialready the latest.
+update_found_update_in_branch: foundthe update, it exists in the branch
+update_change_log: updatelog
+update_log_too_big: このソフトウェアは the update log is too long and files are being attached..
+update_hint: Please e the following command to update
+update_found_pulling: An update was foundand is being pulled ...
+update_success: update successfully.
+update_failed: update failed
+update_auto_upgrade_git_failed_ubuntu: It is detected that your system is Ubuntu or Debain. Try to upgrade git amatically but failed. Please upgrade manually.
+update_auto_upgrade_git_failed_cent: It is detected that your system system is CentOS, try to upgrade git automatically but failed, please upgrade manually 。
+update_auto_upgrade_git_hint: Your git version is too low and has tried to automatically upgrade for you. If you are reminded of this error again, please upgrade manually 。
+update_master: Received a known CVE and is forcing an update to the PagerMaid-Pyro instance
+update_plugins: Received a known CVE and is forcing an update to the relevant plugin
+#sb
+sb_des: an a user in the common group of administrator, privileges.
+sb_des_auto: Manage the Automatic banned list
+sb_pause: Pause
+sb_no: Not ban user
+sb_per: In
+sb_in: groups banned user
+sb_pro: 'Groups：'
+sb_no_per: There is no ban user permission.
+sb_set: This group has been added to the automatic banned list.
+sb_remove: The automatic banned list has been removed this group.
+sb_exist: This group exists in the automatic banned list.
+sb_no_exist: This group does't exist in the automatic banned list.
+sb_channel: Successfully blocked this channel in this group.
