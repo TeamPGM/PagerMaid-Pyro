@@ -1,31 +1,27 @@
-# Chinese (Simplified)
-
-# main
+---
+#Chinese (Simplified)
+#main
 web_TypeError: 出错了呜呜呜 ~ Web 界面配置绑定到了一个无效地址。
 web_KeyError: 出错了呜呜呜 ~ 配置文件中缺少 Web 界面配置。
 PhoneNumberInvalidError: 出错了呜呜呜 ~ 输入的电话号码无效。 请确保附加国家代码。
 module: 模块
 error: 加载出错
 start: PagerMaid-Pyro 已启动，在任何聊天中输入 ,help 以获得帮助消息。
-
-# utils
+#utils
 msg_ValueError: 出错了呜呜呜 ~ 没有成功获取到消息！
 isinstance: 出错了呜呜呜 ~ 长度必须是整数!
-
-# init
+#init
 platform: 将平台检测为“
-platform_load: ”，进入PagerMaid的早期加载过程。
-platform_unsupported: ，不支持运行 PagerMaid，请在Linux或 *BSD 上启动 PagerMaid。
+platform_load: '”，进入PagerMaid的早期加载过程。'
+platform_unsupported: '，不支持运行 PagerMaid，请在Linux或 *BSD 上启动 PagerMaid。'
 error_prefix: 出错了呜呜呜 ~
 python: 请将您的 python 升级到至少3.6版。
 config_error: 出错了呜呜呜 ~ 请在工作目录中放置一个有效的配置文件。
 save_id: 设置用户标识成功。
-
-# modules_init
+#modules_init
 modules_init_loading_modules: 加载内置模块
 modules_init_loading_plugins: 加载插件
-
-# listener
+#listener
 command: 命令
 has_reg: 已经被注册。
 too_long: 出错了呜呜呜 ~ 生成的输出太长，无法显示。
@@ -33,8 +29,7 @@ run_error: 出错了呜呜呜 ~ 执行此命令时发生错误。
 report_error: 上报错误出错了呜呜呜 ~
 use_method: 使用方法
 need_permission: 所需权限
-
-# account
+#account
 ## username
 username_des: 通过命令快捷设置道纹（不支持回复）
 arg_error: 您好像输入了一个无效的参数。
@@ -75,8 +70,8 @@ profile_e_long: 指定的 UserID 已超出长度限制，您确定输对了？
 profile_user: 用户
 profile_noset: 喵喵喵 ~ 好像没有设置
 profile_nobio: 没有公开的情报
-profile_yes: 是
-profile_no: 否
+profile_yes: "是"
+profile_no: "否"
 profile_name: 用户简介
 profile_username: 道纹
 profile_fname: 名字
@@ -96,8 +91,7 @@ unblock_des: 取消拉黑一个用户
 unblock_process: 正在取消拉黑中 . . .
 unblock_success: 成功取消拉黑
 unblock_exist: 不存在黑名单中。
-
-# avoid
+#avoid
 ## ghost
 ghost_des: 开启对话的自动已读，需要 Redis
 redis_dis: Redis 好像离线了，无法执行命令。
@@ -113,16 +107,16 @@ deny_set: 已被添加到自动拒绝对话列表中。
 deny_cancel: 已从自动拒绝对话列表中移除。
 deny_e_noexist: emm...当前对话不在自动拒绝对话列表中。
 deny_e_exist: emm...当前对话在自动拒绝对话列表中。
-# help
+#help
 help_des: 显示命令列表或单个命令的帮助。
 help_list: 命令列表
 help_send: 发送
 help_see: 以查看特定命令的帮助
 help_no_permission: 很抱歉，您暂时无权查看此命令的帮助信息
-help_source: 🖥 源代码
-help_plugin: 🔅 插件列表
-help_module: 💠 內置模块
-# qr
+help_source: '🖥 源代码'
+help_plugin: '🔅 插件列表'
+help_module: '💠 內置模块'
+#qr
 ## genqr
 genqr_des: 生成 QR Code 。
 genqr_process: 生成QR码中。。。
@@ -134,8 +128,7 @@ parseqr_nofile: 回复的消息中没有附件。
 parseqr_content: 内容
 parseqr_e_noqr: 回复的附件不是 QR 码。
 parseqr_log: 已解析一张带有 QR 码的消息，内容：
-
-# backup
+#backup
 ## backup
 backup_des: 备份数据文件到本地以及日志频道，支持数据库的全量备份，安全可靠。
 backup_process: 备份中，请耐心等待备份程序完成...
@@ -148,8 +141,7 @@ recovery_down: 正在下载备份文件到本地... 在备份的过程中，建�
 recovery_process: 开始恢复，可能需要一定的时间。。
 recovery_file_not_found: 找不到可用的备份文件。
 recovery_success: 備份恢复完成！
-
-# captions
+#captions
 ## convert
 convert_des: 回复某条附件消息然后转换为图片输出
 convert_process: 正在转换中 . . .
@@ -178,15 +170,13 @@ highlight_no_file: 出错了呜呜呜 ~ 无法检索目标消息。
 highlight_uploading: 正在上传图片中 . . .
 ## handle_failure
 handle_failure_error: 出错了呜呜呜 ~ 请报告此问题。
-
-# clock
+#clock
 ## time
 time_des: 显示特定区域的时间，如果参数为空，则默认显示配置值。
 time_parameters: <地区>
 time_time: 时间
 time_config: 出错了呜呜呜 ~ 配置文件填写错误
-
-# external
+#external
 ## translate
 translate_des: 通过 Google 翻译将目标消息翻译成指定的语言。（支持回复）
 translate_parameters: <文本>
@@ -199,27 +189,26 @@ translate_tg_limit_uploading_file: 输出超出 TG 限制，正在尝试上传�
 translate_get: 把一条消息
 translate_from: 从
 translate_to: 翻译到了
-# tts
+#tts
 tts_des: 通过 Google文本到语音 基于字符串生成语音消息。
 tts_processing: 生成语音中 . . .
 tts_AssertionError: 出错了呜呜呜 ~ 无效的参数。
 tts_ValueError: 出错了呜呜呜 ~ 找不到目标语言，请更正配置文件中的错误。
 tts_RuntimeError: 出错了呜呜呜 ~ 加载语言数组时出错。
 tts_success: 生成了一条文本到语音的音频消息
-# google
+#google
 google_des: 使用 Google 查询
 google_processing: 正在拉取结果 . . .
 google_connection_error: 连接到 google服务器 失败
 google_success: 在Google搜索引擎上查询了
-# fetchaudio
+#fetchaudio
 fetchaudio_des: 从多个平台获取音频文件。
 fetchaudio_error_grammer: 出错了呜呜呜 ~ 错误的语法。
 fetchaudio_processing: 拉取音频中 . . .
 fetchaudio_error_downloading: 出错了呜呜呜 ~ 原声带下载失败。
 fetchaudio_success: 从链接中获取了一条音频
 fetchaudio_link: 链接
-
-# fun
+#fun
 ## animate
 animate_des: 使用消息制作文本动画。
 ## teletype
@@ -252,8 +241,7 @@ tuxsay_des: 生成一条看起来像企鹅说话的 ASCII 艺术消息
 coin_des: 扔硬币。
 coin_processing: 扔硬币中 . . .
 coin_lost: 我丢了硬币
-
-# help
+#help
 ## lang
 lang_des: 切换语言。
 lang_change_to: 语言已切换到
@@ -262,16 +250,16 @@ lang_current_lang: 当前语言是
 lang_all_lang: 所有可用的语言有：
 ## alias
 alias_des: 重定向原始命令。
-alias_list: 以下是重定向命令列表：
+alias_list: '以下是重定向命令列表：'
 alias_no: 您还没有重定向任何原始命令。
 alias_success: 编辑重定向命令成功，PagerMaid-Pyro 正在重新启动。
 alias_exist: 出错了呜呜呜 ~ 重定向指向的命令已被占用。
 alias_no_exist: 出错了呜呜呜 ~ 原始命令没有被重定向。
-# message
+#message
 ## id
 id_des: 获取一条消息的各种信息。
 id_hint: 以下是被回复消息的信息
-id_is_bot_yes: 是
+id_is_bot_yes: "是"
 id_da: 死号
 ## uslog
 uslog_des: 转发一条消息到日志。
@@ -312,8 +300,7 @@ hitokoto_type_poem: 诗词
 hitokoto_type_netease_music: 网易云
 hitokoto_type_philosophy: 哲学
 hitokoto_type_meme: 抖机灵
-
-# plugin
+#plugin
 ## apt
 apt_des: 用于管理安装到 PagerMaid-Pyro 的插件。
 apt_parameters: "{update|search|show|status|install|remove|enable|disable|upload|export} <插件名称/文件>"
@@ -325,7 +312,7 @@ apt_installed: 已安装
 apt_reboot: PagerMaid-Pyro 正在重新启动。
 apt_install_success: 安装成功
 apt_not_found: 没有找到
-apt_no_update: 无需更新 
+apt_no_update: 无需更新
 apt_remove_success: 成功删除插件
 apt_remove: 删除插件
 apt_removed_plugins: 已删除的插件
@@ -357,8 +344,7 @@ apt_plugin_maintainer: 作者
 apt_plugin_size: 大小
 apt_plugin_support: 支持周期
 apt_plugin_des_short: 说明
-
-# prune
+#prune
 ## prune
 prune_des: 以此命令回复某条消息，将删除最新一条消息至该条消息之间的所有消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（非群组管理员只删除自己的消息）
 prune_hint1: 批量删除了
@@ -376,8 +362,7 @@ del_notification: 删除了一条消息。
 del_BadRequestError: 出错了呜呜呜 ~ 缺少删除此消息的权限。
 ## send_prune_notify
 spn_deleted: 删除了
-
-# status
+#status
 ## sysinfo
 sysinfo_des: 通过 neofetch 检索系统信息.
 sysinfo_loading: 加载系统信息中 . . .
@@ -403,7 +388,7 @@ status_release: Kernel 版本
 status_python: Python 版本
 status_telethon: Telethon 版本
 status_pyrogram: Pyrogram 版本
-status_db: 数据库状态
+status_pgm: PagerMaid 版本
 status_uptime: 运行时间
 ## stats
 stats_des: 查看我的对话统计信息。
@@ -440,12 +425,11 @@ topcloud_des: 生成一张资源占用的词云图片。
 topcloud_processing: 生成图片中 . . .
 topcloud_caption: 正在运行的进程。
 topcloud_success: 生成了一张资源占用的词云图片。
-
-# sudo
+#sudo
 sudo_des: 允许其他用户来使用你的 PagerMaid-Pyro
 sudo_has_enabled: Sudo 模式没有关闭
 sudo_enable: Sudo 模式开启成功
-sudo_no_sudo: 请注意：你还没有添加 Sudo 管理员
+sudo_no_sudo: '请注意：你还没有添加 Sudo 管理员'
 sudo_disable: Sudo 模式关闭成功
 sudo_has_disabled: Sudo 模式没有开启
 sudo_add: 成功添加此用户到 Sudo 管理员列表
@@ -454,7 +438,7 @@ sudo_no: 此用户不存在于 Sudo 管理员列表
 sudo_remove: 成功将此用户移出 Sudo 管理员列表
 sudo_remove_chat: 成功将此会话移出 Sudo 管理员列表
 sudo_no_one: 你还没有添加任何用户到 Sudo 管理员列表
-sudo_group_list: 权限组有以下权限：
+sudo_group_list: '权限组有以下权限：'
 sudo_group_list_no: 不存在此权限组或此权限组无权限
 sudo_group_add_user: 添加此用户到此权限组成功
 sudo_group_del_user: 从此权限组删除此用户成功
@@ -462,9 +446,8 @@ sudo_group_add_per: 从此权限组中添加此权限成功
 sudo_group_del_per: 从此权限组中移除此权限成功
 sudo_user_add_per: 从此用户中添加此权限成功
 sudo_user_del_per: 从此用户中移除此权限成功
-sudo_list: Sudo 管理员列表：
-
-# sticker
+sudo_list: 'Sudo 管理员列表：'
+#sticker
 ## sticker
 sticker_des: 收集回复的图像/贴纸作为贴纸，通过参数指定 emoji 以设置非默认的 emoji。
 sticker_processing: 收集图像/贴纸中 . . .
@@ -474,8 +457,8 @@ sticker_reply_not_sticker: 出错了呜呜呜 ~ 请回复带有图片/贴纸的�
 sticker_pack_title: 的私藏
 sticker_resizing: 调整图像大小中 . . .
 sticker_telegram_server_error: 连接到 Telegram 服务器失败 . . .
-sticker_change_pack_to: 切换到私藏 
-sticker_last_is_full:  上一个贴纸包已满 . . .
+sticker_change_pack_to: 切换到私藏
+sticker_last_is_full: '上一个贴纸包已满 . . .'
 sticker_has_been_added: 这张图片/贴纸已经被添加到
 sticker_this: 这个
 sticker_pack: 贴纸包
@@ -492,15 +475,14 @@ us_change_rounding_false: 已关闭贴纸自动转换圆角功能
 ## merge
 merge_command_error: 命令参数错误！
 merge_processing_left: 正在处理第【
-merge_processing_right: 】条消息。
+merge_processing_right: '】条消息。'
 merge_total_processed_left: 共处理了【
-merge_total_processed_right: 】张贴纸。
+merge_total_processed_right: '】张贴纸。'
 ## search
 sticker_search_des: 通过关键词查找 Sticker 包。
 sticker_search_no: 没有找到任何 Sticker 包。
-sticker_search_result: 以下是查找到的 Sticker 包：
-
-# system
+sticker_search_result: '以下是查找到的 Sticker 包：'
+#system
 ## sh
 sh_des: 在 Telegram 上远程执行 Shell 命令。
 sh_parameters: <命令>
@@ -511,9 +493,7 @@ eval_des: 在 Telegram 上远程执行 Python 命令。
 eval_parameters: <命令>
 eval_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Pyro 的配置禁止在频道中执行 Python 命令。
 eval_success: 远程执行 Python 命令
-eval_need_dev: '**请注意：此命令可以直接操作您的账户**
-
-此命令仅适用于开发者，如果您知道您在做什么的话，请手动在 Redis 数据库配置 dev 项为任意值或者在 data 文件夹下创建 dev 文件。'
+eval_need_dev: '**请注意：此命令可以直接操作您的账户** 此命令仅适用于开发者，如果您知道您在做什么的话，请手动在 Redis 数据库配置 dev 项为任意值或者在 data 文件夹下创建 dev 文件。'
 ## restart
 restart_des: 使 PagerMaid-Pyro 重新启动
 restart_processing: 尝试重启 PagerMaid-Pyro...
@@ -532,7 +512,6 @@ chat_already_join1: 您早已成功加入
 chat_already_join2: 用户群。
 chat_error: 出错了呜呜呜 ~ 请尝试手动加入 @PagerMaid_Modify
 chat_join_success: 您已成功加入
-
 #update
 ## update
 update_des: 从远程来源检查更新，并将其安装到 PagerMaid-Pyro。
@@ -560,15 +539,14 @@ update_auto_upgrade_git_failed_cent: 检测到您的系统是CentOS，尝试自�
 update_auto_upgrade_git_hint: 您的git版本过低,已尝试为您自动升级. 如再次提醒此错误,请手动升级.
 update_master: 收到已知的 CVE ，正在强制更新 PagerMaid-Pyro 实例
 update_plugins: 收到已知的 CVE ，正在强制更新相关插件
-
-# sb
+#sb
 sb_des: 在自己拥有管理员权限的共同群组中封禁一位用户。
 sb_des_auto: 管理自动封禁列表。
 sb_pause: 暂停
 sb_no: 没有在任何群封禁用户
 sb_per: 在
 sb_in: 个群封禁了用户
-sb_pro: 受影响的群组
+sb_pro: '受影响的群组'
 sb_no_per: 没有封禁用户权限。
 sb_set: 已被添加到自动封禁列表中。
 sb_remove: 已被移除自动封禁列表。

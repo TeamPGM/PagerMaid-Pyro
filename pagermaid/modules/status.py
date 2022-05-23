@@ -14,7 +14,7 @@ from psutil import boot_time, virtual_memory, disk_partitions
 from shutil import disk_usage
 from subprocess import Popen, PIPE
 
-from pagermaid import start_time, Config
+from pagermaid import start_time, Config, pgm_version
 from pagermaid.listener import listener
 from pagermaid.utils import lang, Message, execute
 
@@ -64,6 +64,7 @@ async def status(_: Client, message: Message):
             f"{lang('status_release')}: `{uname().release}` \n"
             f"{lang('status_python')}: `{python_version()}` \n"
             f"{lang('status_pyrogram')}: `{__version__}` \n"
+            f"{lang('status_pgm')}: `{pgm_version}`\n"
             f"{lang('status_uptime')}: `{uptime}`"
             )
     await message.edit(text)

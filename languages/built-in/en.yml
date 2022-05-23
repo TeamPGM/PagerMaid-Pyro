@@ -12,7 +12,7 @@ msg_ValueError: Oops ~ No messages were successfully obtained!
 isinstance: Oops ~ Length must be an integer!
 #init
 platform: Detected platform as
-platform_load: proceeding to early load process of PagerMaid.
+platform_load: 'proceeding to early load process of PagerMaid.'
 platform_unsupported: is not supported, please start PagerMaid on Linux or *BSD.
 error_prefix: Oops ~
 python: Please upgrade your python interpreter to at least version 3.6.
@@ -247,7 +247,7 @@ lang_des: Switch language.
 lang_change_to: The language has been switched to
 lang_reboot: Restarting.
 lang_current_lang: The current language is
-lang_all_lang: All available languages are 
+lang_all_lang: All available languages are
 ## alias
 alias_des: Redirect original command.
 alias_list: 'The following is a list of redirect commands:'
@@ -388,7 +388,7 @@ status_release: Kernel version
 status_python: Python version
 status_telethon: Telethon version
 status_pyrogram: Pyrogram version
-status_db: Database status
+status_pgm: PagerMaid version
 status_uptime: Uptime
 ## stats
 stats_des: View conversation statistics.
@@ -403,7 +403,7 @@ stats_bot: Bot
 ## speedtest
 speedtest_des: Execute the speedtest script and send the result.
 speedtest_processing: Execute test scripts...
-speedtest_ServerFailure: Unable to determine the best server.
+speedtest_ServerFailure: Enable to determine the best server.
 speedtest_ConnectFailure: Connection failure.
 ## connection
 connection_des: Display the connection information between the server running PagerMaid-Pyro and the Telegram server.
@@ -458,7 +458,7 @@ sticker_pack_title: private possession
 sticker_resizing: Resizing the image...
 sticker_telegram_server_error: Failed to connect to Telegram server...
 sticker_change_pack_to: switch to private collection
-sticker_last_is_full: The last sticker pack is full...
+sticker_last_is_full: 'The last sticker pack is full...'
 sticker_has_been_added: This picture/sticker has been added to
 sticker_this: this
 sticker_pack: sticker pack
