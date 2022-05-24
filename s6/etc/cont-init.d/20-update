@@ -1,7 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 cd /pagermaid/workdir
-git remote set-url origin https://gitlab.com/Xtao-Labs/pagermaid-modify.git
+git remote set-url origin https://github.com/TeamPGM/PagerMaid-Pyro.git
 git pull
 
 pip install -r requirements.txt
