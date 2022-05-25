@@ -27,12 +27,12 @@ def noop(*args, **kw):
 
 def listener(**args):
     """ Register an event listener. """
-    command = args.get('command', None)
+    command = args.get('command')
     disallow_alias = args.get('disallow_alias', False)
     need_admin = args.get('need_admin', False)
-    description = args.get('description', None)
-    parameters = args.get('parameters', None)
-    pattern = sudo_pattern = args.get('pattern', None)
+    description = args.get('description')
+    parameters = args.get('parameters')
+    pattern = sudo_pattern = args.get('pattern')
     diagnostics = args.get('diagnostics', True)
     ignore_edited = args.get('ignore_edited', False)
     is_plugin = args.get('is_plugin', True)
