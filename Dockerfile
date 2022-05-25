@@ -28,7 +28,6 @@ RUN source ~/.bashrc \
         sudo \
         git \
         openssl \
-        redis-server \
         curl \
         wget \
         neofetch \
