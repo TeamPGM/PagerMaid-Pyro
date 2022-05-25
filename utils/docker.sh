@@ -85,7 +85,7 @@ data_persistence () {
                     docker cp $container_name:/pagermaid/workdir $data_path
                     docker stop $container_name &>/dev/null
                     docker rm $container_name &>/dev/null
-                    docker run -dit -e PUID=$PUID -e PGID=$PGID -v $data_path/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" mrwangzhe/pagermaid_modify <&1
+                    docker run -dit -e PUID=$PUID -e PGID=$PGID -v $data_path/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
                     echo
                     echo "数据持久化操作完成。"
                     echo 
