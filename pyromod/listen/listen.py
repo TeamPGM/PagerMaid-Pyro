@@ -179,9 +179,9 @@ class Message(pyrogram.types.Message):
             if raw_user.isnumeric():
                 user = int(raw_user)
             elif self.entities is not None:
-                if isinstance(self.entities[0].type, pyrogram.raw.types.MessageEntityMention):
+                if self.entities[0].type == pyrogram.enums.MessageEntityType.TEXT_MENTION:
                     user = self.entities[0].user.id
-        if not user and self.chat.type == "private":  # Current chat
+        if not user and self.chat.type == pyrogram.enums.ChatType.PRIVATE:  # Current chat
             user = self.chat.id
         return user
 
