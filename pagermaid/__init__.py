@@ -7,6 +7,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from pagermaid.config import Config
 import pyromod.listen
 from pyrogram import Client
+import sys
 
 pgm_version = "1.0.1"
 CMD_LIST = {}
@@ -33,10 +34,10 @@ logs.setLevel(INFO)
 # easy check
 if not Config.API_ID:
     logs.error("Api-ID Not Found!")
-    exit(1)
+    sys.exit(1)
 elif not Config.API_HASH:
     logs.error("Api-Hash Not Found!")
-    exit(1)
+    sys.exit(1)
 
 start_time = datetime.utcnow()
 bot = Client("pagermaid", api_id=Config.API_ID, api_hash=Config.API_HASH, ipv6=Config.IPV6, proxy=Config.PROXY)

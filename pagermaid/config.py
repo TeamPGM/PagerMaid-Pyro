@@ -1,5 +1,6 @@
 import os
 from json import load as load_json
+import sys
 from yaml import load, FullLoader, safe_load
 from shutil import copyfile
 from distutils.util import strtobool
@@ -10,7 +11,7 @@ try:
 except FileNotFoundError:
     print("The configuration file does not exist, and a new configuration file is being generated.")
     copyfile(f"{os.getcwd()}{os.sep}config.gen.yml", "config.yml")
-    exit(1)
+    sys.exit(1)
 
 
 class Config(object):
@@ -45,7 +46,7 @@ class Config(object):
         except Exception as e:
             print("Reading language YAML file failed")
             print(e)
-            exit(1)
+            sys.exit(1)
         try:
             with open(f"data{os.sep}alias.json", encoding="utf-8") as f:
                 alias_dict = load_json(f)
@@ -54,4 +55,4 @@ class Config(object):
             alias_dict = {}
     except ValueError as e:
         print(e)
-        exit(1)
+        sys.exit(1)
