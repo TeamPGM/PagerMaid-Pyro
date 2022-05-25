@@ -134,7 +134,7 @@ def listener(**args):
             except ContinuePropagation:
                 raise ContinuePropagation
             except SystemExit:
-                exit(0)
+                sys.exit(0)
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
@@ -193,7 +193,7 @@ def raw_listener(filter_s):
             except ContinuePropagation:
                 raise ContinuePropagation
             except SystemExit:
-                exit(0)
+                sys.exit(0)
             except UserNotParticipant:
                 pass
             except MessageEmpty:
