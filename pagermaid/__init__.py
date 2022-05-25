@@ -38,9 +38,12 @@ if not Config.API_ID:
 elif not Config.API_HASH:
     logs.error("Api-Hash Not Found!")
     sys.exit(1)
+elif not Config.STRING_SESSION:
+    logs.error("Api-Hash Not Found!")
+    sys.exit(1)
 
 start_time = datetime.utcnow()
-bot = Client("pagermaid", api_id=Config.API_ID, api_hash=Config.API_HASH, ipv6=Config.IPV6, proxy=Config.PROXY)
+bot = Client("pagermaid", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, ipv6=Config.IPV6, proxy=Config.PROXY)
 
 
 async def log(message):
