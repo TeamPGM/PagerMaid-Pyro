@@ -14,7 +14,7 @@ except FileNotFoundError:
     sys.exit(1)
 
 
-class Config(object):
+class Config:
     try:
         API_ID = int(os.environ.get("API_ID", config["api_id"]))
         API_HASH = os.environ.get("API_HASH", config["api_hash"])
