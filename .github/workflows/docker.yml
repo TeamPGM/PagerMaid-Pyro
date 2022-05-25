@@ -1,0 +1,74 @@
+name: "Docker Build"
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  workflow_dispatch: ~
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: docker build and publish
+    env:
+      DOCKER_BUILDKIT: 1
+      DOCKER_CLI_EXPERIMENTAL: enabled
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_REPO }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Setup Docker Buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+
+      - name: Buildx cache
+        uses: actions/cache@v2
+        id: buildx-cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx
+
+      - name: Build
+        run: |
+          declare -a IMAGES
+
+          echo "Build amd64"
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache" \
+            --output "type=image,push=true" \
+            --platform linux/amd64 \
+            --build-arg "S6_ARCH=amd64" \
+            --tag "${DOCKERHUB_REPOSITORY}:latest-amd64" \
+            -f Dockerfile \
+            .
+          IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-amd64" )
+          
+          echo "Build arm64-v8"
+          docker buildx build \
+            --cache-from "type=local,src=/tmp/.buildx-cache" \
+            --cache-to "type=local,dest=/tmp/.buildx-cache" \
+            --output "type=image,push=true" \
+            --platform linux/arm64/v8 \
+            --build-arg "S6_ARCH=aarch64" \
+            --tag "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" \
+            -f Dockerfile \
+            .
+          IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" )
+          
+          echo "Create manifest lists"
+          docker manifest create "${DOCKERHUB_REPOSITORY}:latest" "${IMAGES[@]}"
+
+          echo "Annotate manifest lists to add architecture variants that aren't picked up automatically"
+          docker manifest annotate "${DOCKERHUB_REPOSITORY}:latest" "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" --variant "v8"
+
+          echo "Push manifest lists & delete local copies"
+          docker manifest push --purge "${DOCKERHUB_REPOSITORY}:latest"
