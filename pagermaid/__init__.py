@@ -25,7 +25,7 @@ logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
 root_logger = getLogger()
-root_logger.setLevel(CRITICAL)
+root_logger.setLevel(DEBUG if Config.DEBUG else CRITICAL)
 root_logger.addHandler(logging_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)
 logs.setLevel(DEBUG if Config.DEBUG else INFO)
