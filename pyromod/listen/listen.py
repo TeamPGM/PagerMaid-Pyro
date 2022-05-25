@@ -161,6 +161,31 @@ class Message(pyrogram.types.Message):
             return False
 
     @patchable
+    def obtain_message(self) -> Optional[str]:
+        """ Obtains a message from either the reply message or command arguments. """
+        return self.arguments if self.arguments else (self.reply_to_message.text if self.reply_to_message else None)
+
+    @patchable
+    def obtain_user(self) -> Optional[int]:
+        """ Obtains a user from either the reply message or command arguments. """
+        user = None
+        # Priority: reply > argument > current_chat
+        if self.reply_to_message:  # Reply to a user
+            user = self.reply_to_message.from_user
+            if user:
+                user = user.id
+        if not user and len(self.parameter) == 1:  # Argument provided
+            (raw_user,) = self.parameter
+            if raw_user.isnumeric():
+                user = int(raw_user)
+            elif self.entities is not None:
+                if self.entities[0].type == pyrogram.enums.MessageEntityType.TEXT_MENTION:
+                    user = self.entities[0].user.id
+        if not user and self.chat.type == pyrogram.enums.ChatType.PRIVATE:  # Current chat
+            user = self.chat.id
+        return user
+
+    @patchable
     async def edit_text(
             self,
             text: str,

@@ -1,6 +1,6 @@
 from os import sep, remove, mkdir
 from os.path import exists
-from typing import List
+from typing import List, Optional
 from pyrogram.types import Message
 from sqlitedict import SqliteDict
 
@@ -29,12 +29,13 @@ class Message(Message):  # noqa
     arguments: str
     parameter: List
 
-    async def safe_delete(self, revoke: bool = True):
-        try:
-            return await self._client.delete_messages(
-                chat_id=self.chat.id,
-                message_ids=self.id,
-                revoke=revoke
-            )
-        except Exception as e:  # noqa
-            return False
+    def obtain_message(self) -> Optional[str]:
+        """ Obtains a message from either the reply message or command arguments. """
+        return
+
+    def obtain_user(self) -> Optional[int]:
+        """ Obtains a user from either the reply message or command arguments. """
+        return
+
+    async def safe_delete(self, revoke: bool = True) -> None:
+        return

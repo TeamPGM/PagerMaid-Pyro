@@ -38,8 +38,6 @@ def listener(**args):
     is_plugin = args.get('is_plugin', True)
     incoming = args.get('incoming', False)
     outgoing = args.get('outgoing', True)
-    owners_only = args.get("owners_only", False)
-    admins_only = args.get("admins_only", False)
     groups_only = args.get("groups_only", False)
     privates_only = args.get("privates_only", False)
 
