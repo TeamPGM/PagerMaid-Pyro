@@ -8,7 +8,7 @@ from pagermaid.config import Config
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.0.0"
+pgm_version = "1.0.1"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
