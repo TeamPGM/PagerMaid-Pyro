@@ -1,8 +1,24 @@
 import os
 from json import load as load_json
+import sys
 from yaml import load, FullLoader, safe_load
 from shutil import copyfile
-from distutils.util import strtobool
+
+
+def strtobool(val):
+    """Convert a string representation of truth to true (1) or false (0).
+
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return 0
+    else:
+        raise ValueError("invalid truth value %r" % (val,))
 
 
 try:
@@ -10,14 +26,14 @@ try:
 except FileNotFoundError:
     print("The configuration file does not exist, and a new configuration file is being generated.")
     copyfile(f"{os.getcwd()}{os.sep}config.gen.yml", "config.yml")
-    exit(1)
+    sys.exit(1)
 
 
-class Config(object):
+class Config:
     try:
         API_ID = int(os.environ.get("API_ID", config["api_id"]))
         API_HASH = os.environ.get("API_HASH", config["api_hash"])
-        STRING_SESSION = os.environ.get("STRING_SESSION", None)
+        STRING_SESSION = os.environ.get("STRING_SESSION")
         DEBUG = strtobool(os.environ.get("DEBUG", config["debug"]))
         ERROR_REPORT = strtobool(os.environ.get("ERROR_REPORT", config["error_report"]))
         LANGUAGE = os.environ.get("LANGUAGE", config["application_language"])
@@ -45,7 +61,7 @@ class Config(object):
         except Exception as e:
             print("Reading language YAML file failed")
             print(e)
-            exit(1)
+            sys.exit(1)
         try:
             with open(f"data{os.sep}alias.json", encoding="utf-8") as f:
                 alias_dict = load_json(f)
@@ -54,4 +70,4 @@ class Config(object):
             alias_dict = {}
     except ValueError as e:
         print(e)
-        exit(1)
+        sys.exit(1)
