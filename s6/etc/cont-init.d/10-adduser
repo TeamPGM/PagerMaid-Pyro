@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bash
+
+if [[ $RUN_AS_ROOT != true ]]; then
+    PUID=${PUID:-917}
+    PGID=${PGID:-917}
+    groupmod -o -g "$PGID" pagermaid
+    usermod -o -u "$PUID" pagermaid
+fi
