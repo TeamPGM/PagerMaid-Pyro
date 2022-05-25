@@ -87,27 +87,12 @@ async def profile(client: Client, message: Message):
           parameters="(username/uid/reply)")
 async def block_user(client: Client, message: Message):
     """ Block a user. """
-    current_chat = message.chat
     if len(message.parameter) > 1:
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
         await message.edit(lang('block_process'))
-    user = None
-    # Priority: reply > argument > current_chat
-    if message.reply_to_message:  # Reply to a user
-        user = message.reply_to_message.from_user
-        if user:
-            user = user.id
-    if not user and len(message.parameter) == 1:  # Argument provided
-        (raw_user,) = message.parameter
-        if raw_user.isnumeric():
-            user = int(raw_user)
-        elif message.entities is not None:
-            if message.entities[0].type == "text_mention":
-                user = message.entities[0].user.id
-    if not user and current_chat.type == "private":  # Current chat
-        user = current_chat.id
+    user = message.obtain_user()
     if not user:
         return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
     try:
@@ -129,20 +114,7 @@ async def unblock_user(client: Client, message: Message):
         return
     if not Config.SILENT:
         await message.edit(lang('unblock_process'))
-    user = None
-    if message.reply_to_message:  # Reply to a user
-        user = message.reply_to_message.from_user
-        if user:
-            user = user.id
-    if not user and len(message.parameter) == 1:  # Argument provided
-        (raw_user,) = message.parameter
-        if raw_user.isnumeric():
-            user = int(raw_user)
-        elif message.entities is not None:
-            if message.entities[0].type == "text_mention":
-                user = message.entities[0].user.id
-    if not user and message.chat.type == "private":  # Current chat
-        user = message.chat.id
+    user = message.obtain_user()
     if not user:
         return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
     try:

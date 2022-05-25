@@ -17,9 +17,8 @@ working_dir = getcwd()
 read_context = {}
 help_messages = {}
 all_permissions = []
-scheduler = AsyncIOScheduler()
+scheduler = AsyncIOScheduler(timezone="Asia/ShangHai")
 if not scheduler.running:
-    scheduler.configure(timezone="Asia/ShangHai")
     scheduler.start()
 logs = getLogger(__name__)
 logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
@@ -40,7 +39,12 @@ elif not Config.API_HASH:
     sys.exit(1)
 
 start_time = datetime.utcnow()
-bot = Client("pagermaid", api_id=Config.API_ID, api_hash=Config.API_HASH, ipv6=Config.IPV6, proxy=Config.PROXY)
+bot = Client("pagermaid",
+             session_string=Config.STRING_SESSION,
+             api_id=Config.API_ID,
+             api_hash=Config.API_HASH,
+             ipv6=Config.IPV6,
+             proxy=Config.PROXY)
 
 
 async def log(message):
