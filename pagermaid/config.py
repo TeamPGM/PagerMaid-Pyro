@@ -18,7 +18,7 @@ class Config:
     try:
         API_ID = int(os.environ.get("API_ID", config["api_id"]))
         API_HASH = os.environ.get("API_HASH", config["api_hash"])
-        STRING_SESSION = os.environ.get("STRING_SESSION", None)
+        STRING_SESSION = os.environ.get("STRING_SESSION")
         DEBUG = strtobool(os.environ.get("DEBUG", config["debug"]))
         ERROR_REPORT = strtobool(os.environ.get("ERROR_REPORT", config["error_report"]))
         LANGUAGE = os.environ.get("LANGUAGE", config["application_language"])
