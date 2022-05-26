@@ -39,6 +39,12 @@ elif not Config.API_HASH:
     sys.exit(1)
 
 start_time = datetime.utcnow()
+
+try:
+    import uvloop
+    uvloop.install()
+except ImportError:
+    pass
 bot = Client("pagermaid",
              session_string=Config.STRING_SESSION,
              api_id=Config.API_ID,
