@@ -178,6 +178,18 @@ def from_self(message: Message) -> bool:
     return False
 
 
+def from_msg_get_sudo_uid(message: Message) -> int:
+    """ Get the sudo uid from the message. """
+    from_id = message.from_user.id if message.from_user else message.sender_chat.id
+    if from_id in get_sudo_list():
+        return from_id
+    return message.chat.id
+
+
+def check_manage_subs(message: Message) -> bool:
+    return from_self(message) or enforce_permission(from_msg_get_sudo_uid(message), "modules.manage_subs")
+
+
 """ Init httpx client """
 # 使用自定义 UA
 headers = {
