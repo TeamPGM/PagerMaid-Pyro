@@ -15,7 +15,7 @@ async def update(_: Client, message: Message):
     if len(message.parameter) > 0:
         await execute('git reset --hard origin/master')
     await execute('git pull --all')
-    await execute(f"{executable} -m pip install -r requirements.txt --upgrade")
+    await execute(f"{executable} -m pip install --upgrade -r requirements.txt")
     await execute(f"{executable} -m pip install -r requirements.txt")
     await message.edit(lang('update_success'))
     exit(1)
