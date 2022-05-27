@@ -9,7 +9,7 @@ from sys import executable
 from asyncio import create_subprocess_shell, sleep
 from asyncio.subprocess import PIPE
 
-from pyrogram import filters
+from pyrogram import filters, enums
 from pagermaid.config import Config
 from pagermaid import bot
 from pagermaid.group_manager import enforce_permission
@@ -117,7 +117,7 @@ def pip_install(package: str, version: Optional[str] = "", alias: Optional[str] 
 async def edit_delete(message: Message,
                       text: str,
                       time: int = 5,
-                      parse_mode: Optional[str] = object,
+                      parse_mode: Optional["enums.ParseMode"] = None,
                       disable_web_page_preview: bool = None):
     sudo_users = get_sudo_list()
     from_id = message.from_user.id if message.from_user else message.sender_chat.id
