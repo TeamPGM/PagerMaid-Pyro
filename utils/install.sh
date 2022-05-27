@@ -451,7 +451,7 @@ start_installation() {
         configure
         login_screen
         systemctl_reload
-        echo "PagerMaid 已经安装完毕 在telegram对话框中输入 -help 并发送查看帮助列表"
+        echo "PagerMaid 已经安装完毕 在telegram对话框中输入 ,help 并发送查看帮助列表"
     elif [ "$release" = "ubuntu" ]; then
         echo "系统检测通过。"
         welcome
@@ -465,7 +465,7 @@ start_installation() {
         configure
         login_screen
         systemctl_reload
-        echo "PagerMaid 已经安装完毕 在telegram对话框中输入 -help 并发送查看帮助列表"
+        echo "PagerMaid 已经安装完毕 在telegram对话框中输入 ,help 并发送查看帮助列表"
     elif [ "$release" = "debian" ]; then
         echo "系统检测通过。"
         welcome
@@ -479,7 +479,7 @@ start_installation() {
         configure
         login_screen
         systemctl_reload
-        echo "PagerMaid 已经安装完毕 在telegram对话框中输入 -help 并发送查看帮助列表"
+        echo "PagerMaid 已经安装完毕 在telegram对话框中输入 ,help 并发送查看帮助列表"
     else
         echo "目前暂时不支持此系统。"
     fi

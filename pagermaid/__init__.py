@@ -1,5 +1,5 @@
 from coloredlogs import ColoredFormatter
-from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig
+from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
 from datetime import datetime
 from os import getcwd
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -9,7 +9,7 @@ import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.0.2"
+pgm_version = "1.0.3"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -25,10 +25,10 @@ logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
 root_logger = getLogger()
-root_logger.setLevel(CRITICAL)
+root_logger.setLevel(DEBUG if Config.DEBUG else CRITICAL)
 root_logger.addHandler(logging_handler)
-basicConfig(level=INFO)
-logs.setLevel(INFO)
+basicConfig(level=DEBUG if Config.DEBUG else INFO)
+logs.setLevel(DEBUG if Config.DEBUG else INFO)
 
 # easy check
 if not Config.API_ID:
@@ -39,6 +39,12 @@ elif not Config.API_HASH:
     sys.exit(1)
 
 start_time = datetime.utcnow()
+
+try:
+    import uvloop
+    uvloop.install()
+except ImportError:
+    pass
 bot = Client("pagermaid",
              session_string=Config.STRING_SESSION,
              api_id=Config.API_ID,
