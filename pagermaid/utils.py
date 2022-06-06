@@ -41,7 +41,7 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
             reply_to_message_id=reply_id,
             caption=caption
         )
-    except:
+    except Exception:  # noqa
         return
     remove(file_name)
 
@@ -60,7 +60,7 @@ async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None)
     remove(file_name)
 
 
-async def upload_attachment(file_path, chat_id, reply_id, caption=None, preview=None, document=None, thumb=None):
+async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=None):
     """ Uploads a local attachment file. """
     if not exists(file_path):
         return False
@@ -164,7 +164,7 @@ def sudo_filter(permission: str):
                     return enforce_permission(message.chat.id, flt.permission)
                 return False
             return enforce_permission(from_id, flt.permission)
-        except Exception as e:
+        except Exception:  # noqa
             return False
 
     return filters.create(if_sudo, permission=permission)
@@ -193,6 +193,7 @@ def check_manage_subs(message: Message) -> bool:
 """ Init httpx client """
 # 使用自定义 UA
 headers = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36"
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/102.0.5005.72 Safari/537.36 "
 }
 client = httpx.AsyncClient(timeout=10.0, headers=headers)
