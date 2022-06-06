@@ -5,17 +5,8 @@ from json import dump as json_dump
 from os import listdir, sep
 from pagermaid import help_messages, Config
 from pagermaid.group_manager import enforce_permission
-from pagermaid.single_utils import get_sudo_list
-from pagermaid.utils import lang, Message, from_self
+from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
 from pagermaid.listener import listener
-
-
-def from_msg_get_sudo_uid(message: Message) -> int:
-    """ Get the sudo uid from the message. """
-    from_id = message.from_user.id if message.from_user else message.sender_chat.id
-    if from_id in get_sudo_list():
-        return from_id
-    return message.chat.id
 
 
 @listener(is_plugin=False, command="help",

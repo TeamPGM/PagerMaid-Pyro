@@ -9,7 +9,7 @@ from sys import executable
 from asyncio import create_subprocess_shell, sleep
 from asyncio.subprocess import PIPE
 
-from pyrogram import filters
+from pyrogram import filters, enums
 from pagermaid.config import Config
 from pagermaid import bot
 from pagermaid.group_manager import enforce_permission
@@ -41,7 +41,7 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
             reply_to_message_id=reply_id,
             caption=caption
         )
-    except:
+    except Exception:  # noqa
         return
     remove(file_name)
 
@@ -60,7 +60,7 @@ async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None)
     remove(file_name)
 
 
-async def upload_attachment(file_path, chat_id, reply_id, caption=None, preview=None, document=None, thumb=None):
+async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=None):
     """ Uploads a local attachment file. """
     if not exists(file_path):
         return False
@@ -117,7 +117,7 @@ def pip_install(package: str, version: Optional[str] = "", alias: Optional[str] 
 async def edit_delete(message: Message,
                       text: str,
                       time: int = 5,
-                      parse_mode: Optional[str] = object,
+                      parse_mode: Optional["enums.ParseMode"] = None,
                       disable_web_page_preview: bool = None):
     sudo_users = get_sudo_list()
     from_id = message.from_user.id if message.from_user else message.sender_chat.id
@@ -164,7 +164,7 @@ def sudo_filter(permission: str):
                     return enforce_permission(message.chat.id, flt.permission)
                 return False
             return enforce_permission(from_id, flt.permission)
-        except Exception as e:
+        except Exception:  # noqa
             return False
 
     return filters.create(if_sudo, permission=permission)
@@ -178,9 +178,22 @@ def from_self(message: Message) -> bool:
     return False
 
 
+def from_msg_get_sudo_uid(message: Message) -> int:
+    """ Get the sudo uid from the message. """
+    from_id = message.from_user.id if message.from_user else message.sender_chat.id
+    if from_id in get_sudo_list():
+        return from_id
+    return message.chat.id
+
+
+def check_manage_subs(message: Message) -> bool:
+    return from_self(message) or enforce_permission(from_msg_get_sudo_uid(message), "modules.manage_subs")
+
+
 """ Init httpx client """
 # 使用自定义 UA
 headers = {
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36"
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                  "Chrome/102.0.5005.72 Safari/537.36 "
 }
 client = httpx.AsyncClient(timeout=10.0, headers=headers)
