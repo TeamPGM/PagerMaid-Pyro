@@ -16,7 +16,7 @@ from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.group_manager import Permission
-from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name
+from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
 
 secret_generator = secrets.SystemRandom()
 
@@ -27,17 +27,17 @@ def noop(*args, **kw):
 
 def listener(**args):
     """ Register an event listener. """
-    command = args.get('command')
-    disallow_alias = args.get('disallow_alias', False)
-    need_admin = args.get('need_admin', False)
-    description = args.get('description')
-    parameters = args.get('parameters')
-    pattern = sudo_pattern = args.get('pattern')
-    diagnostics = args.get('diagnostics', True)
-    ignore_edited = args.get('ignore_edited', False)
-    is_plugin = args.get('is_plugin', True)
-    incoming = args.get('incoming', False)
-    outgoing = args.get('outgoing', True)
+    command = args.get("command")
+    disallow_alias = args.get("disallow_alias", False)
+    need_admin = args.get("need_admin", False)
+    description = args.get("description")
+    parameters = args.get("parameters")
+    pattern = sudo_pattern = args.get("pattern")
+    diagnostics = args.get("diagnostics", True)
+    ignore_edited = args.get("ignore_edited", False)
+    is_plugin = args.get("is_plugin", True)
+    incoming = args.get("incoming", False)
+    outgoing = args.get("outgoing", True)
     groups_only = args.get("groups_only", False)
     privates_only = args.get("privates_only", False)
 
@@ -46,11 +46,11 @@ def listener(**args):
             raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
         pattern = fr"^,{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
         sudo_pattern = fr"^/{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
-    if pattern is not None and not pattern.startswith('(?i)'):
-        args['pattern'] = f"(?i){pattern}"
+    if pattern is not None and not pattern.startswith("(?i)"):
+        args["pattern"] = f"(?i){pattern}"
     else:
-        args['pattern'] = pattern
-    if sudo_pattern is not None and not sudo_pattern.startswith('(?i)'):
+        args["pattern"] = pattern
+    if sudo_pattern is not None and not sudo_pattern.startswith("(?i)"):
         sudo_pattern = f"(?i){sudo_pattern}"
     if outgoing and not incoming:
         base_filters = filters.me & ~filters.via_bot & ~filters.forwarded
@@ -64,8 +64,8 @@ def listener(**args):
             & ~filters.via_bot
             & ~filters.forwarded
     )
-    if args['pattern']:
-        base_filters &= filters.regex(args['pattern'])
+    if args["pattern"]:
+        base_filters &= filters.regex(args["pattern"])
         sudo_filters &= filters.regex(sudo_pattern)
     if groups_only:
         base_filters &= filters.group
@@ -73,26 +73,26 @@ def listener(**args):
     if privates_only:
         base_filters &= filters.private
         sudo_filters &= filters.private
-    if 'ignore_edited' in args:
-        del args['ignore_edited']
-    if 'command' in args:
-        del args['command']
-    if 'diagnostics' in args:
-        del args['diagnostics']
-    if 'description' in args:
-        del args['description']
-    if 'parameters' in args:
-        del args['parameters']
-    if 'is_plugin' in args:
-        del args['is_plugin']
-    if 'owners_only' in args:
-        del args['owners_only']
-    if 'admins_only' in args:
-        del args['admins_only']
-    if 'groups_only' in args:
-        del args['groups_only']
-    if 'need_admin' in args:
-        del args['need_admin']
+    if "ignore_edited" in args:
+        del args["ignore_edited"]
+    if "command" in args:
+        del args["command"]
+    if "diagnostics" in args:
+        del args["diagnostics"]
+    if "description" in args:
+        del args["description"]
+    if "parameters" in args:
+        del args["parameters"]
+    if "is_plugin" in args:
+        del args["is_plugin"]
+    if "owners_only" in args:
+        del args["owners_only"]
+    if "admins_only" in args:
+        del args["admins_only"]
+    if "groups_only" in args:
+        del args["groups_only"]
+    if "need_admin" in args:
+        del args["need_admin"]
 
     def decorator(function):
 
@@ -101,8 +101,8 @@ def listener(**args):
 
             try:
                 try:
-                    parameter = message.matches[0].group(1).split(' ')
-                    if parameter == ['']:
+                    parameter = message.matches[0].group(1).split(" ")
+                    if parameter == [""]:
                         parameter = []
                     message.parameter = parameter
                     message.arguments = message.matches[0].group(1)
@@ -132,12 +132,13 @@ def listener(**args):
             except ContinuePropagation:
                 raise ContinuePropagation
             except SystemExit:
+                await process_exit(start=False, _client=client, message=message)
                 sys.exit(0)
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 try:
-                    await message.edit(lang('run_error'), no_reply=True)  # noqa
+                    await message.edit(lang("run_error"), no_reply=True)  # noqa
                 except BaseException:
                     pass
                 if not diagnostics:
@@ -191,6 +192,7 @@ def raw_listener(filter_s):
             except ContinuePropagation:
                 raise ContinuePropagation
             except SystemExit:
+                await process_exit(start=False, _client=client, message=message)
                 sys.exit(0)
             except UserNotParticipant:
                 pass
