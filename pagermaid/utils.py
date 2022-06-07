@@ -198,6 +198,7 @@ async def process_exit(start: int, _client, message=None):
             await _client.edit_message_text(cid, mid, lang("restart_complete"))
         except Exception as e:  # noqa
             pass
+        del sqlite["exit_msg"]
     if message:
         sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
 
