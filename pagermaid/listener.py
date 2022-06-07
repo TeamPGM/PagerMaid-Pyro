@@ -132,6 +132,7 @@ def listener(**args):
             except ContinuePropagation:
                 raise ContinuePropagation
             except SystemExit:
+                await process_exit(start=False, _client=client, message=message)
                 sys.exit(0)
             except BaseException:
                 exc_info = sys.exc_info()[1]
