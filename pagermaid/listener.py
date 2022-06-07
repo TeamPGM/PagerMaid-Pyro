@@ -55,7 +55,7 @@ def listener(**args):
     if outgoing and not incoming:
         base_filters = filters.me & ~filters.via_bot & ~filters.forwarded
     elif incoming and not outgoing:
-        base_filters = filters.incoming
+        base_filters = filters.incoming & ~filters.me
     else:
         base_filters = filters.all
     permission_name = get_permission_name(is_plugin, need_admin, command)
