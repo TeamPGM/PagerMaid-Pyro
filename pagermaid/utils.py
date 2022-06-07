@@ -194,7 +194,10 @@ async def process_exit(start: int, _client, message=None):
     data = sqlite.get("exit_msg", {})
     cid, mid = data.get("cid", 0), data.get("mid", 0)
     if start and data and cid and mid:
-        await _client.edit_message_text(cid, mid, lang("restart_complete"))
+        try:
+            await _client.edit_message_text(cid, mid, lang("restart_complete"))
+        except Exception as e:  # noqa
+            pass
     if message:
         sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
 
