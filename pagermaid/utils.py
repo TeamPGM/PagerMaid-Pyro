@@ -13,7 +13,7 @@ from pyrogram import filters, enums
 from pagermaid.config import Config
 from pagermaid import bot
 from pagermaid.group_manager import enforce_permission
-from pagermaid.single_utils import _status_sudo, get_sudo_list, Message
+from pagermaid.single_utils import _status_sudo, get_sudo_list, Message, sqlite
 
 
 def lang(text: str) -> str:
@@ -188,6 +188,15 @@ def from_msg_get_sudo_uid(message: Message) -> int:
 
 def check_manage_subs(message: Message) -> bool:
     return from_self(message) or enforce_permission(from_msg_get_sudo_uid(message), "modules.manage_subs")
+
+
+async def process_exit(start: int, _client, message=None):
+    data = sqlite.get("exit_msg", {})
+    cid, mid = data.get("cid", 0), data.get("mid", 0)
+    if start and data and cid and mid:
+        await _client.edit_message_text(cid, mid, lang("restart_complete"))
+    if message:
+        sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
 
 
 """ Init httpx client """
