@@ -271,8 +271,7 @@ async def plugin(__: Client, message: Message):
                 await message.edit(f"<b>{lang('apt_name')}</b>\n\n" +
                                    lang("apt_loading_from_online_but_nothing_need_to_update"))
             else:
-                print(6)
-                await message.edit(lang("apt_loading_from_online_and_updating"))
+                message = await message.edit(lang("apt_loading_from_online_and_updating"))
                 plugin_directory = f"{working_dir}{sep}plugins{sep}"
                 for i in need_update_list:
                     remove_plugin(i)
@@ -334,7 +333,7 @@ async def plugin(__: Client, message: Message):
         if not exists(f"{plugin_directory}version.json"):
             await message.edit(lang("apt_why_not_install_a_plugin"))
             return
-        await message.edit(lang("stats_loading"))
+        message = await message.edit(lang("stats_loading"))
         list_plugin = []
         with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
             version_json = json.load(f)
