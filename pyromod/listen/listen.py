@@ -60,7 +60,7 @@ class Client:
         self.listening.update({
             chat_id: {"future": future, "filters": filters}
         })
-        return await asyncio.wait_for(future, timeout)
+        return await asyncio.wait_for(future, timeout, loop=self.loop)
 
     @patchable
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
