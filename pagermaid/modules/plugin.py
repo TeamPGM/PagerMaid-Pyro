@@ -62,7 +62,7 @@ async def plugin(__: Client, message: Message):
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
     if message.parameter[0] == "install":
         if len(message.parameter) == 1:
-            await message.edit(lang('apt_processing'))
+            message = await message.edit(lang('apt_processing'))
             if reply:
                 file_path = await reply.download()
             else:
