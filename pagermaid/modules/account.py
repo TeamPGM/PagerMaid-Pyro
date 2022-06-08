@@ -18,7 +18,7 @@ async def profile(client: Client, message: Message):
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
-        await message.edit(lang('profile_process'))
+        message = await message.edit(lang('profile_process'))
     if message.reply_to_message:
         user = message.reply_to_message.from_user
         if not user:
@@ -91,13 +91,13 @@ async def block_user(client: Client, message: Message):
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
-        await message.edit(lang('block_process'))
+        message = await message.edit(lang('block_process'))
     user = message.obtain_user()
     if not user:
         return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
     try:
         if await client.block_user(user):
-            await message.edit(f"{lang('block_success')} `{user}`")
+            return await message.edit(f"{lang('block_success')} `{user}`")
     except Exception:  # noqa
         pass
     await message.edit(f"`{user}` {lang('block_exist')}")
@@ -113,13 +113,13 @@ async def unblock_user(client: Client, message: Message):
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
     if not Config.SILENT:
-        await message.edit(lang('unblock_process'))
+        message = await message.edit(lang('unblock_process'))
     user = message.obtain_user()
     if not user:
         return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
     try:
         if await client.unblock_user(user):
-            await message.edit(f"{lang('unblock_success')} `{user}`")
+            return await message.edit(f"{lang('unblock_success')} `{user}`")
     except Exception:  # noqa
         pass
     await message.edit(f"`{user}` {lang('unblock_exist')}")

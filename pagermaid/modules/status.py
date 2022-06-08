@@ -23,10 +23,10 @@ from pagermaid.utils import lang, Message, execute
           description=lang('sysinfo_des'))
 async def sysinfo(_: Client, message: Message):
     """ Retrieve system information via neofetch. """
-    message = await message.edit(lang("sysinfo_loading"))
+    if not Config.SILENT:
+        message = await message.edit(lang("sysinfo_loading"))
     if platform == 'win32':
-        await message.edit(neofetch_win(), parse_mode=ParseMode.HTML)
-        return
+        return await message.edit(neofetch_win(), parse_mode=ParseMode.HTML)
     result = await execute("neofetch --config none --stdout")
     await message.edit(f"`{result}`")
 
