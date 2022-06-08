@@ -18,4 +18,4 @@ async def update(_: Client, message: Message):
     await execute(f"{executable} -m pip install --upgrade -r requirements.txt")
     await execute(f"{executable} -m pip install -r requirements.txt")
     await message.edit(lang('update_success'))
-    exit(1)
+    exit(0)

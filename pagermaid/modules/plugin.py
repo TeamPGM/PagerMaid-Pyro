@@ -82,8 +82,8 @@ async def plugin(__: Client, message: Message):
             await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
             exit(0)
         elif len(message.parameter) >= 2:
-            await message.edit(lang('apt_processing'))
             process_list = message.parameter
+            message = await message.edit(lang('apt_processing'))
             del process_list[0]
             success_list = []
             failed_list = []

@@ -20,7 +20,7 @@ from pagermaid.utils import attach_log, execute, Message, lang
 async def sh(_: Client, message: Message):
     """ Use the command-line from Telegram. """
     user = getuser()
-    command = message.text[4:]
+    command = message.arguments
     hostname = node()
 
     if not command:
@@ -67,8 +67,7 @@ async def sh_eval(_: Client, message: Message):
     try:
         cmd = message.text.split(" ", maxsplit=1)[1]
     except IndexError:
-        await message.edit(lang('eval_need_dev'))
-        return
+        return await message.edit(lang('eval_need_dev'))
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()
@@ -97,7 +96,7 @@ async def sh_eval(_: Client, message: Message):
         )
     )
     if len(final_output) > 4096:
-        await message.edit("**>>>** ```{}```".format(cmd))
+        message = await message.edit("**>>>** ```{}```".format(cmd))
         await attach_log(bot, evaluation, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
