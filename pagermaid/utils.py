@@ -194,10 +194,11 @@ async def process_exit(start: int, _client, message=None):
     data = sqlite.get("exit_msg", {})
     cid, mid = data.get("cid", 0), data.get("mid", 0)
     if start and data and cid and mid:
-        msg = await _client.get_messages(cid, mid)
+        msg: Message = await _client.get_messages(cid, mid)
         if msg:
             try:
-                await msg.edit(lang("restart_complete"))
+                await msg.edit((msg.text if msg.from_user.is_self and msg.text else "") +
+                               f'\n\n> {lang("restart_complete")}')
             except Exception as e:  # noqa
                 pass
         del sqlite["exit_msg"]

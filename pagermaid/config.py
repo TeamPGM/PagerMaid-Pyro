@@ -55,7 +55,7 @@ class Config:
                 port=PROXY_PORT,
             )
         GIT_SOURCE = os.environ.get("PGM_GIT_SOURCE", config["git_source"])
-        GIT_SOURCE = GIT_SOURCE.replace("TeamPGM/PagerMaid-Pyro", "TeamPGM/PagerMaid_Plugins_Pyro")
+        GIT_SOURCE = GIT_SOURCE.replace("TeamPGM/PagerMaid_Plugins/", "TeamPGM/PagerMaid_Plugins_Pyro/")
         try:
             with open(f"languages{os.sep}built-in{os.sep}{LANGUAGE}.yml", "r", encoding="utf-8") as f:
                 lang_dict = safe_load(f)
