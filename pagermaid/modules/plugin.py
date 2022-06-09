@@ -10,6 +10,7 @@ from pyrogram import Client
 
 from pagermaid import log, working_dir, Config
 from pagermaid.listener import listener
+from pagermaid.single_utils import safe_remove
 from pagermaid.utils import upload_attachment, lang, Message, client
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
 
@@ -137,16 +138,19 @@ async def plugin(__: Client, message: Message):
             await message.edit(lang('arg_error'))
     elif message.parameter[0] == "remove":
         if len(message.parameter) == 2:
-            if exists(f"{plugin_directory}{message.parameter[1]}.py"):
-                remove(f"{plugin_directory}{message.parameter[1]}.py")
+            if exists(f"{plugin_directory}{message.parameter[1]}.py") or \
+                    exists(f"{plugin_directory}{message.parameter[1]}.py.disabled"):
+                safe_remove(f"{plugin_directory}{message.parameter[1]}.py")
+                safe_remove(f"{plugin_directory}{message.parameter[1]}.py.disabled")
+                with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+                    version_json = json.load(f)
+                version_json[message.parameter[1]] = "0.0"
+                with open(f"{plugin_directory}version.json", 'w') as f:
+                    json.dump(version_json, f)
                 await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}, "
                                    f"{lang('apt_reboot')} ")
                 await log(f"{lang('apt_remove')} {message.parameter[1]}.")
                 exit(0)
-            elif exists(f"{plugin_directory}{message.parameter[1]}.py.disabled"):
-                remove(f"{plugin_directory}{message.parameter[1]}.py.disabled")
-                await message.edit(f"{lang('apt_removed_plugins')} {message.parameter[1]}.")
-                await log(f"{lang('apt_removed_plugins')} {message.parameter[1]}.")
             elif "/" in message.parameter[1]:
                 await message.edit(lang('arg_error'))
             else:

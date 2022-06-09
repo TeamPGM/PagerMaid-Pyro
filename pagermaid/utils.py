@@ -197,7 +197,7 @@ async def process_exit(start: int, _client, message=None):
         msg = await _client.get_messages(cid, mid)
         if msg:
             try:
-                await msg.edit(lang("restart_complete"))
+                await msg.edit(msg.text if msg.text else "" + f'\n\n> {lang("restart_complete")}')
             except Exception as e:  # noqa
                 pass
         del sqlite["exit_msg"]
