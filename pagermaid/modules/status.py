@@ -180,7 +180,8 @@ def neofetch_win():
     gpu = [f'     {g.strip()}' for g in gpu[1:]][0].strip()
     ram = get_ram()
     disks = '\n'.join(partitions())
-    text = f'<code>{user_name}@{host_name}\n---------\nOS: {os}\nUptime: {uptime}\n' \
-           f'Motherboard: {mboard}\nCPU: {cpu}\nGPU: {gpu}\nMemory: {ram}\n' \
-           f'Disk:\n{disks}</code>'
-    return text
+    return (
+        f'<code>{user_name}@{host_name}\n---------\nOS: {os}\nUptime: {uptime}\n'
+        f'Motherboard: {mboard}\nCPU: {cpu}\nGPU: {gpu}\nMemory: {ram}\n'
+        f'Disk:\n{disks}</code>'
+    )

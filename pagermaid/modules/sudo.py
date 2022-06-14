@@ -10,8 +10,7 @@ from pagermaid.single_utils import get_sudo_list
 
 
 def from_msg_get_sudo_id(message: Message) -> int:
-    reply = message.reply_to_message
-    if reply:
+    if reply := message.reply_to_message:
         return reply.from_user.id if reply.from_user else reply.sender_chat.id
     else:
         return message.chat.id
@@ -93,14 +92,16 @@ async def sudo_change(client: Client, message: Message):
         if len(message.parameter) == 2:
             from_id = from_msg_get_sudo_id(message)
             if message.parameter[0] == "glist":
-                data = permissions.get_permissions_for_user(str(message.parameter[1]))
-                if data:
-                    text = f"**{message.parameter[1]} {lang('sudo_group_list')}**\n\n"
-                    for i in data:
-                        text += f"  • `{'-' if i[2] == 'ejection' else ''}{i[1]}`\n"
-                    return await message.edit(text)
-                else:
+                if not (
+                    data := permissions.get_permissions_for_user(
+                        str(message.parameter[1])
+                    )
+                ):
                     return await edit_delete(message, f"__{lang('sudo_group_list')}__")
+                text = f"**{message.parameter[1]} {lang('sudo_group_list')}**\n\n"
+                for i in data:
+                    text += f"  • `{'-' if i[2] == 'ejection' else ''}{i[1]}`\n"
+                return await message.edit(text)
             if from_id not in sudo:
                 return await edit_delete(message, f"__{lang('sudo_no')}__")
             elif message.parameter[0] == "gaddu":

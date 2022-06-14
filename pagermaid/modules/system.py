@@ -96,7 +96,7 @@ async def sh_eval(_: Client, message: Message):
         )
     )
     if len(final_output) > 4096:
-        message = await message.edit("**>>>** ```{}```".format(cmd))
+        message = await message.edit(f"**>>>** ```{cmd}```")
         await attach_log(bot, evaluation, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
@@ -104,11 +104,15 @@ async def sh_eval(_: Client, message: Message):
 
 async def aexec(code, event, client):
     exec(
-        f"async def __aexec(e, client): "
-        + "\n msg = message = e"
-        + "\n reply = message.reply_to_message"
-        + "\n chat = e.chat"
-        + "".join(f"\n {x}" for x in code.split("\n")),
+        (
+            (
+                ("async def __aexec(e, client): " + "\n msg = message = e")
+                + "\n reply = message.reply_to_message"
+            )
+            + "\n chat = e.chat"
+        )
+        + "".join(f"\n {x}" for x in code.split("\n"))
     )
+
 
     return await locals()["__aexec"](event, client)

@@ -13,26 +13,26 @@ from pagermaid.utils import lang, Message
 async def userid(_: Client, message: Message):
     """ Query the UserID of the sender of the message you replied to. """
     reply = message.reply_to_message
-    text = "Message ID: `" + str(message.id) + "`\n\n"
+    text = f"Message ID: `{str(message.id)}" + "`\n\n"
     text += "**Chat**\nid:`" + str(message.chat.id) + "`\n"
     msg_from = message.chat
     if msg_from.type == "private":
         try:
-            text += "first_name: `" + msg_from.first_name + "`\n"
+            text += f"first_name: `{msg_from.first_name}" + "`\n"
         except TypeError:
             text += "**死号**\n"
         if msg_from.last_name:
-            text += "last_name: `" + msg_from.last_name + "`\n"
+            text += f"last_name: `{msg_from.last_name}" + "`\n"
         if msg_from.username:
-            text += "username: @" + msg_from.username + "\n"
+            text += f"username: @{msg_from.username}" + "\n"
     if msg_from.type in ["supergroup", "channel"]:
-        text += "title: `" + msg_from.title + "`\n"
+        text += f"title: `{msg_from.title}" + "`\n"
         try:
             if msg_from.username:
-                text += "username: @" + msg_from.username + "\n"
+                text += f"username: @{msg_from.username}" + "\n"
         except AttributeError:
             return await message.edit(lang("leave_not_group"))
-        text += "protected: `" + str(msg_from.has_protected_content) + "`\n"
+        text += f"protected: `{str(msg_from.has_protected_content)}" + "`\n"
     if reply:
         text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(reply.id) + \
                 "`\n\n**User**\nid: `" + str(reply.from_user.id) + "`"
@@ -121,8 +121,7 @@ async def logging(_: Client, message: Message):
           parameters=lang('re_parameters'))
 async def re(_: Client, message: Message):
     """ Forwards a message into this group """
-    reply = message.reply_to_message
-    if reply:
+    if reply := message.reply_to_message:
         if message.arguments == '':
             num = 1
         else:
@@ -133,7 +132,7 @@ async def re(_: Client, message: Message):
             except:  # noqa
                 return await message.edit(lang('re_arg_error'))
         await message.safe_delete()
-        for nums in range(0, num):
+        for _ in range(num):
             try:
                 if not message.chat.has_protected_content:
                     await reply.forward(reply.chat.id)
