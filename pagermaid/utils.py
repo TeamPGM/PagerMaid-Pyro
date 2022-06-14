@@ -18,22 +18,18 @@ from pagermaid.single_utils import _status_sudo, get_sudo_list, Message, sqlite
 
 def lang(text: str) -> str:
     """ i18n """
-    result = Config.lang_dict.get(text, text)
-    return result
+    return Config.lang_dict.get(text, text)
 
 
 def alias_command(command: str, disallow_alias: bool = False) -> str:
     """ alias """
-    if disallow_alias:
-        return command
-    return Config.alias_dict.get(command, command)
+    return command if disallow_alias else Config.alias_dict.get(command, command)
 
 
 async def attach_report(plaintext, file_name, reply_id=None, caption=None):
     """ Attach plaintext as logs. """
-    file = open(file_name, "w+")
-    file.write(plaintext)
-    file.close()
+    with open(file_name, "w+") as file:
+        file.write(plaintext)
     try:
         await bot.send_document(
             "PagerMaid_Modify_bot",
@@ -48,9 +44,8 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
 
 async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None):
     """ Attach plaintext as logs. """
-    file = open(file_name, "w+")
-    file.write(plaintext)
-    file.close()
+    with open(file_name, "w+") as file:
+        file.write(plaintext)
     await bot.send_document(
         chat_id,
         file_name,
@@ -141,15 +136,9 @@ async def edit_delete(message: Message,
 def get_permission_name(is_plugin: bool, need_admin: bool, command: str) -> str:
     """ Get permission name. """
     if is_plugin:
-        if need_admin:
-            return f"plugins_root.{command}"
-        else:
-            return f"plugins.{command}"
+        return f"plugins_root.{command}" if need_admin else f"plugins.{command}"
     else:
-        if need_admin:
-            return f"system.{command}"
-        else:
-            return f"modules.{command}"
+        return f"system.{command}" if need_admin else f"modules.{command}"
 
 
 def sudo_filter(permission: str):

@@ -161,7 +161,9 @@ class Message(pyrogram.types.Message):
     @patchable
     def obtain_message(self) -> Optional[str]:
         """ Obtains a message from either the reply message or command arguments. """
-        return self.arguments if self.arguments else (self.reply_to_message.text if self.reply_to_message else None)
+        return self.arguments or (
+            self.reply_to_message.text if self.reply_to_message else None
+        )
 
     @patchable
     def obtain_user(self) -> Optional[int]:
@@ -217,13 +219,12 @@ class Message(pyrogram.types.Message):
                         disable_web_page_preview=disable_web_page_preview,
                         reply_markup=reply_markup
                     )
-                else:
-                    if not no_reply:
-                        msg = await self.reply(
-                            text=text,
-                            parse_mode=parse_mode,
-                            disable_web_page_preview=disable_web_page_preview
-                        )
+                elif not no_reply:
+                    msg = await self.reply(
+                        text=text,
+                        parse_mode=parse_mode,
+                        disable_web_page_preview=disable_web_page_preview
+                    )
             else:
                 try:
                     msg = await self._client.edit_message_text(
@@ -236,9 +237,7 @@ class Message(pyrogram.types.Message):
                         reply_markup=reply_markup
                     )
                 except pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired:  # noqa
-                    if no_reply:
-                        pass
-                    else:
+                    if not no_reply:
                         msg = await self.reply(
                             text=text,
                             parse_mode=parse_mode,
@@ -254,11 +253,10 @@ class Message(pyrogram.types.Message):
                 document="output.log",
                 reply_to_message_id=self.id
             )
-        if msg:
-            msg.parameter = self.parameter
-            msg.arguments = self.arguments
-            return msg
-        else:
+        if not msg:
             return self
+        msg.parameter = self.parameter
+        msg.arguments = self.arguments
+        return msg
 
     edit = edit_text

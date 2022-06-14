@@ -18,12 +18,12 @@ async def main():
 
     for module_name in module_list:
         try:
-            import_module("pagermaid.modules." + module_name)
+            import_module(f"pagermaid.modules.{module_name}")
         except BaseException as exception:
             logs.info(f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}")
     for plugin_name in plugin_list:
         try:
-            import_module("plugins." + plugin_name)
+            import_module(f"plugins.{plugin_name}")
         except BaseException as exception:
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
             plugin_list.remove(plugin_name)
