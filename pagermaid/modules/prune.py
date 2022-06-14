@@ -48,7 +48,7 @@ async def self_prune(client: Client, message: Message):
     """ Deletes specific amount of messages you sent. """
     msgs = []
     count_buffer = 0
-    if not len(message.parameter) == 1:
+    if len(message.parameter) != 1:
         if not message.reply_to_message:
             return await message.edit(lang('arg_error'))
         async for msg in client.search_messages(
@@ -87,7 +87,10 @@ async def self_prune(client: Client, message: Message):
             msgs = []
     if msgs:
         await client.delete_messages(message.chat.id, msgs)
-    await log(f"{lang('prune_hint1')}{lang('sp_hint')} {str(count_buffer)} / {str(count)} {lang('prune_hint2')}")
+    await log(
+        f"{lang('prune_hint1')}{lang('sp_hint')} {str(count_buffer)} / {count} {lang('prune_hint2')}"
+    )
+
     try:
         notification = await send_prune_notify(client, message, count_buffer, count)
         await sleep(1)
@@ -107,7 +110,7 @@ async def your_prune(client: Client, message: Message):
     target = message.reply_to_message
     if not target.from_user:
         return await message.edit(lang('not_reply'))
-    if not len(message.parameter) == 1:
+    if len(message.parameter) != 1:
         return await message.edit(lang('arg_error'))
     count = 0
     try:
@@ -123,7 +126,10 @@ async def your_prune(client: Client, message: Message):
             break
         await msg.delete()
         count_buffer += 1
-    await log(f"{lang('prune_hint1')}{lang('yp_hint')} {str(count_buffer)} / {str(count)} {lang('prune_hint2')}")
+    await log(
+        f"{lang('prune_hint1')}{lang('yp_hint')} {str(count_buffer)} / {count} {lang('prune_hint2')}"
+    )
+
     notification = await send_prune_notify(client, message, count_buffer, count)
     await sleep(1)
     await notification.delete()
@@ -134,8 +140,7 @@ async def your_prune(client: Client, message: Message):
           description=lang('del_des'))
 async def delete(_: Client, message: Message):
     """ Deletes the message you replied to. """
-    target = message.reply_to_message
-    if target:
+    if target := message.reply_to_message:
         try:
             await target.delete()
         except Exception as e:  # noqa
@@ -149,5 +154,5 @@ async def delete(_: Client, message: Message):
 async def send_prune_notify(client, message, count_buffer, count):
     return await client.send_message(
         message.chat.id,
-        "%s %s / %s %s" % (lang('spn_deleted'), str(count_buffer), str(count), lang('prune_hint2'))
+        f"{lang('spn_deleted')} {str(count_buffer)} / {str(count)} {lang('prune_hint2')}",
     )

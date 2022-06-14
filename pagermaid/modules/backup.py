@@ -69,20 +69,18 @@ async def backup(_: Client, message: Message):
 async def recovery(_: Client, message: Message):
     reply = message.reply_to_message
 
-    if reply.document:  # Overwrite local backup
-        try:
-            if ".tar.gz" in reply.document.file_name:  # Verify filename
-                await message.edit(lang('recovery_down'))
-                # Start download process
-                pgm_backup_zip_name = await reply.download()  # noqa
-            else:
-                return await message.edit(lang('recovery_file_error'))
-        except Exception as e:  # noqa
-            print(e, format_exc())
-            return await message.edit(lang('recovery_file_error'))
-    else:
+    if not reply.document:
         return await message.edit(lang('recovery_file_error'))
 
+    try:
+        if ".tar.gz" not in reply.document.file_name:
+            return await message.edit(lang('recovery_file_error'))
+        await message.edit(lang('recovery_down'))
+        # Start download process
+        pgm_backup_zip_name = await reply.download()  # noqa
+    except Exception as e:  # noqa
+        print(e, format_exc())
+        return await message.edit(lang('recovery_file_error'))
     # Extract backup files
     await message.edit(lang('recovery_process'))
     if not os.path.exists(pgm_backup_zip_name):
