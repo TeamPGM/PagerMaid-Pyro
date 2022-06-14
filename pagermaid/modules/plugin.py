@@ -13,6 +13,7 @@ from pagermaid.listener import listener
 from pagermaid.single_utils import safe_remove
 from pagermaid.utils import upload_attachment, lang, Message, client
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
+import sys
 
 
 def remove_plugin(name):
@@ -81,7 +82,7 @@ async def plugin(__: Client, message: Message):
                                f"{path.basename(file_path)[:-3]} {lang('apt_installed')},"
                                f"{lang('apt_reboot')}")
             await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
-            exit(0)
+            sys.exit(0)
         elif len(message.parameter) >= 2:
             process_list = message.parameter
             message = await message.edit(lang('apt_processing'))
@@ -133,7 +134,7 @@ async def plugin(__: Client, message: Message):
                 text += lang('apt_reboot')
             await message.edit(text)
             if restart:
-                exit(0)
+                sys.exit(0)
         else:
             await message.edit(lang('arg_error'))
     elif message.parameter[0] == "remove":
@@ -150,7 +151,7 @@ async def plugin(__: Client, message: Message):
                 await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}, "
                                    f"{lang('apt_reboot')} ")
                 await log(f"{lang('apt_remove')} {message.parameter[1]}.")
-                exit(0)
+                sys.exit(0)
             elif "/" in message.parameter[1]:
                 await message.edit(lang('arg_error'))
             else:
@@ -201,7 +202,7 @@ async def plugin(__: Client, message: Message):
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
                                    f"{lang('apt_enable')},{lang('apt_reboot')}")
                 await log(f"{lang('apt_enable')} {message.parameter[1]}.")
-                exit(0)
+                sys.exit(0)
             else:
                 await message.edit(lang('apt_not_exist'))
         else:
@@ -214,7 +215,7 @@ async def plugin(__: Client, message: Message):
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
                                    f"{lang('apt_disable')},{lang('apt_reboot')}")
                 await log(f"{lang('apt_disable')} {message.parameter[1]}.")
-                exit(0)
+                sys.exit(0)
             else:
                 await message.edit(lang('apt_not_exist'))
         else:
@@ -288,7 +289,7 @@ async def plugin(__: Client, message: Message):
                     with open(f"{plugin_directory}version.json", "w") as f:
                         json.dump(version_json, f)
                 await message.edit(f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + need_update)
-                exit(0)
+                sys.exit(0)
     elif message.parameter[0] == "search":
         if len(message.parameter) == 1:
             await message.edit(lang("apt_search_no_name"))

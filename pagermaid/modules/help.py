@@ -7,6 +7,7 @@ from pagermaid import help_messages, Config
 from pagermaid.group_manager import enforce_permission
 from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
 from pagermaid.listener import listener
+import sys
 
 
 @listener(is_plugin=False, command="help",
@@ -102,7 +103,7 @@ async def lang_change(_: Client, message: Message):
         with open('config.yml', 'w') as f:
             f.write(file)
         await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
-        exit(1)
+        sys.exit(1)
     else:
         await message.edit(f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n'
                            f'{lang("lang_all_lang")}{"，".join(dir__)}')
@@ -140,7 +141,7 @@ async def alias_commands(_: Client, message: Message):
             with open(f"data{sep}alias.json", 'w') as f:
                 json_dump(Config.alias_dict, f)
             await message.edit(lang('alias_success'))
-            exit(1)
+            sys.exit(1)
         except KeyError:
             await message.edit(lang('alias_no_exist'))
             return
@@ -154,4 +155,4 @@ async def alias_commands(_: Client, message: Message):
         with open(f"data{sep}alias.json", 'w') as f:
             json_dump(Config.alias_dict, f)
         await message.edit(lang('alias_success'))
-        exit(1)
+        sys.exit(1)

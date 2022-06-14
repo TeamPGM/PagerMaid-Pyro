@@ -1,5 +1,6 @@
 """ Pagermaid backup and recovery plugin. """
 import os
+import sys
 import tarfile
 from traceback import format_exc
 
@@ -94,4 +95,4 @@ async def recovery(_: Client, message: Message):
         os.remove(pgm_backup_zip_name)
 
     await message.edit(lang('recovery_success') + " " + lang('apt_reboot'))
-    exit(1)
+    sys.exit(1)
