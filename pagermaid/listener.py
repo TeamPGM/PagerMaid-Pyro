@@ -144,14 +144,8 @@ def listener(**args):
                 if not diagnostics:
                     return
                 if Config.ERROR_REPORT:
-                    report = f"# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n" \
-                             f"# ChatID: {message.chat.id}. \n" \
-                             f"# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n" \
-                             f"# Message: \n-----BEGIN TARGET MESSAGE-----\n" \
-                             f"{message.text if message.text else message.caption}\n-----END TARGET MESSAGE-----\n" \
-                             f"# Traceback: \n-----BEGIN TRACEBACK-----\n" \
-                             f"{str(exc_format)}\n-----END TRACEBACK-----\n" \
-                             f"# Error: \"{str(exc_info)}\". \n"
+                    report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
+
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
             if (message.chat.id, message.id) in read_context:

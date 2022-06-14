@@ -14,20 +14,6 @@ from pagermaid.listener import listener
           parameters=f"<{lang('command')}>")
 async def help_command(_: Client, message: Message):
     """ The help new command,"""
-    support_commands = ['username', 'name', 'pfp', 'bio', 'rmpfp',
-                        'profile', 'block', 'unblock', 'ghost', 'deny', 'convert',
-                        'caption', 'ocr', 'highlight', 'time', 'translate',
-                        'tts', 'google', 'animate',
-                        'teletype', 'widen', 'owo', 'flip',
-                        'rng', 'aaa', 'tuxsay', 'coin', 'help',
-                        'lang', 'alias', 'id', 'uslog', 'log',
-                        're', 'leave', 'hitokoto', 'apt', 'prune', 'selfprune',
-                        'yourprune', 'del', 'genqr', 'parseqr',
-                        'sb', 'sysinfo', 'status',
-                        'stats', 'speedtest', 'connection',
-                        'pingdc', 'ping', 'topcloud',
-                        's', 'sticker', 'sh', 'restart',
-                        'trace', 'chat', 'update']
     if message.arguments:
         if message.arguments in help_messages:
             if from_self(message) or \
@@ -39,6 +25,20 @@ async def help_command(_: Client, message: Message):
             await message.edit(lang('arg_error'))
     else:
         result = f"**{lang('help_list')}: \n**"
+        support_commands = ['username', 'name', 'pfp', 'bio', 'rmpfp',
+                            'profile', 'block', 'unblock', 'ghost', 'deny', 'convert',
+                            'caption', 'ocr', 'highlight', 'time', 'translate',
+                            'tts', 'google', 'animate',
+                            'teletype', 'widen', 'owo', 'flip',
+                            'rng', 'aaa', 'tuxsay', 'coin', 'help',
+                            'lang', 'alias', 'id', 'uslog', 'log',
+                            're', 'leave', 'hitokoto', 'apt', 'prune', 'selfprune',
+                            'yourprune', 'del', 'genqr', 'parseqr',
+                            'sb', 'sysinfo', 'status',
+                            'stats', 'speedtest', 'connection',
+                            'pingdc', 'ping', 'topcloud',
+                            's', 'sticker', 'sh', 'restart',
+                            'trace', 'chat', 'update']
         for command in sorted(help_messages, reverse=False):
             if str(command) in support_commands:
                 continue
@@ -79,9 +79,10 @@ async def help_raw_command(_: Client, message: Message):
             if from_self(message) or \
                     enforce_permission(from_msg_get_sudo_uid(message), help_messages[command]["permission"]):
                 result += f"`{command}`, "
-        await message.edit(result[:-2] + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}** "
-                                         f"[{lang('help_source')}](https://t.me/PagerMaid_Modify)",
-                           disable_web_page_preview=True)
+        await message.edit(
+            f"""{result[:-2]}\n**{lang('help_send')} ",help <{lang('command')}>" {lang('help_see')}** [{lang('help_source')}](https://t.me/PagerMaid_Modify)""",
+            disable_web_page_preview=True,
+        )
 
 
 @listener(is_plugin=False, command="lang",
@@ -92,7 +93,7 @@ async def lang_change(_: Client, message: Message):
     from_lang = Config.LANGUAGE
     dir_, dir__ = listdir('languages/built-in'), []
     for i in dir_:
-        if not i.find('yml') == -1:
+        if i.find('yml') != -1:
             dir__.append(i[:-4])
     with open('config.yml') as f:
         file = f.read()
@@ -123,9 +124,12 @@ async def alias_commands(_: Client, message: Message):
         await message.edit(lang('arg_error'))
         return
     elif len(message.parameter) == 1:
-        if not len(source_commands) == 0:
-            for i in range(0, len(source_commands)):
-                texts.append(f'`{source_commands[i]}` --> `{to_commands[i]}`')
+        if source_commands:
+            texts.extend(
+                f'`{source_commands[i]}` --> `{to_commands[i]}`'
+                for i in range(len(source_commands))
+            )
+
             await message.edit(lang('alias_list') + '\n\n' + '\n'.join(texts))
         else:
             await message.edit(lang('alias_no'))
