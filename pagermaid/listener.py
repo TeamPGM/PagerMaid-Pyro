@@ -1,3 +1,4 @@
+import contextlib
 import sys
 import secrets
 from asyncio import sleep
@@ -5,7 +6,6 @@ from time import strftime, gmtime, time
 from traceback import format_exc
 
 from pyrogram import ContinuePropagation, StopPropagation, filters, Client
-from pagermaid.single_utils import Message
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid,
     MessageNotModified,
@@ -16,7 +16,9 @@ from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.group_manager import Permission
+from pagermaid.single_utils import Message
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
+from pagermaid.utils import client as httpx_client
 
 secret_generator = secrets.SystemRandom()
 
@@ -97,7 +99,8 @@ def listener(**args):
     def decorator(function):
 
         async def handler(client: Client, message: Message):
-            message.client = client
+            message.bot = client
+            message.request = httpx_client
 
             try:
                 try:
@@ -116,11 +119,14 @@ def listener(**args):
                         raise ContinuePropagation
                     read_context[(message.chat.id, message.id)] = True
 
-                await function(client, message)
-            except StopPropagation:
-                raise StopPropagation
-            except KeyboardInterrupt:
-                raise KeyboardInterrupt
+                if function.__code__.co_argcount == 1:
+                    await function(message)
+                elif function.__code__.co_argcount == 2:
+                    await function(client, message)
+            except StopPropagation as e:
+                raise StopPropagation from e
+            except KeyboardInterrupt as e:
+                raise KeyboardInterrupt from e
             except MessageNotModified:
                 pass
             except MessageIdInvalid:
@@ -129,29 +135,21 @@ def listener(**args):
                 )
             except UserNotParticipant:
                 pass
-            except ContinuePropagation:
-                raise ContinuePropagation
+            except ContinuePropagation as e:
+                raise ContinuePropagation from e
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 sys.exit(0)
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
-                try:
+                with contextlib.suppress(BaseException):
                     await message.edit(lang("run_error"), no_reply=True)  # noqa
-                except BaseException:
-                    pass
                 if not diagnostics:
                     return
                 if Config.ERROR_REPORT:
-                    report = f"# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n" \
-                             f"# ChatID: {message.chat.id}. \n" \
-                             f"# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n" \
-                             f"# Message: \n-----BEGIN TARGET MESSAGE-----\n" \
-                             f"{message.text if message.text else message.caption}\n-----END TARGET MESSAGE-----\n" \
-                             f"# Traceback: \n-----BEGIN TRACEBACK-----\n" \
-                             f"{str(exc_format)}\n-----END TRACEBACK-----\n" \
-                             f"# Error: \"{str(exc_info)}\". \n"
+                    report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
+
                     await attach_report(report, f"exception.{time()}.pagermaid", None,
                                         "Error report generated.")
             if (message.chat.id, message.id) in read_context:
@@ -185,12 +183,18 @@ def raw_listener(filter_s):
 
     def decorator(function):
         async def handler(client, message):
+            message.bot = client
+            message.request = httpx_client
+
             try:
-                await function(client, message)
-            except StopPropagation:
-                raise StopPropagation
-            except ContinuePropagation:
-                raise ContinuePropagation
+                if function.__code__.co_argcount == 1:
+                    await function(message)
+                elif function.__code__.co_argcount == 2:
+                    await function(client, message)
+            except StopPropagation as e:
+                raise StopPropagation from e
+            except ContinuePropagation as e:
+                raise ContinuePropagation from e
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 sys.exit(0)
@@ -201,10 +205,8 @@ def raw_listener(filter_s):
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
-                try:
+                with contextlib.suppress(BaseException):
                     await message.edit(lang('run_error'), no_reply=True)
-                except BaseException:
-                    pass
                 if Config.ERROR_REPORT:
                     report = f"# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n" \
                              f"# ChatID: {message.chat.id}. \n" \

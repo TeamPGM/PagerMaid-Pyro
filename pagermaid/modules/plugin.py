@@ -1,30 +1,29 @@
 """ PagerMaid module to manage plugins. """
+
+import contextlib
 import json
+import importlib
+
 from re import search, I
 from os import remove, rename, chdir, path, sep
 from os.path import exists
 from shutil import copyfile, move
 from glob import glob
 
-from pyrogram import Client
-
-from pagermaid import log, working_dir, Config
+from pagermaid import log, working_dir, Config, scheduler
 from pagermaid.listener import listener
 from pagermaid.single_utils import safe_remove
 from pagermaid.utils import upload_attachment, lang, Message, client
 from pagermaid.modules import plugin_list as active_plugins, __list_plugins
+from pagermaid.modules.reload import reload_all
 
 
 def remove_plugin(name):
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
-    try:
+    with contextlib.suppress(FileNotFoundError):
         remove(f"{plugin_directory}{name}.py")
-    except FileNotFoundError:
-        pass
-    try:
+    with contextlib.suppress(FileNotFoundError):
         remove(f"{plugin_directory}{name}.py.disabled")
-    except FileNotFoundError:
-        pass
 
 
 def move_plugin(file_path):
@@ -55,7 +54,7 @@ def update_version(plugin_name, version):
           diagnostics=False,
           description=lang('apt_des'),
           parameters=lang('apt_parameters'))
-async def plugin(__: Client, message: Message):
+async def plugin(message: Message):
     if len(message.parameter) == 0:
         await message.edit(lang('arg_error'))
         return
@@ -81,7 +80,7 @@ async def plugin(__: Client, message: Message):
                                f"{path.basename(file_path)[:-3]} {lang('apt_installed')},"
                                f"{lang('apt_reboot')}")
             await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
-            exit(0)
+            reload_all()
         elif len(message.parameter) >= 2:
             process_list = message.parameter
             message = await message.edit(lang('apt_processing'))
@@ -133,24 +132,24 @@ async def plugin(__: Client, message: Message):
                 text += lang('apt_reboot')
             await message.edit(text)
             if restart:
-                exit(0)
+                reload_all()
         else:
             await message.edit(lang('arg_error'))
     elif message.parameter[0] == "remove":
         if len(message.parameter) == 2:
             if exists(f"{plugin_directory}{message.parameter[1]}.py") or \
                     exists(f"{plugin_directory}{message.parameter[1]}.py.disabled"):
-                safe_remove(f"{plugin_directory}{message.parameter[1]}.py")
-                safe_remove(f"{plugin_directory}{message.parameter[1]}.py.disabled")
-                with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
-                    version_json = json.load(f)
-                version_json[message.parameter[1]] = "0.0"
-                with open(f"{plugin_directory}version.json", 'w') as f:
-                    json.dump(version_json, f)
+                remove_plugin(message.parameter[1])
+                if exists(f"{plugin_directory}version.json"):
+                    with open(f"{plugin_directory}version.json", 'r', encoding="utf-8") as f:
+                        version_json = json.load(f)
+                    version_json[message.parameter[1]] = "0.0"
+                    with open(f"{plugin_directory}version.json", 'w') as f:
+                        json.dump(version_json, f)
                 await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}, "
                                    f"{lang('apt_reboot')} ")
                 await log(f"{lang('apt_remove')} {message.parameter[1]}.")
-                exit(0)
+                reload_all()
             elif "/" in message.parameter[1]:
                 await message.edit(lang('arg_error'))
             else:
@@ -201,7 +200,7 @@ async def plugin(__: Client, message: Message):
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
                                    f"{lang('apt_enable')},{lang('apt_reboot')}")
                 await log(f"{lang('apt_enable')} {message.parameter[1]}.")
-                exit(0)
+                reload_all()
             else:
                 await message.edit(lang('apt_not_exist'))
         else:
@@ -214,7 +213,7 @@ async def plugin(__: Client, message: Message):
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
                                    f"{lang('apt_disable')},{lang('apt_reboot')}")
                 await log(f"{lang('apt_disable')} {message.parameter[1]}.")
-                exit(0)
+                reload_all()
             else:
                 await message.edit(lang('apt_not_exist'))
         else:
@@ -262,7 +261,7 @@ async def plugin(__: Client, message: Message):
                         un_need_update += "\n`" + key + "`:Ver  " + value
                     else:
                         need_update_list.extend([key])
-                        need_update += "\n`" + key + "`:Ver  " + value + " --> Ver  " + i['version']
+                        need_update += "\n<code>" + key + "</code>:Ver  " + value + " > Ver  " + i['version']
                     continue
         if un_need_update == f"{lang('apt_no_update')}:":
             un_need_update = ""
@@ -288,7 +287,7 @@ async def plugin(__: Client, message: Message):
                     with open(f"{plugin_directory}version.json", "w") as f:
                         json.dump(version_json, f)
                 await message.edit(f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + need_update)
-                exit(0)
+                reload_all()
     elif message.parameter[0] == "search":
         if len(message.parameter) == 1:
             await message.edit(lang("apt_search_no_name"))
@@ -354,5 +353,9 @@ async def plugin(__: Client, message: Message):
             await message.edit(lang("apt_why_not_install_a_plugin"))
         else:
             await message.edit(",apt install " + " ".join(list_plugin))
+    elif message.parameter[0] == "reload":
+        # bot.dispatcher.remove_all_handlers()  # noqa
+        scheduler.remove_all_jobs()
+        importlib.reload(importlib.import_module("plugins.sign"))
     else:
         await message.edit(lang("arg_error"))

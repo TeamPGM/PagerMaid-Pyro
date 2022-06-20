@@ -1,6 +1,4 @@
-from sys import executable
-
-from pyrogram import Client
+from sys import executable, exit
 
 from pagermaid.listener import listener
 from pagermaid.utils import lang, execute, Message, alias_command
@@ -10,7 +8,7 @@ from pagermaid.utils import lang, execute, Message, alias_command
           need_admin=True,
           description=lang('update_des'),
           parameters="<true/debug>")
-async def update(_: Client, message: Message):
+async def update(message: Message):
     await execute('git fetch --all')
     if len(message.parameter) > 0:
         await execute('git reset --hard origin/master')

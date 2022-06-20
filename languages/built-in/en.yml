@@ -245,14 +245,14 @@ coin_lost: I lost my coin
 ## lang
 lang_des: Switch language.
 lang_change_to: The language has been switched to
-lang_reboot: Restarting.
+lang_reboot: Reloading.
 lang_current_lang: The current language is
 lang_all_lang: All available languages are
 ## alias
 alias_des: Redirect original command.
 alias_list: 'The following is a list of redirect commands:'
 alias_no: You have not redirected any original commands.
-alias_success: Edit redirection command success，PagerMaid-Pyro is restarting.
+alias_success: Edit redirection command success，PagerMaid-Pyro is reloading.
 alias_exist: Something went wrong, woooo~ The command that is redirected is already occupied.
 alias_no_exist: Something went wrong, woooo~ The original command is not redirected.
 #message
@@ -309,7 +309,7 @@ apt_processing: Installing plugins...
 apt_no_py: Something went wrong ~ Failed to get the plug-in file from the attachment.
 apt_plugin: plugin
 apt_installed: installed
-apt_reboot: PagerMaid-Pyro is restarting.
+apt_reboot: PagerMaid-Pyro is reloading.
 apt_install_success: successful installation
 apt_not_found: not founded
 apt_no_update: no need to update
@@ -553,3 +553,6 @@ sb_remove: The automatic banned list has been removed this group.
 sb_exist: This group exists in the automatic banned list.
 sb_no_exist: This group does't exist in the automatic banned list.
 sb_channel: Successfully blocked this channel in this group.
+#reload
+reload_des: Reload the PagerMaid-Pyro instance.
+reload_ok: Successfully reloaded.

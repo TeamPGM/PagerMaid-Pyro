@@ -1,9 +1,9 @@
 """ PagerMaid module that contains utilities related to system status. """
-from datetime import datetime
+from datetime import datetime, timezone
 from platform import uname, python_version
 from sys import platform
 
-from pyrogram import Client, __version__
+from pyrogram import __version__
 from pyrogram.raw.functions import Ping
 from pyrogram.enums.parse_mode import ParseMode
 
@@ -21,7 +21,7 @@ from pagermaid.utils import lang, Message, execute
 
 @listener(is_plugin=False, command="sysinfo",
           description=lang('sysinfo_des'))
-async def sysinfo(_: Client, message: Message):
+async def sysinfo(message: Message):
     """ Retrieve system information via neofetch. """
     if not Config.SILENT:
         message = await message.edit(lang("sysinfo_loading"))
@@ -33,7 +33,7 @@ async def sysinfo(_: Client, message: Message):
 
 @listener(is_plugin=False, command="status",
           description=lang('status_des'))
-async def status(_: Client, message: Message):
+async def status(message: Message):
     # database
     # database = lang('status_online') if redis_status() else lang('status_offline')
     # uptime https://gist.github.com/borgstrom/936ca741e885a1438c374824efb038b3
@@ -55,7 +55,7 @@ async def status(_: Client, message: Message):
             time_form = time_form.replace(key, value)
         return time_form
 
-    current_time = datetime.utcnow()
+    current_time = datetime.now(timezone.utc)
     uptime_sec = (current_time - start_time).total_seconds()
     uptime = await human_time_duration(int(uptime_sec))
     text = (f"**{lang('status_hint')}** \n"
@@ -72,10 +72,10 @@ async def status(_: Client, message: Message):
 
 @listener(is_plugin=False, command="ping",
           description=lang('ping_des'))
-async def ping(client: Client, message: Message):
+async def ping(message: Message):
     """ Calculates latency between PagerMaid and Telegram. """
     start = datetime.now()
-    await client.invoke(Ping(ping_id=0))
+    await message.bot.invoke(Ping(ping_id=0))
     end = datetime.now()
     ping_duration = (end - start).microseconds / 1000
     start = datetime.now()
@@ -180,7 +180,8 @@ def neofetch_win():
     gpu = [f'     {g.strip()}' for g in gpu[1:]][0].strip()
     ram = get_ram()
     disks = '\n'.join(partitions())
-    text = f'<code>{user_name}@{host_name}\n---------\nOS: {os}\nUptime: {uptime}\n' \
-           f'Motherboard: {mboard}\nCPU: {cpu}\nGPU: {gpu}\nMemory: {ram}\n' \
-           f'Disk:\n{disks}</code>'
-    return text
+    return (
+        f'<code>{user_name}@{host_name}\n---------\nOS: {os}\nUptime: {uptime}\n'
+        f'Motherboard: {mboard}\nCPU: {cpu}\nGPU: {gpu}\nMemory: {ram}\n'
+        f'Disk:\n{disks}</code>'
+    )

@@ -245,14 +245,14 @@ coin_lost: 我擲了硬幣
 ## lang
 lang_des: 切換語言
 lang_change_to: 語言已切換到
-lang_reboot: 正在重新啟動。
+lang_reboot: 正在重新加載。
 lang_current_lang: 目前語言是
 lang_all_lang: 所有語言有這些：
 ## alias
 alias_des: 重定向原始命令。
 alias_list: '以下是重定向命令列表：'
 alias_no: 您還沒有重定向任何原始命令。
-alias_success: 編輯重定向命令成功，PagerMaid-Pyro 正在重新啟動。
+alias_success: 編輯重定向命令成功，PagerMaid-Pyro 正在重新加载。
 alias_exist: 出錯了嗚嗚嗚 ~ 重定向指向的命令已被佔用。
 alias_no_exist: 出錯了嗚嗚嗚 ~ 原始命令沒有被重定向。
 #message
@@ -309,7 +309,7 @@ apt_processing: 安裝插件中…
 apt_no_py: Error！無法獲取插件文件。
 apt_plugin: 插件
 apt_installed: 已安裝
-apt_reboot: 正在重新啟動 PagerMaid-Pyro。
+apt_reboot: PagerMaid-Pyro 正在重新加載。
 apt_install_success: 安裝成功
 apt_not_found: Error！沒有找到插件
 apt_no_update: 沒必要更新
@@ -553,3 +553,6 @@ sb_remove: 已被移除自動封禁列表。
 sb_exist: 此群組存在於自動封禁列表中。
 sb_no_exist: 此群組不存在於自動封禁列表中。
 sb_channel: 成功在本群封禁此頻道。
+#reload
+reload_des: 重新加載內置模塊和插件。
+reload_ok: 重新加載內置模塊和插件成功。

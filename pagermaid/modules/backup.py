@@ -1,9 +1,8 @@
 """ Pagermaid backup and recovery plugin. """
 import os
+import sys
 import tarfile
 from traceback import format_exc
-
-from pyrogram import Client
 
 from pagermaid.config import Config
 from pagermaid.listener import listener
@@ -42,7 +41,7 @@ def un_tar_gz(filename, dirs):
 
 @listener(is_plugin=False, outgoing=True, command="backup",
           description=lang('back_des'))
-async def backup(_: Client, message: Message):
+async def backup(message: Message):
     await message.edit(lang('backup_process'))
 
     # Remove old backup
@@ -66,23 +65,21 @@ async def backup(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="recovery",
           need_admin=True,
           description=lang('recovery_des'))
-async def recovery(_: Client, message: Message):
+async def recovery(message: Message):
     reply = message.reply_to_message
 
-    if reply.document:  # Overwrite local backup
-        try:
-            if ".tar.gz" in reply.document.file_name:  # Verify filename
-                await message.edit(lang('recovery_down'))
-                # Start download process
-                pgm_backup_zip_name = await reply.download()  # noqa
-            else:
-                return await message.edit(lang('recovery_file_error'))
-        except Exception as e:  # noqa
-            print(e, format_exc())
-            return await message.edit(lang('recovery_file_error'))
-    else:
+    if not reply.document:
         return await message.edit(lang('recovery_file_error'))
 
+    try:
+        if ".tar.gz" not in reply.document.file_name:
+            return await message.edit(lang('recovery_file_error'))
+        await message.edit(lang('recovery_down'))
+        # Start download process
+        pgm_backup_zip_name = await reply.download()  # noqa
+    except Exception as e:  # noqa
+        print(e, format_exc())
+        return await message.edit(lang('recovery_file_error'))
     # Extract backup files
     await message.edit(lang('recovery_process'))
     if not os.path.exists(pgm_backup_zip_name):
@@ -96,4 +93,4 @@ async def recovery(_: Client, message: Message):
         os.remove(pgm_backup_zip_name)
 
     await message.edit(lang('recovery_success') + " " + lang('apt_reboot'))
-    exit(1)
+    sys.exit(1)

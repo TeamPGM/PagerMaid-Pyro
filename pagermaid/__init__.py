@@ -1,15 +1,16 @@
+import contextlib
 from coloredlogs import ColoredFormatter
+from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
-from datetime import datetime
 from os import getcwd
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from pagermaid.config import Config
+from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.0.9"
+pgm_version = "1.1.0"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -17,9 +18,7 @@ working_dir = getcwd()
 read_context = {}
 help_messages = {}
 all_permissions = []
-scheduler = AsyncIOScheduler(timezone="Asia/ShangHai")
-if not scheduler.running:
-    scheduler.start()
+
 logs = getLogger(__name__)
 logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = StreamHandler()
@@ -27,6 +26,9 @@ logging_handler.setFormatter(ColoredFormatter(logging_format))
 root_logger = getLogger()
 root_logger.setLevel(DEBUG if Config.DEBUG else CRITICAL)
 root_logger.addHandler(logging_handler)
+pyro_logger = getLogger("pyrogram")
+pyro_logger.setLevel(CRITICAL)
+pyro_logger.addHandler(logging_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)
 logs.setLevel(DEBUG if Config.DEBUG else INFO)
 
@@ -38,19 +40,21 @@ elif not Config.API_HASH:
     logs.error("Api-Hash Not Found!")
     sys.exit(1)
 
-start_time = datetime.utcnow()
+start_time = datetime.now(timezone.utc)
 
-try:
-    import uvloop
+with contextlib.suppress(ImportError):
+    import uvloop  # noqa
     uvloop.install()
-except ImportError:
-    pass
+
+if not scheduler.running:
+    scheduler.start()
 bot = Client("pagermaid",
              session_string=Config.STRING_SESSION,
              api_id=Config.API_ID,
              api_hash=Config.API_HASH,
              ipv6=Config.IPV6,
              proxy=Config.PROXY)
+bot.job = scheduler
 
 
 async def log(message):

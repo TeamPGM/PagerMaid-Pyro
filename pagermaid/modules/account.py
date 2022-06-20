@@ -1,6 +1,5 @@
 from os import remove
 
-from pyrogram import Client
 from pyrogram.errors import UsernameNotOccupied, PeerIdInvalid
 from pyrogram.types import User
 
@@ -8,11 +7,13 @@ from pagermaid import Config
 from pagermaid.listener import listener
 from pagermaid.utils import lang, Message
 
+import contextlib
 
-@listener(is_plugin=False, outgoing=True, command="profile",
+
+@listener(is_plugin=False, command="profile",
           description=lang('profile_des'),
           parameters="<username>")
-async def profile(client: Client, message: Message):
+async def profile(message: Message):
     """ Queries profile of a user. """
     if len(message.parameter) > 1:
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
@@ -29,7 +30,7 @@ async def profile(client: Client, message: Message):
             if user.isdigit():
                 user = int(user)
         else:
-            user = await client.get_me()
+            user = await message.bot.get_me()
         if message.entities is not None:
             if message.entities[0].type == "text_mention":
                 user = message.entities[0].user
@@ -39,7 +40,7 @@ async def profile(client: Client, message: Message):
                 return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         if not isinstance(user, User):
             try:
-                user = await client.get_users(user)
+                user = await message.bot.get_users(user)
             except PeerIdInvalid:
                 return await message.edit(f"{lang('error_prefix')}{lang('profile_e_nof')}")
             except UsernameNotOccupied:
@@ -66,10 +67,10 @@ async def profile(client: Client, message: Message):
               f"{lang('profile_restricted')}: {restricted} \n" \
               f"{lang('profile_type')}: {user_type} \n" \
               f"[{first_name}](tg://user?id={user.id})"
-    photo = await client.download_media(user.photo.big_file_id)
+    photo = await message.bot.download_media(user.photo.big_file_id)
     reply_to = message.reply_to_message
     try:
-        await client.send_photo(
+        await message.bot.send_photo(
             message.chat.id,
             photo,
             caption=caption,
@@ -85,7 +86,7 @@ async def profile(client: Client, message: Message):
           need_admin=True,
           description=lang('block_des'),
           parameters="(username/uid/reply)")
-async def block_user(client: Client, message: Message):
+async def block_user(message: Message):
     """ Block a user. """
     if len(message.parameter) > 1:
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
@@ -95,11 +96,9 @@ async def block_user(client: Client, message: Message):
     user = message.obtain_user()
     if not user:
         return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
-    try:
-        if await client.block_user(user):
+    with contextlib.suppress(Exception):
+        if await message.bot.block_user(user):
             return await message.edit(f"{lang('block_success')} `{user}`")
-    except Exception:  # noqa
-        pass
     await message.edit(f"`{user}` {lang('block_exist')}")
 
 
@@ -107,7 +106,7 @@ async def block_user(client: Client, message: Message):
           need_admin=True,
           description=lang('unblock_des'),
           parameters="<username/uid/reply>")
-async def unblock_user(client: Client, message: Message):
+async def unblock_user(message: Message):
     """ Unblock a user. """
     if len(message.parameter) > 1:
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
@@ -117,9 +116,7 @@ async def unblock_user(client: Client, message: Message):
     user = message.obtain_user()
     if not user:
         return await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
-    try:
-        if await client.unblock_user(user):
+    with contextlib.suppress(Exception):
+        if await message.bot.unblock_user(user):
             return await message.edit(f"{lang('unblock_success')} `{user}`")
-    except Exception:  # noqa
-        pass
     await message.edit(f"`{user}` {lang('unblock_exist')}")

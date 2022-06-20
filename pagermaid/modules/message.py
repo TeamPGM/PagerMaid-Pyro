@@ -1,5 +1,5 @@
 """ Pagermaid message plugin. """
-from pyrogram import Client
+
 from pyrogram.errors import Forbidden, FloodWait
 
 from pagermaid import log
@@ -10,29 +10,29 @@ from pagermaid.utils import lang, Message
 
 @listener(is_plugin=False, outgoing=True, command="id",
           description=lang("id_des"))
-async def userid(_: Client, message: Message):
+async def userid(message: Message):
     """ Query the UserID of the sender of the message you replied to. """
     reply = message.reply_to_message
-    text = "Message ID: `" + str(message.id) + "`\n\n"
+    text = f"Message ID: `{str(message.id)}" + "`\n\n"
     text += "**Chat**\nid:`" + str(message.chat.id) + "`\n"
     msg_from = message.chat
     if msg_from.type == "private":
         try:
-            text += "first_name: `" + msg_from.first_name + "`\n"
+            text += f"first_name: `{msg_from.first_name}" + "`\n"
         except TypeError:
             text += "**死号**\n"
         if msg_from.last_name:
-            text += "last_name: `" + msg_from.last_name + "`\n"
+            text += f"last_name: `{msg_from.last_name}" + "`\n"
         if msg_from.username:
-            text += "username: @" + msg_from.username + "\n"
+            text += f"username: @{msg_from.username}" + "\n"
     if msg_from.type in ["supergroup", "channel"]:
-        text += "title: `" + msg_from.title + "`\n"
+        text += f"title: `{msg_from.title}" + "`\n"
         try:
             if msg_from.username:
-                text += "username: @" + msg_from.username + "\n"
+                text += f"username: @{msg_from.username}" + "\n"
         except AttributeError:
             return await message.edit(lang("leave_not_group"))
-        text += "protected: `" + str(msg_from.has_protected_content) + "`\n"
+        text += f"protected: `{str(msg_from.has_protected_content)}" + "`\n"
     if reply:
         text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(reply.id) + \
                 "`\n\n**User**\nid: `" + str(reply.from_user.id) + "`"
@@ -83,7 +83,7 @@ async def userid(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="uslog",
           description=lang('uslog_des'),
           parameters="<string>")
-async def uslog(_: Client, message: Message):
+async def uslog(message: Message):
     """ Forwards a message into log group """
     if Config.LOG:
         if message.reply_to_message:
@@ -101,7 +101,7 @@ async def uslog(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="log",
           description=lang('log_des'),
           parameters="<string>")
-async def logging(_: Client, message: Message):
+async def logging(message: Message):
     """ Forwards a message into log group """
     if Config.LOG:
         if message.reply_to_message:
@@ -119,10 +119,9 @@ async def logging(_: Client, message: Message):
 @listener(is_plugin=False, outgoing=True, command="re",
           description=lang('re_des'),
           parameters=lang('re_parameters'))
-async def re(_: Client, message: Message):
+async def re(message: Message):
     """ Forwards a message into this group """
-    reply = message.reply_to_message
-    if reply:
+    if reply := message.reply_to_message:
         if message.arguments == '':
             num = 1
         else:
@@ -130,10 +129,10 @@ async def re(_: Client, message: Message):
                 num = int(message.arguments)
                 if num > 100:
                     await message.edit(lang('re_too_big'))
-            except:  # noqa
+            except Exception:
                 return await message.edit(lang('re_arg_error'))
         await message.safe_delete()
-        for nums in range(0, num):
+        for _ in range(num):
             try:
                 if not message.chat.has_protected_content:
                     await reply.forward(reply.chat.id)

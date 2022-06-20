@@ -6,8 +6,6 @@ from sys import exit
 from platform import node
 from getpass import getuser
 
-from pyrogram import Client
-
 from pagermaid import bot
 from pagermaid.listener import listener
 from pagermaid.utils import attach_log, execute, Message, lang
@@ -17,7 +15,7 @@ from pagermaid.utils import attach_log, execute, Message, lang
           need_admin=True,
           description=lang('sh_des'),
           parameters=lang('sh_parameters'))
-async def sh(_: Client, message: Message):
+async def sh(message: Message):
     """ Use the command-line from Telegram. """
     user = getuser()
     command = message.arguments
@@ -28,9 +26,9 @@ async def sh(_: Client, message: Message):
         return
 
     message = await message.edit(
-                                  f"`{user}`@{hostname} ~"
-                                  f"\n> `$` {command}"
-                                  )
+        f"`{user}`@{hostname} ~"
+        f"\n> `$` {command}"
+    )
 
     result = await execute(command)
 
@@ -40,10 +38,10 @@ async def sh(_: Client, message: Message):
             return
 
         await message.edit(
-                            f"`{user}`@{hostname} ~"
-                            f"\n> `#` {command}"
-                            f"\n`{result}`"
-                            )
+            f"`{user}`@{hostname} ~"
+            f"\n> `#` {command}"
+            f"\n`{result}`"
+        )
     else:
         return
 
@@ -51,7 +49,7 @@ async def sh(_: Client, message: Message):
 @listener(is_plugin=False, command="restart",
           need_admin=True,
           description=lang('restart_des'))
-async def restart(_: Client, message: Message):
+async def restart(message: Message):
     """ To re-execute PagerMaid. """
     if not message.text[0].isalpha():
         await message.edit(lang('restart_log'))
@@ -62,7 +60,7 @@ async def restart(_: Client, message: Message):
           need_admin=True,
           description=lang('eval_des'),
           parameters=lang('eval_parameters'))
-async def sh_eval(_: Client, message: Message):
+async def sh_eval(message: Message):
     """ Run python commands from Telegram. """
     try:
         cmd = message.text.split(" ", maxsplit=1)[1]
@@ -89,14 +87,9 @@ async def sh_eval(_: Client, message: Message):
         evaluation = stdout
     else:
         evaluation = "Success"
-    final_output = (
-        "**>>>** ```{}``` \n```{}```".format(
-            cmd,
-            evaluation,
-        )
-    )
+    final_output = f"**>>>** ```{cmd}``` \n```{evaluation}```"
     if len(final_output) > 4096:
-        message = await message.edit("**>>>** ```{}```".format(cmd))
+        message = await message.edit(f"**>>>** ```{cmd}```")
         await attach_log(bot, evaluation, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
@@ -104,11 +97,14 @@ async def sh_eval(_: Client, message: Message):
 
 async def aexec(code, event, client):
     exec(
-        f"async def __aexec(e, client): "
-        + "\n msg = message = e"
-        + "\n reply = message.reply_to_message"
-        + "\n chat = e.chat"
-        + "".join(f"\n {x}" for x in code.split("\n")),
+        (
+                (
+                        ("async def __aexec(e, client): " + "\n msg = message = e")
+                        + "\n reply = message.reply_to_message"
+                )
+                + "\n chat = e.chat"
+        )
+        + "".join(f"\n {x}" for x in code.split("\n"))
     )
 
     return await locals()["__aexec"](event, client)

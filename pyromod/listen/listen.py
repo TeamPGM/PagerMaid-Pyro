@@ -25,10 +25,9 @@ from typing import Optional, List
 import pyrogram
 
 from pagermaid.single_utils import get_sudo_list, Message
+from pagermaid.scheduler import add_delete_message_job
 
 from ..utils import patch, patchable
-
-loop = asyncio.get_event_loop()
 
 
 class ListenerCanceled(Exception):
@@ -53,14 +52,14 @@ class Client:
             chat = await self.get_chat(chat_id)
             chat_id = chat.id
 
-        future = loop.create_future()
+        future = self.loop.create_future()
         future.add_done_callback(
             functools.partial(self.clear_listener, chat_id)
         )
         self.listening.update({
             chat_id: {"future": future, "filters": filters}
         })
-        return await asyncio.wait_for(future, timeout)
+        return await asyncio.wait_for(future, timeout, loop=self.loop)
 
     @patchable
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
@@ -144,6 +143,7 @@ class User(pyrogram.types.User):
     def cancel_listener(self):
         return self._client.cancel_listener(self.id)
 
+
 # pagermaid-pyro
 
 
@@ -163,7 +163,9 @@ class Message(pyrogram.types.Message):
     @patchable
     def obtain_message(self) -> Optional[str]:
         """ Obtains a message from either the reply message or command arguments. """
-        return self.arguments if self.arguments else (self.reply_to_message.text if self.reply_to_message else None)
+        return self.arguments or (
+            self.reply_to_message.text if self.reply_to_message else None
+        )
 
     @patchable
     def obtain_user(self) -> Optional[int]:
@@ -184,6 +186,10 @@ class Message(pyrogram.types.Message):
         if not user and self.chat.type == pyrogram.enums.ChatType.PRIVATE:  # Current chat
             user = self.chat.id
         return user
+
+    @patchable
+    async def delay_delete(self, delay: int = 60):
+        add_delete_message_job(self, delay)
 
     @patchable
     async def edit_text(
@@ -219,13 +225,12 @@ class Message(pyrogram.types.Message):
                         disable_web_page_preview=disable_web_page_preview,
                         reply_markup=reply_markup
                     )
-                else:
-                    if not no_reply:
-                        msg = await self.reply(
-                            text=text,
-                            parse_mode=parse_mode,
-                            disable_web_page_preview=disable_web_page_preview
-                        )
+                elif not no_reply:
+                    msg = await self.reply(
+                        text=text,
+                        parse_mode=parse_mode,
+                        disable_web_page_preview=disable_web_page_preview
+                    )
             else:
                 try:
                     msg = await self._client.edit_message_text(
@@ -238,9 +243,7 @@ class Message(pyrogram.types.Message):
                         reply_markup=reply_markup
                     )
                 except pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired:  # noqa
-                    if no_reply:
-                        pass
-                    else:
+                    if not no_reply:
                         msg = await self.reply(
                             text=text,
                             parse_mode=parse_mode,
@@ -256,11 +259,26 @@ class Message(pyrogram.types.Message):
                 document="output.log",
                 reply_to_message_id=self.id
             )
-        if msg:
-            msg.parameter = self.parameter
-            msg.arguments = self.arguments
-            return msg
-        else:
+        if not msg:
             return self
+        msg.parameter = self.parameter
+        msg.arguments = self.arguments
+        return msg
 
     edit = edit_text
+
+
+@patch(pyrogram.dispatcher.Dispatcher)  # noqa
+class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
+    @patchable
+    def remove_all_handlers(self):
+        async def fn():
+            for lock in self.locks_list:
+                await lock.acquire()
+
+            self.groups.clear()
+
+            for lock in self.locks_list:
+                lock.release()
+
+        self.loop.create_task(fn())

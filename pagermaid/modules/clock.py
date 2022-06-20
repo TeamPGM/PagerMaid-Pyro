@@ -2,7 +2,6 @@
 
 from datetime import datetime
 
-from pyrogram import Client
 from pytz import country_names, country_timezones, timezone
 from pagermaid.config import Config
 from pagermaid.listener import listener
@@ -12,7 +11,7 @@ from pagermaid.utils import lang, Message
 @listener(is_plugin=False, outgoing=True, command="time",
           description=lang('time_des'),
           parameters=lang('time_parameters'))
-async def time(_: Client, message: Message):
+async def time(message: Message):
     """ For querying time. """
     if len(message.parameter) == 1:
         country = message.parameter[0].title()
