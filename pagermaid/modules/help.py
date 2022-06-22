@@ -127,7 +127,7 @@ async def alias_commands(message: Message):
     elif len(message.parameter) == 1:
         if source_commands:
             texts.extend(
-                f'`{source_commands[i]}` --> `{to_commands[i]}`'
+                f'`{source_commands[i]}` > `{to_commands[i]}`'
                 for i in range(len(source_commands))
             )
 

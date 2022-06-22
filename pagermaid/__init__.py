@@ -10,7 +10,7 @@ import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.1.0"
+pgm_version = "1.1.1"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()

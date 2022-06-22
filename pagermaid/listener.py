@@ -168,10 +168,10 @@ def listener(**args):
         if parameters is None:
             parameters = ""
         help_messages.update({
-            f"{command}": {"permission": permission_name,
-                           "use": f"**{lang('use_method')}:** `,{command} {parameters}`\n"
-                                  f"**{lang('need_permission')}:** `{permission_name}`\n"
-                                  f"{description}"}
+            f"{alias_command(command)}": {"permission": permission_name,
+                                          "use": f"**{lang('use_method')}:** `,{command} {parameters}`\n"
+                                                 f"**{lang('need_permission')}:** `{permission_name}`\n"
+                                                 f"{description}"}
         })
         all_permissions.append(Permission(permission_name))
 
