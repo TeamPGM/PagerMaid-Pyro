@@ -18,8 +18,11 @@ You should have received a copy of the GNU General Public License
 along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-import pyrogram 
+import pyrogram
+
 
 def dice(ctx, message):
     return hasattr(message, 'dice') and message.dice
+
+
 pyrogram.filters.dice = dice

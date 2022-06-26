@@ -1,12 +1,16 @@
 import contextlib
 from os import sep, remove, mkdir
 from os.path import exists
-from typing import List, Optional
+from typing import List, Optional, Union
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from httpx import AsyncClient
 
 from pyrogram import Client
 from pyrogram.types import Message
+
+from pyromod.utils.conversation import Conversation
+from pyromod.utils.errors import AlreadyInConversationError, TimeoutConversationError
+
 from sqlitedict import SqliteDict
 
 # init folders
@@ -30,6 +34,25 @@ def safe_remove(name: str) -> None:
 
 class Client(Client):  # noqa
     job: Optional[AsyncIOScheduler] = None
+
+    async def listen(self, chat_id, filters=None, timeout=None) -> Optional[Message]:
+        return
+
+    async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs) -> Optional[Message]:
+        return
+
+    def cancel_listener(self, chat_id):
+        """ Cancel the conversation with the given chat_id. """
+        return
+
+    def cancel_all_listeners(self):
+        """ Cancel all conversations. """
+        return
+
+    def conversation(self, chat_id: Union[int, str],
+                     once_timeout: int = 60, filters=None) -> Optional[Conversation]:
+        """ Initialize a conversation with the given chat_id. """
+        return
 
 
 class Message(Message):  # noqa

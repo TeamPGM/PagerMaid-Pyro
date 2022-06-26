@@ -556,3 +556,6 @@ sb_channel: 成功在本群封禁此頻道。
 #reload
 reload_des: 重新加載內置模塊和插件。
 reload_ok: 重新加載內置模塊和插件成功。
+#conversation
+conversation_already_in_error: 另一個操作正在進行中，請稍等片刻後重試。
+conversation_timed_out_error: 響應超時，請稍等片刻後重試。

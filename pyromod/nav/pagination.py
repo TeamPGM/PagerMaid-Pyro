@@ -20,6 +20,7 @@ along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 import math
 from ..helpers import array_chunk
 
+
 class Pagination:
     def __init__(self, objects, page_data=None, item_data=None, item_title=None):
         default_page_callback = (lambda x: str(x))
@@ -28,26 +29,25 @@ class Pagination:
         self.page_data = page_data or default_page_callback
         self.item_data = item_data or default_item_callback
         self.item_title = item_title or default_item_callback
-    
+
     def create(self, page, lines=5, columns=1):
-        quant_per_page = lines*columns
+        quant_per_page = lines * columns
         page = 1 if page <= 0 else page
-        offset = (page-1)*quant_per_page
-        stop = offset+quant_per_page
+        offset = (page - 1) * quant_per_page
+        stop = offset + quant_per_page
         cutted = self.objects[offset:stop]
 
         total = len(self.objects)
-        pages_range = [*range(1, math.ceil(total/quant_per_page)+1)] # each item is a page
+        pages_range = [*range(1, math.ceil(total / quant_per_page) + 1)]  # each item is a page
         last_page = len(pages_range)
-
 
         nav = []
         if page <= 3:
-            for n in [1,2,3]:
+            for n in [1, 2, 3]:
                 if n not in pages_range:
                     continue
                 text = f"· {n} ·" if n == page else n
-                nav.append( (text, self.page_data(n)) )
+                nav.append((text, self.page_data(n)))
             if last_page >= 4:
                 nav.append(
                     ('4 ›' if last_page > 5 else 4, self.page_data(4))
@@ -56,29 +56,28 @@ class Pagination:
                 nav.append(
                     (f'{last_page} »' if last_page > 5 else last_page, self.page_data(last_page))
                 )
-        elif page >= last_page-2:
+        elif page >= last_page - 2:
             nav.extend(
                 [
                     ('« 1' if last_page > 5 else 1, self.page_data(1)),
                     (
-                        f'‹ {last_page-3}' if last_page > 5 else last_page - 3,
+                        f'‹ {last_page - 3}' if last_page > 5 else last_page - 3,
                         self.page_data(last_page - 3),
                     ),
                 ]
             )
 
-            for n in range(last_page-2, last_page+1):
+            for n in range(last_page - 2, last_page + 1):
                 text = f"· {n} ·" if n == page else n
-                nav.append( (text, self.page_data(n)) )
+                nav.append((text, self.page_data(n)))
         else:
             nav = [
                 ('« 1', self.page_data(1)),
-                (f'‹ {page-1}', self.page_data(page - 1)),
+                (f'‹ {page - 1}', self.page_data(page - 1)),
                 (f'· {page} ·', "noop"),
-                (f'{page+1} ›', self.page_data(page + 1)),
+                (f'{page + 1} ›', self.page_data(page + 1)),
                 (f'{last_page} »', self.page_data(last_page)),
             ]
-
 
         buttons = [
             (self.item_title(item, page), self.item_data(item, page))

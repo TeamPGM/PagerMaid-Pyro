@@ -16,7 +16,7 @@ from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.group_manager import Permission
-from pagermaid.single_utils import Message
+from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
 from pagermaid.utils import client as httpx_client
 
@@ -133,6 +133,16 @@ def listener(**args):
                 logs.warning(
                     "Please Don't Delete Commands While it's Processing.."
                 )
+            except AlreadyInConversationError:
+                logs.warning(
+                    "Please Don't Send Commands In The Same Conversation.."
+                )
+                await message.edit(lang("conversation_already_in_error"))
+            except TimeoutConversationError:
+                logs.warning(
+                    "Conversation Timed out while processing commands.."
+                )
+                await message.edit(lang("conversation_timed_out_error"))
             except UserNotParticipant:
                 pass
             except ContinuePropagation as e:
@@ -195,6 +205,20 @@ def raw_listener(filter_s):
                 raise StopPropagation from e
             except ContinuePropagation as e:
                 raise ContinuePropagation from e
+            except MessageIdInvalid:
+                logs.warning(
+                    "Please Don't Delete Commands While it's Processing.."
+                )
+            except AlreadyInConversationError:
+                logs.warning(
+                    "Please Don't Send Commands In The Same Conversation.."
+                )
+                await message.edit(lang("conversation_already_in_error"))
+            except TimeoutConversationError:
+                logs.warning(
+                    "Conversation Timed out while processing commands.."
+                )
+                await message.edit(lang("conversation_timed_out_error"))
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 sys.exit(0)

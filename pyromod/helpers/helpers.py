@@ -1,19 +1,24 @@
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ForceReply
 
-def ikb(rows = []):
+
+def ikb(rows=None):
+    if rows is None:
+        rows = []
     lines = []
     for row in rows:
         line = []
         for button in row:
-            button = btn(*button) # InlineKeyboardButton
+            button = btn(*button)  # InlineKeyboardButton
             line.append(button)
         lines.append(line)
     return InlineKeyboardMarkup(inline_keyboard=lines)
-    #return {'inline_keyboard': lines}
+    # return {'inline_keyboard': lines}
 
-def btn(text, value, type = 'callback_data'):
+
+def btn(text, value, type='callback_data'):
     return InlineKeyboardButton(text, **{type: value})
-    #return {'text': text, type: value}
+    # return {'text': text, type: value}
+
 
 # The inverse of above
 def bki(keyboard):
@@ -21,14 +26,16 @@ def bki(keyboard):
     for row in keyboard.inline_keyboard:
         line = []
         for button in row:
-            button = ntb(button) # btn() format
+            button = ntb(button)  # btn() format
             line.append(button)
         lines.append(line)
     return lines
-    #return ikb() format
+    # return ikb() format
+
 
 def ntb(button):
-    for btn_type in ['callback_data', 'url', 'switch_inline_query', 'switch_inline_query_current_chat', 'callback_game']:
+    for btn_type in ['callback_data', 'url', 'switch_inline_query', 'switch_inline_query_current_chat',
+                     'callback_game']:
         value = getattr(button, btn_type)
         if value:
             break
@@ -36,9 +43,12 @@ def ntb(button):
     if btn_type != 'callback_data':
         button.append(btn_type)
     return button
-    #return {'text': text, type: value}
+    # return {'text': text, type: value}
 
-def kb(rows = [], **kwargs):
+
+def kb(rows=None, **kwargs):
+    if rows is None:
+        rows = []
     lines = []
     for row in rows:
         line = []
@@ -48,16 +58,18 @@ def kb(rows = [], **kwargs):
                 button = KeyboardButton(button)
             elif button_type == dict:
                 button = KeyboardButton(**button)
-            
+
             line.append(button)
         lines.append(line)
     return ReplyKeyboardMarkup(keyboard=lines, **kwargs)
 
+
 kbtn = KeyboardButton
+
 
 def force_reply(selective=True):
     return ForceReply(selective=selective)
 
-def array_chunk(input, size):
-    return [input[i:i+size] for i in range(0, len(input), size)]
 
+def array_chunk(input_, size):
+    return [input_[i:i + size] for i in range(0, len(input_), size)]

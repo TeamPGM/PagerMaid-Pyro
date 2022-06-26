@@ -556,3 +556,6 @@ sb_channel: Successfully blocked this channel in this group.
 #reload
 reload_des: Reload the PagerMaid-Pyro instance.
 reload_ok: Successfully reloaded.
+#conversation
+conversation_already_in_error: Another conversation is already in progress.
+conversation_timed_out_error: Response timed out.

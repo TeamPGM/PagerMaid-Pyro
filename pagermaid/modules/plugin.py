@@ -77,8 +77,7 @@ async def plugin(message: Message):
             move_plugin(file_path)
             await message.edit(f"<b>{lang('apt_name')}</b>\n\n"
                                f"{lang('apt_plugin')} "
-                               f"{path.basename(file_path)[:-3]} {lang('apt_installed')},"
-                               f"{lang('apt_reboot')}")
+                               f"{path.basename(file_path)[:-3]} {lang('apt_installed')}")
             await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
             reload_all()
         elif len(message.parameter) >= 2:
@@ -128,8 +127,6 @@ async def plugin(message: Message):
                 text += lang('apt_no_update') + " %s\n" % ", ".join(no_need_list)
             await log(text)
             restart = len(success_list) > 0
-            if restart:
-                text += lang('apt_reboot')
             await message.edit(text)
             if restart:
                 reload_all()
@@ -146,8 +143,7 @@ async def plugin(message: Message):
                     version_json[message.parameter[1]] = "0.0"
                     with open(f"{plugin_directory}version.json", 'w') as f:
                         json.dump(version_json, f)
-                await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}, "
-                                   f"{lang('apt_reboot')} ")
+                await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}")
                 await log(f"{lang('apt_remove')} {message.parameter[1]}.")
                 reload_all()
             elif "/" in message.parameter[1]:
@@ -198,7 +194,7 @@ async def plugin(message: Message):
                 rename(f"{plugin_directory}{message.parameter[1]}.py.disabled",
                        f"{plugin_directory}{message.parameter[1]}.py")
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
-                                   f"{lang('apt_enable')},{lang('apt_reboot')}")
+                                   f"{lang('apt_enable')}")
                 await log(f"{lang('apt_enable')} {message.parameter[1]}.")
                 reload_all()
             else:
@@ -211,7 +207,7 @@ async def plugin(message: Message):
                 rename(f"{plugin_directory}{message.parameter[1]}.py",
                        f"{plugin_directory}{message.parameter[1]}.py.disabled")
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
-                                   f"{lang('apt_disable')},{lang('apt_reboot')}")
+                                   f"{lang('apt_disable')}")
                 await log(f"{lang('apt_disable')} {message.parameter[1]}.")
                 reload_all()
             else:

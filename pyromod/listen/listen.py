@@ -20,7 +20,7 @@ along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
 import functools
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import pyrogram
 
@@ -28,6 +28,8 @@ from pagermaid.single_utils import get_sudo_list, Message
 from pagermaid.scheduler import add_delete_message_job
 
 from ..utils import patch, patchable
+from ..utils.conversation import Conversation
+from ..utils.errors import TimeoutConversationError
 
 
 class ListenerCanceled(Exception):
@@ -59,7 +61,10 @@ class Client:
         self.listening.update({
             chat_id: {"future": future, "filters": filters}
         })
-        return await asyncio.wait_for(future, timeout)
+        try:
+            return await asyncio.wait_for(future, timeout)
+        except asyncio.exceptions.TimeoutError as e:
+            raise TimeoutConversationError() from e
 
     @patchable
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs):
@@ -81,6 +86,15 @@ class Client:
 
         listener['future'].set_exception(ListenerCanceled())
         self.clear_listener(chat_id, listener['future'])
+
+    @patchable
+    def cancel_all_listener(self):
+        for chat_id in self.listening:
+            self.cancel_listener(chat_id)
+
+    @patchable
+    def conversation(self, chat_id: Union[int, str], once_timeout: int = 60, filters=None):
+        return Conversation(self, chat_id, once_timeout, filters)
 
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)

@@ -4,13 +4,15 @@ from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
 from os import getcwd
 
+from pyrogram.errors import PeerIdInvalid
+
 from pagermaid.config import Config
 from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.1.1"
+pgm_version = "1.1.2"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -63,7 +65,10 @@ async def log(message):
     )
     if not Config.LOG:
         return
-    await bot.send_message(
-            Config.LOG_ID,
-            message
-    )
+    try:
+        await bot.send_message(
+                Config.LOG_ID,
+                message
+        )
+    except PeerIdInvalid:
+        Config.LOG = False
