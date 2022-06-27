@@ -19,6 +19,7 @@ from pagermaid.group_manager import Permission
 from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
 from pagermaid.utils import client as httpx_client
+from pagermaid.hook import Hook
 
 secret_generator = secrets.SystemRandom()
 
@@ -137,18 +138,21 @@ def listener(**args):
                 logs.warning(
                     "Please Don't Send Commands In The Same Conversation.."
                 )
-                await message.edit(lang("conversation_already_in_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_already_in_error"))
             except TimeoutConversationError:
                 logs.warning(
                     "Conversation Timed out while processing commands.."
                 )
-                await message.edit(lang("conversation_timed_out_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_timed_out_error"))
             except UserNotParticipant:
                 pass
             except ContinuePropagation as e:
                 raise ContinuePropagation from e
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
+                await Hook.shutdown()
                 sys.exit(0)
             except BaseException:
                 exc_info = sys.exc_info()[1]
@@ -213,14 +217,17 @@ def raw_listener(filter_s):
                 logs.warning(
                     "Please Don't Send Commands In The Same Conversation.."
                 )
-                await message.edit(lang("conversation_already_in_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_already_in_error"))
             except TimeoutConversationError:
                 logs.warning(
                     "Conversation Timed out while processing commands.."
                 )
-                await message.edit(lang("conversation_timed_out_error"))
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("conversation_timed_out_error"))
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
+                await Hook.shutdown()
                 sys.exit(0)
             except UserNotParticipant:
                 pass

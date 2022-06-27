@@ -2,7 +2,7 @@ import importlib
 import pagermaid.config
 import pagermaid.modules
 
-from pagermaid import bot, logs, help_messages, all_permissions
+from pagermaid import bot, logs, help_messages, all_permissions, startup_functions, shutdown_functions
 from pagermaid.listener import listener
 from pagermaid.utils import lang, Message
 
@@ -17,8 +17,9 @@ def reload_all():
     importlib.reload(pagermaid.config)
     help_messages.clear()
     all_permissions.clear()
+    startup_functions.clear()
+    shutdown_functions.clear()
 
-    importlib.reload(pagermaid.modules)
     for module_name in pagermaid.modules.module_list:
         try:
             module = importlib.import_module(f"pagermaid.modules.{module_name}")

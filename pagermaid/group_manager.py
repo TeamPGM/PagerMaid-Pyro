@@ -1,4 +1,5 @@
 import casbin
+from logging import CRITICAL
 from shutil import copyfile
 from os import path as os_path
 from re import findall
@@ -10,6 +11,7 @@ from pagermaid import all_permissions, module_dir
 if not os_path.exists(f"data{os_path.sep}gm_policy.csv"):
     copyfile(f"{module_dir}{os_path.sep}assets{os_path.sep}gm_policy.csv", f"data{os_path.sep}gm_policy.csv")
 permissions = casbin.Enforcer(f"pagermaid{sep}assets{sep}gm_model.conf", f"data{sep}gm_policy.csv")
+permissions.logger.setLevel(CRITICAL)
 
 
 class Permission:

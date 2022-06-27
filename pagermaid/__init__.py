@@ -1,4 +1,6 @@
 import contextlib
+from typing import Callable, Awaitable, Set
+
 from coloredlogs import ColoredFormatter
 from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
@@ -12,13 +14,15 @@ import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.1.2"
+pgm_version = "1.1.3"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
 # solve same process
 read_context = {}
 help_messages = {}
+startup_functions: Set[Callable[[], Awaitable[None]]] = set()
+shutdown_functions: Set[Callable[[], Awaitable[None]]] = set()
 all_permissions = []
 
 logs = getLogger(__name__)
