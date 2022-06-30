@@ -19,21 +19,21 @@ async def ghost(message: Message):
     if message.parameter[0] == "true":
         if message.chat.id == self_user_id:
             return await message.edit(lang('ghost_e_mark'))
-        sqlite[f"ghosted.chat_id.{str(message.chat_id)}"] = True
+        sqlite[f"ghosted.chat_id.{str(message.chat.id)}"] = True
         await message.safe_delete()
-        await log(f"{lang('ghost_set_f')} ChatID {str(message.chat_id)} {lang('ghost_set_l')}")
+        await log(f"{lang('ghost_set_f')} ChatID {str(message.chat.id)} {lang('ghost_set_l')}")
     elif message.parameter[0] == "false":
-        if message.chat_id == self_user_id:
+        if message.chat.id == self_user_id:
             await message.edit(lang('ghost_e_mark'))
             return
         try:
-            del sqlite[f"ghosted.chat_id.{str(message.chat_id)}"]
+            del sqlite[f"ghosted.chat_id.{str(message.chat.id)}"]
         except KeyError:
             return await message.edit(lang('ghost_e_noexist'))
         await message.safe_delete()
-        await log(f"{lang('ghost_set_f')} ChatID {str(message.chat_id)} {lang('ghost_cancel')}")
+        await log(f"{lang('ghost_set_f')} ChatID {str(message.chat.id)} {lang('ghost_cancel')}")
     elif message.parameter[0] == "status":
-        if sqlite.get(f"ghosted.chat_id.{str(message.chat_id)}", None):
+        if sqlite.get(f"ghosted.chat_id.{str(message.chat.id)}", None):
             await message.edit(lang('ghost_e_exist'))
         else:
             await message.edit(lang('ghost_e_noexist'))
@@ -55,21 +55,21 @@ async def deny(message: Message):
     if message.parameter[0] == "true":
         if message.chat.id == self_user_id:
             return await message.edit(lang('ghost_e_mark'))
-        sqlite[f"denied.chat_id.{str(message.chat_id)}"] = True
+        sqlite[f"denied.chat_id.{str(message.chat.id)}"] = True
         await message.safe_delete()
-        await log(f"ChatID {str(message.chat_id)} {lang('deny_set')}")
+        await log(f"ChatID {str(message.chat.id)} {lang('deny_set')}")
     elif message.parameter[0] == "false":
-        if message.chat_id == self_user_id:
+        if message.chat.id == self_user_id:
             await message.edit(lang('ghost_e_mark'))
             return
         try:
-            del sqlite[f"denied.chat_id.{str(message.chat_id)}"]
+            del sqlite[f"denied.chat_id.{str(message.chat.id)}"]
         except KeyError:
             return await message.edit(lang('deny_e_noexist'))
         await message.safe_delete()
-        await log(f"ChatID {str(message.chat_id)} {lang('deny_cancel')}")
+        await log(f"ChatID {str(message.chat.id)} {lang('deny_cancel')}")
     elif message.parameter[0] == "status":
-        if sqlite.get(f"denied.chat_id.{str(message.chat_id)}", None):
+        if sqlite.get(f"denied.chat_id.{str(message.chat.id)}", None):
             await message.edit(lang('deny_e_exist'))
         else:
             await message.edit(lang('deny_e_noexist'))
