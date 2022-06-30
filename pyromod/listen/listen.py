@@ -29,12 +29,7 @@ from pagermaid.scheduler import add_delete_message_job
 
 from ..utils import patch, patchable
 from ..utils.conversation import Conversation
-from ..utils.errors import TimeoutConversationError
-
-
-class ListenerCanceled(Exception):
-    pass
-
+from ..utils.errors import TimeoutConversationError, ListenerCanceled
 
 pyrogram.errors.ListenerCanceled = ListenerCanceled
 
@@ -99,6 +94,37 @@ class Client:
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)
 class MessageHandler:
+    @patchable
+    def __init__(self, callback: callable, filters=None):
+        self.user_callback = callback
+        self.old__init__(self.resolve_listener, filters)
+
+    @patchable
+    async def resolve_listener(self, client, message, *args):
+        listener = client.listening.get(message.chat.id)
+        if listener and not listener['future'].done():
+            listener['future'].set_result(message)
+        else:
+            if listener and listener['future'].done():
+                client.clear_listener(message.chat.id, listener['future'])
+            await self.user_callback(client, message, *args)
+
+    @patchable
+    async def check(self, client, update):
+        listener = client.listening.get(update.chat.id)
+
+        if listener and not listener['future'].done():
+            return await listener['filters'](client, update) if callable(listener['filters']) else True
+
+        return (
+            await self.filters(client, update)
+            if callable(self.filters)
+            else True
+        )
+
+
+@patch(pyrogram.handlers.edited_message_handler.EditedMessageHandler)
+class EditedMessageHandler:
     @patchable
     def __init__(self, callback: callable, filters=None):
         self.user_callback = callback

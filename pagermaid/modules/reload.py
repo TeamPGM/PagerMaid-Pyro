@@ -1,3 +1,4 @@
+import contextlib
 import importlib
 import pagermaid.config
 import pagermaid.modules
@@ -10,6 +11,8 @@ from pagermaid.utils import lang, Message
 def reload_all():
     bot.dispatcher.remove_all_handlers()
     bot.job.remove_all_jobs()
+    with contextlib.suppress(RuntimeError):
+        bot.cancel_all_listener()
     loaded_plugins = list(pagermaid.modules.plugin_list)
     loaded_plugins.extend(iter(pagermaid.modules.module_list))
     # init

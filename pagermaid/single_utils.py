@@ -9,7 +9,7 @@ from pyrogram import Client
 from pyrogram.types import Message
 
 from pyromod.utils.conversation import Conversation
-from pyromod.utils.errors import AlreadyInConversationError, TimeoutConversationError
+from pyromod.utils.errors import AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
 
 from sqlitedict import SqliteDict
 

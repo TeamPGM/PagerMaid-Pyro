@@ -16,7 +16,7 @@ from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.group_manager import Permission
-from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError
+from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
 from pagermaid.utils import client as httpx_client
 from pagermaid.hook import Hook
@@ -146,6 +146,12 @@ def listener(**args):
                 )
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("conversation_timed_out_error"))
+            except ListenerCanceled:
+                logs.warning(
+                    "Listener Canceled While Processing Commands.."
+                )
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("reload_des"))
             except UserNotParticipant:
                 pass
             except ContinuePropagation as e:
@@ -225,6 +231,12 @@ def raw_listener(filter_s):
                 )
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("conversation_timed_out_error"))
+            except ListenerCanceled:
+                logs.warning(
+                    "Listener Canceled While Processing Commands.."
+                )
+                with contextlib.suppress(BaseException):
+                    await message.edit(lang("reload_des"))
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()
