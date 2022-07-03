@@ -1,9 +1,13 @@
 """ PagerMaid module that contains utilities related to system status. """
+
+import re
+
 from datetime import datetime, timezone
 from platform import uname, python_version
 from sys import platform
 
 from pyrogram import __version__
+from pyrogram.enums import ChatType
 from pyrogram.raw.functions import Ping
 from pyrogram.enums.parse_mode import ParseMode
 
@@ -17,6 +21,14 @@ from subprocess import Popen, PIPE
 from pagermaid import start_time, Config, pgm_version
 from pagermaid.listener import listener
 from pagermaid.utils import lang, Message, execute
+
+DCs = {
+    1: "149.154.175.50",
+    2: "149.154.167.51",
+    3: "149.154.175.100",
+    4: "149.154.167.91",
+    5: "91.108.56.130"
+}
 
 
 @listener(is_plugin=False, command="sysinfo",
@@ -70,8 +82,65 @@ async def status(message: Message):
     await message.edit(text)
 
 
+@listener(is_plugin=False, command="stats",
+          description=lang("stats_des"))
+async def stats(message: Message):
+    msg = await message.edit(lang("stats_loading"))
+    a, u, g, s, c, b = 0, 0, 0, 0, 0, 0
+    async for dialog in message.bot.get_dialogs():
+        chat_type = dialog.chat.type
+        if chat_type == ChatType.BOT:
+            b += 1
+        elif chat_type == ChatType.PRIVATE:
+            u += 1
+        elif chat_type == ChatType.GROUP:
+            g += 1
+        elif chat_type == ChatType.SUPERGROUP:
+            s += 1
+        elif chat_type == ChatType.CHANNEL:
+            c += 1
+        a += 1
+    text = (f"**{lang('stats_hint')}** \n"
+            f"{lang('stats_dialogs')}: `{a}` \n"
+            f"{lang('stats_private')}: `{u}` \n"
+            f"{lang('stats_group')}: `{g}` \n"
+            f"{lang('stats_supergroup')}: `{s}` \n"
+            f"{lang('stats_channel')}: `{c}` \n"
+            f"{lang('stats_bot')}: `{b}`"
+            )
+    await msg.edit(text)
+
+
+@listener(is_plugin=False, command="pingdc",
+          description=lang("pingdc_des"))
+async def ping_dc(message: Message):
+    """ Ping your or other data center's IP addresses. """
+    data = []
+    print("1")
+    for dc in range(1, 6):
+        if platform == "win32":
+            result = await execute(f'ping -n 1 {DCs[dc]} | find "最短"')
+            if result := re.findall(r"= (.*?)ms", result or ""):
+                data.append(result[0])
+            else:
+                data.append("0")
+        else:
+            result = await execute(f"ping -c 1 {DCs[dc]} | awk -F '/' " + "'END {print $5}'")
+            try:
+                data.append(str(float(result)))
+            except ValueError:
+                data.append("0")
+    await message.edit(
+        f"{lang('pingdc_1')}: `{data[0]}ms`\n"
+        f"{lang('pingdc_2')}: `{data[1]}ms`\n"
+        f"{lang('pingdc_3')}: `{data[2]}ms`\n"
+        f"{lang('pingdc_4')}: `{data[3]}ms`\n"
+        f"{lang('pingdc_5')}: `{data[4]}ms`"
+    )
+
+
 @listener(is_plugin=False, command="ping",
-          description=lang('ping_des'))
+          description=lang("ping_des"))
 async def ping(message: Message):
     """ Calculates latency between PagerMaid and Telegram. """
     start = datetime.now()

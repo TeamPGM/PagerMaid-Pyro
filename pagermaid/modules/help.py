@@ -2,6 +2,9 @@
 
 from json import dump as json_dump
 from os import listdir, sep
+
+from pyrogram.enums import ParseMode
+
 from pagermaid import help_messages, Config
 from pagermaid.group_manager import enforce_permission
 from pagermaid.modules.reload import reload_all
@@ -58,6 +61,7 @@ async def help_command(message: Message):
                                   f"[{lang('help_source')}](https://t.me/PagerMaid_Modify) "
                                   f"[{lang('help_plugin')}](https://index.xtaolabs.com/) "
                                   f"[{lang('help_module')}](https://wiki.xtaolabs.com/)",
+                           parse_mode=ParseMode.MARKDOWN,
                            disable_web_page_preview=True)
 
 
@@ -83,6 +87,7 @@ async def help_raw_command(message: Message):
                 result += f"`{command}`, "
         await message.edit(
             f"""{result[:-2]}\n**{lang('help_send')} ",help <{lang('command')}>" {lang('help_see')}** [{lang('help_source')}](https://t.me/PagerMaid_Modify)""",
+            parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
 
