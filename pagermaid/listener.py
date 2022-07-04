@@ -43,10 +43,23 @@ def listener(**args):
     outgoing = args.get("outgoing", True)
     groups_only = args.get("groups_only", False)
     privates_only = args.get("privates_only", False)
+    priority = args.get("priority", 50)
+    block_process = args.get("block_process", False)
+
+    if priority < 0 or priority > 100:
+        raise ValueError("Priority must be between 0 and 100.")
+    elif priority == 0 and is_plugin:
+        """ Priority 0 is reserved for modules. """
+        priority = 1
+    elif (not is_plugin) and need_admin:
+        priority = 0
 
     if command is not None:
         if command in help_messages:
-            raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
+            if help_messages[alias_command(command)]["priority"] <= priority:
+                raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
+            else:
+                block_process = True
         pattern = fr"^,{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
         sudo_pattern = fr"^/{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith("(?i)"):
@@ -96,6 +109,10 @@ def listener(**args):
         del args["groups_only"]
     if "need_admin" in args:
         del args["need_admin"]
+    if "priority" in args:
+        del args["priority"]
+    if "block_process" in args:
+        del args["block_process"]
 
     def decorator(function):
 
@@ -155,6 +172,8 @@ def listener(**args):
             except UserNotParticipant:
                 pass
             except ContinuePropagation as e:
+                if block_process:
+                    raise StopPropagation from e
                 raise ContinuePropagation from e
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
@@ -174,13 +193,15 @@ def listener(**args):
                                         "Error report generated.")
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
+            if block_process:
+                message.stop_propagation()
             message.continue_propagation()
 
-        bot.add_handler(MessageHandler(handler, filters=base_filters), group=0)
-        bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=1)
+        bot.add_handler(MessageHandler(handler, filters=base_filters), group=0 + priority)
+        bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=50 + priority)
         if not ignore_edited:
-            bot.add_handler(EditedMessageHandler(handler, filters=base_filters), group=2)
-            bot.add_handler(EditedMessageHandler(handler, filters=sudo_filters), group=3)
+            bot.add_handler(EditedMessageHandler(handler, filters=base_filters), group=1 + priority)
+            bot.add_handler(EditedMessageHandler(handler, filters=sudo_filters), group=51 + priority)
 
         return handler
 
@@ -191,7 +212,8 @@ def listener(**args):
             f"{alias_command(command)}": {"permission": permission_name,
                                           "use": f"**{lang('use_method')}:** `,{command} {parameters}`\n"
                                                  f"**{lang('need_permission')}:** `{permission_name}`\n"
-                                                 f"{description}"}
+                                                 f"{description}",
+                                          "priority": priority, }
         })
         all_permissions.append(Permission(permission_name))
 
