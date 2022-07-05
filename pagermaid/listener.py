@@ -60,7 +60,7 @@ def listener(**args):
                 raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
             else:
                 block_process = True
-        pattern = fr"^,{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
+        pattern = fr"^(,|，){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
         sudo_pattern = fr"^/{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith("(?i)"):
         args["pattern"] = f"(?i){pattern}"
