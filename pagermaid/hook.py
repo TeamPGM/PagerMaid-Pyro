@@ -1,6 +1,9 @@
 import asyncio
 
-from pagermaid import startup_functions, shutdown_functions, logs
+from pyrogram import StopPropagation
+
+from pagermaid import hook_functions, logs
+from pagermaid.single_utils import Message
 
 
 class Hook:
@@ -10,7 +13,7 @@ class Hook:
         注册一个启动钩子
         """
         def decorator(function):
-            startup_functions.add(function)
+            hook_functions["startup"].add(function)
             return function
         return decorator
 
@@ -20,13 +23,37 @@ class Hook:
         注册一个关闭钩子
         """
         def decorator(function):
-            shutdown_functions.add(function)
+            hook_functions["shutdown"].add(function)
             return function
         return decorator
 
     @staticmethod
+    def command_preprocessor():
+        """
+        注册一个命令预处理钩子
+        """
+
+        def decorator(function):
+            hook_functions["command_pre"].add(function)
+            return function
+
+        return decorator
+
+    @staticmethod
+    def command_postprocessor():
+        """
+        注册一个命令后处理钩子
+        """
+
+        def decorator(function):
+            hook_functions["command_post"].add(function)
+            return function
+
+        return decorator
+
+    @staticmethod
     async def startup():
-        if cors := [startup() for startup in startup_functions]:
+        if cors := [startup() for startup in hook_functions["startup"]]:
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
@@ -34,8 +61,28 @@ class Hook:
 
     @staticmethod
     async def shutdown():
-        if cors := [shutdown() for shutdown in shutdown_functions]:
+        if cors := [shutdown() for shutdown in hook_functions["shutdown"]]:
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
                 logs.info(f"[shutdown]: {type(exception)}: {exception}")
+
+    @staticmethod
+    async def command_pre(message: Message):
+        if cors := [pre(message) for pre in hook_functions["command_pre"]]:  # noqa
+            try:
+                await asyncio.gather(*cors)
+            except StopPropagation as e:
+                raise StopPropagation from e
+            except Exception as exception:
+                logs.info(f"[command_pre]: {type(exception)}: {exception}")
+
+    @staticmethod
+    async def command_post(message: Message):
+        if cors := [post(message) for post in hook_functions["command_post"]]:  # noqa
+            try:
+                await asyncio.gather(*cors)
+            except StopPropagation as e:
+                raise StopPropagation from e
+            except Exception as exception:
+                logs.info(f"[command_post]: {type(exception)}: {exception}")

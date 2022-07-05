@@ -137,10 +137,14 @@ def listener(**args):
                         raise ContinuePropagation
                     read_context[(message.chat.id, message.id)] = True
 
+                if command:
+                    await Hook.command_pre(message)
                 if function.__code__.co_argcount == 1:
                     await function(message)
                 elif function.__code__.co_argcount == 2:
                     await function(client, message)
+                if command:
+                    await Hook.command_post(message)
             except StopPropagation as e:
                 raise StopPropagation from e
             except KeyboardInterrupt as e:

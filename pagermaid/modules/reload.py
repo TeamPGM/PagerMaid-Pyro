@@ -3,7 +3,7 @@ import importlib
 import pagermaid.config
 import pagermaid.modules
 
-from pagermaid import bot, logs, help_messages, all_permissions, startup_functions, shutdown_functions
+from pagermaid import bot, logs, help_messages, all_permissions, hook_functions
 from pagermaid.listener import listener
 from pagermaid.utils import lang, Message
 
@@ -20,8 +20,8 @@ def reload_all():
     importlib.reload(pagermaid.config)
     help_messages.clear()
     all_permissions.clear()
-    startup_functions.clear()
-    shutdown_functions.clear()
+    for functions in hook_functions.values():
+        functions.clear()  # noqa: clear all hooks
 
     for module_name in pagermaid.modules.module_list:
         try:
