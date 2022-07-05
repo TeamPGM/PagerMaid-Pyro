@@ -61,7 +61,7 @@ def listener(**args):
             else:
                 block_process = True
         pattern = fr"^(,|，){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
-        sudo_pattern = fr"^/{alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
+        sudo_pattern = fr"^(/){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith("(?i)"):
         args["pattern"] = f"(?i){pattern}"
     else:
@@ -122,11 +122,11 @@ def listener(**args):
 
             try:
                 try:
-                    parameter = message.matches[0].group(1).split(" ")
+                    parameter = message.matches[0].group(2).split(" ")
                     if parameter == [""]:
                         parameter = []
                     message.parameter = parameter
-                    message.arguments = message.matches[0].group(1)
+                    message.arguments = message.matches[0].group(2)
                 except BaseException:
                     message.parameter = None
                     message.arguments = None
