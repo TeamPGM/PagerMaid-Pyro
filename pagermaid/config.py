@@ -22,7 +22,7 @@ def strtobool(val):
 
 
 try:
-    config = load(open(r"config.yml"), Loader=FullLoader)
+    config = load(open(r"config.yml", encoding="utf-8"), Loader=FullLoader)
 except FileNotFoundError:
     print("The configuration file does not exist, and a new configuration file is being generated.")
     copyfile(f"{os.getcwd()}{os.sep}config.gen.yml", "config.yml")

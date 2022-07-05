@@ -105,7 +105,7 @@ async def lang_change(message: Message):
     file = pathlib.Path('config.yml').read_text()
     if to_lang in dir__:
         file = file.replace(f'application_language: "{from_lang}"', f'application_language: "{to_lang}"')
-        with open('config.yml', 'w') as f:
+        with open('config.yml', 'w', encoding="utf-8") as f:
             f.write(file)
         await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
         reload_all()
@@ -143,7 +143,7 @@ async def alias_commands(message: Message):
         source_command = message.parameter[1]
         try:
             del Config.alias_dict[source_command]
-            with open(f"data{sep}alias.json", 'w') as f:
+            with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
                 json_dump(Config.alias_dict, f)
             await message.edit(lang('alias_success'))
             reload_all()
@@ -157,7 +157,7 @@ async def alias_commands(message: Message):
             await message.edit(lang('alias_exist'))
             return
         Config.alias_dict[source_command] = to_command
-        with open(f"data{sep}alias.json", 'w') as f:
+        with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
             json_dump(Config.alias_dict, f)
         await message.edit(lang('alias_success'))
         reload_all()
