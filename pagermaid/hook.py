@@ -52,6 +52,18 @@ class Hook:
         return decorator
 
     @staticmethod
+    def process_error():
+        """
+        注册一个错误处理钩子
+        """
+
+        def decorator(function):
+            hook_functions["process_error"].add(function)
+            return function
+
+        return decorator
+
+    @staticmethod
     async def startup():
         if cors := [startup() for startup in hook_functions["startup"]]:
             try:
@@ -86,3 +98,13 @@ class Hook:
                 raise StopPropagation from e
             except Exception as exception:
                 logs.info(f"[command_post]: {type(exception)}: {exception}")
+
+    @staticmethod
+    async def process_error_exec(message: Message, exc_info: BaseException, exc_format: str):
+        if cors := [error(message, exc_info, exc_format) for error in hook_functions["process_error"]]:  # noqa
+            try:
+                await asyncio.gather(*cors)
+            except StopPropagation as e:
+                raise StopPropagation from e
+            except Exception as exception:
+                logs.info(f"[process_error]: {type(exception)}: {exception}")

@@ -34,7 +34,7 @@ async def sh(message: Message):
 
     if result:
         if len(result) > 4096:
-            await attach_log(bot, result, message.chat.id, "output.log", message.id)
+            await attach_log(result, message.chat.id, "output.log", message.id)
             return
 
         await message.edit(
@@ -90,7 +90,7 @@ async def sh_eval(message: Message):
     final_output = f"**>>>** ```{cmd}``` \n```{evaluation}```"
     if len(final_output) > 4096:
         message = await message.edit(f"**>>>** ```{cmd}```")
-        await attach_log(bot, evaluation, message.chat.id, "output.log", message.id)
+        await attach_log(evaluation, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
 

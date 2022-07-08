@@ -34,9 +34,9 @@ async def userid(message: Message):
             return await message.edit(lang("leave_not_group"))
         text += f"protected: `{str(msg_from.has_protected_content)}" + "`\n"
     if reply:
-        text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(reply.id) + \
-                "`\n\n**User**\nid: `" + str(reply.from_user.id) + "`"
+        text += "\n" + lang('id_hint') + "\nMessage ID: `" + str(reply.id) + "`"
         try:
+            text += "\n\n**User**\nid: `" + str(reply.from_user.id) + "`"
             if reply.from_user.is_bot:
                 text += f"\nis_bot: {lang('id_is_bot_yes')}"
             try:
@@ -49,6 +49,13 @@ async def userid(message: Message):
                 text += "\nusername: @" + reply.from_user.username
             if reply.from_user.dc_id:
                 text += "\ndc: `" + str(reply.from_user.dc_id) + "`"
+        except AttributeError:
+            pass
+        try:
+            text += "\n\n**Chat**\nid: `" + str(reply.sender_chat.id) + "`"
+            text += "\ntitle: `" + reply.sender_chat.title + "`"
+            if reply.sender_chat.username:
+                text += "\nusername: @" + reply.sender_chat.username
         except AttributeError:
             pass
         if reply.forward_from_chat:

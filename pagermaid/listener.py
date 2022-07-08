@@ -190,6 +190,7 @@ def listener(**args):
                     await message.edit(lang("run_error"), no_reply=True)  # noqa
                 if not diagnostics:
                     return
+                await Hook.process_error_exec(message, exc_info, exc_format)
                 if Config.ERROR_REPORT:
                     report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 

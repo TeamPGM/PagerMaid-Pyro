@@ -14,7 +14,7 @@ import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.2.0"
+pgm_version = "1.2.1"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -22,7 +22,7 @@ working_dir = getcwd()
 read_context = {}
 help_messages = {}
 hook_functions: Dict[str, Set[Callable[[], Awaitable[None]]]] = {
-    "startup": set(), "shutdown": set(), "command_pre": set(), "command_post": set()}
+    "startup": set(), "shutdown": set(), "command_pre": set(), "command_post": set(), "process_error": set(), }
 all_permissions = []
 
 logs = getLogger(__name__)
