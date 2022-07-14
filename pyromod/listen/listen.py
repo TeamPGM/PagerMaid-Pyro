@@ -18,7 +18,9 @@ You should have received a copy of the GNU General Public License
 along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+
 import asyncio
+import contextlib
 import functools
 from typing import Optional, List, Union
 
@@ -70,8 +72,9 @@ class Client:
 
     @patchable
     def clear_listener(self, chat_id, future):
-        if future == self.listening[chat_id]["future"]:
-            self.listening.pop(chat_id, None)
+        with contextlib.suppress(KeyError):
+            if future == self.listening[chat_id]["future"]:
+                self.listening.pop(chat_id, None)
 
     @patchable
     def cancel_listener(self, chat_id):
