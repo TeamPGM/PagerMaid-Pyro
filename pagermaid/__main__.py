@@ -17,6 +17,9 @@ async def main():
 
     await bot.start()
 
+    me = await bot.get_me()
+    logs.info(f"{lang('save_id')} {me.first_name}({me.id})")
+
     for module_name in module_list:
         try:
             import_module(f"pagermaid.modules.{module_name}")

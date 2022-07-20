@@ -1,4 +1,4 @@
-pyrogram==2.0.30
+pyrogram==2.0.33
 TgCrypto>=1.2.3
 Pillow>=8.4.0
 pytz>=2021.3
@@ -8,4 +8,4 @@ psutil>=5.8.0
 httpx
 apscheduler
 sqlitedict
-casbin
+casbin==1.16.9
