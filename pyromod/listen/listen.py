@@ -304,8 +304,8 @@ class Message(pyrogram.types.Message):
             )
         if not msg:
             return self
-        msg.parameter = self.parameter
-        msg.arguments = self.arguments
+        msg.parameter = self.parameter if hasattr(self, "parameter") else []
+        msg.arguments = self.arguments if hasattr(self, "arguments") else ""
         return msg
 
     edit = edit_text
