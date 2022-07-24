@@ -16,6 +16,7 @@ from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.group_manager import Permission
+from pagermaid.inject import inject
 from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
 from pagermaid.utils import client as httpx_client
@@ -139,10 +140,15 @@ def listener(**args):
 
                 if command:
                     await Hook.command_pre(message)
-                if function.__code__.co_argcount == 1:
-                    await function(message)
-                elif function.__code__.co_argcount == 2:
-                    await function(client, message)
+                if data := inject(message, function):
+                    await function(**data)
+                else:
+                    if function.__code__.co_argcount == 0:
+                        await function()
+                    if function.__code__.co_argcount == 1:
+                        await function(message)
+                    elif function.__code__.co_argcount == 2:
+                        await function(client, message)
                 if command:
                     await Hook.command_post(message)
             except StopPropagation as e:

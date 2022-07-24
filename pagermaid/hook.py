@@ -3,6 +3,7 @@ import asyncio
 from pyrogram import StopPropagation
 
 from pagermaid import hook_functions, logs
+from pagermaid.inject import inject
 from pagermaid.single_utils import Message
 
 
@@ -65,7 +66,7 @@ class Hook:
 
     @staticmethod
     async def startup():
-        if cors := [startup() for startup in hook_functions["startup"]]:
+        if cors := [startup(**inject(None, startup)) for startup in hook_functions["startup"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
@@ -73,7 +74,7 @@ class Hook:
 
     @staticmethod
     async def shutdown():
-        if cors := [shutdown() for shutdown in hook_functions["shutdown"]]:
+        if cors := [shutdown(**inject(None, shutdown)) for shutdown in hook_functions["shutdown"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
@@ -81,7 +82,7 @@ class Hook:
 
     @staticmethod
     async def command_pre(message: Message):
-        if cors := [pre(message) for pre in hook_functions["command_pre"]]:  # noqa
+        if cors := [pre(**inject(message, pre)) for pre in hook_functions["command_pre"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except StopPropagation as e:
@@ -91,7 +92,7 @@ class Hook:
 
     @staticmethod
     async def command_post(message: Message):
-        if cors := [post(message) for post in hook_functions["command_post"]]:  # noqa
+        if cors := [post(**inject(message, post)) for post in hook_functions["command_post"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except StopPropagation as e:
@@ -101,7 +102,7 @@ class Hook:
 
     @staticmethod
     async def process_error_exec(message: Message, exc_info: BaseException, exc_format: str):
-        if cors := [error(message, exc_info, exc_format) for error in hook_functions["process_error"]]:  # noqa
+        if cors := [error(**inject(message, error, exc_info=exc_info, exc_format=exc_format)) for error in hook_functions["process_error"]]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except StopPropagation as e:
