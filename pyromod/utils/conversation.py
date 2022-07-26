@@ -78,7 +78,7 @@ class Conversation:
         elif isinstance(self._peer_chat, InputPeerChat):
             self._chat_id = self._peer_chat.chat_id
         elif isinstance(self._peer_chat, InputPeerChannel):
-            self._chat_id = self._peer_chat.channel_id
+            self._chat_id = -1000000000000 - self._peer_chat.channel_id
 
         if self._client.listening.get(self._chat_id, False):
             raise AlreadyInConversationError()
