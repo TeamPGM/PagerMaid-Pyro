@@ -68,6 +68,8 @@ async def backup(message: Message):
 async def recovery(message: Message):
     reply = message.reply_to_message
 
+    if not reply:
+        return await message.edit(lang('recovery_file_error'))
     if not reply.document:
         return await message.edit(lang('recovery_file_error'))
 
