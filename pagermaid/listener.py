@@ -200,8 +200,8 @@ def listener(**args):
                 if Config.ERROR_REPORT:
                     report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 
-                    await attach_report(report, f"exception.{time()}.pagermaid", None,
-                                        "Error report generated.")
+                    await attach_report(report, f"exception.{time()}.pgp.txt", None,
+                                        "PGP Error report generated.")
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
             if block_process:
