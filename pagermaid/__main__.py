@@ -7,6 +7,7 @@ from pyrogram import idle
 from pagermaid import bot, logs, working_dir
 from pagermaid.hook import Hook
 from pagermaid.modules import module_list, plugin_list
+from pagermaid.single_utils import safe_remove
 from pagermaid.utils import lang, process_exit
 
 path.insert(1, f"{working_dir}{sep}plugins")
@@ -18,6 +19,9 @@ async def main():
     await bot.start()
 
     me = await bot.get_me()
+    if me.is_bot:
+        safe_remove("pagermaid.session")
+        exit()
     logs.info(f"{lang('save_id')} {me.first_name}({me.id})")
 
     for module_name in module_list:

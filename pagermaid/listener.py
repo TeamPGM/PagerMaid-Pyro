@@ -6,6 +6,7 @@ from time import strftime, gmtime, time
 from traceback import format_exc
 
 from pyrogram import ContinuePropagation, StopPropagation, filters, Client
+from pyrogram.errors import Flood, Forbidden
 from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid,
     MessageNotModified,
@@ -139,7 +140,7 @@ def listener(**args):
                     read_context[(message.chat.id, message.id)] = True
 
                 if command:
-                    await Hook.command_pre(message)
+                    await Hook.command_pre(message, command)
                 if data := inject(message, function):
                     await function(**data)
                 else:
@@ -150,12 +151,12 @@ def listener(**args):
                     elif function.__code__.co_argcount == 2:
                         await function(client, message)
                 if command:
-                    await Hook.command_post(message)
+                    await Hook.command_post(message, command)
             except StopPropagation as e:
                 raise StopPropagation from e
             except KeyboardInterrupt as e:
                 raise KeyboardInterrupt from e
-            except MessageNotModified:
+            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden):
                 pass
             except MessageIdInvalid:
                 logs.warning(
@@ -179,8 +180,6 @@ def listener(**args):
                 )
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("reload_des"))
-            except UserNotParticipant:
-                pass
             except ContinuePropagation as e:
                 if block_process:
                     raise StopPropagation from e
@@ -196,12 +195,12 @@ def listener(**args):
                     await message.edit(lang("run_error"), no_reply=True)  # noqa
                 if not diagnostics:
                     return
-                await Hook.process_error_exec(message, exc_info, exc_format)
                 if Config.ERROR_REPORT:
                     report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 
                     await attach_report(report, f"exception.{time()}.pgp.txt", None,
                                         "PGP Error report generated.")
+                    await Hook.process_error_exec(message, command, exc_info, exc_format)
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
             if block_process:
@@ -274,9 +273,7 @@ def raw_listener(filter_s):
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()
                 sys.exit(0)
-            except UserNotParticipant:
-                pass
-            except MessageEmpty:
+            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden):
                 pass
             except BaseException:
                 exc_info = sys.exc_info()[1]

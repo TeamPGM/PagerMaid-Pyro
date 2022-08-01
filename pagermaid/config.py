@@ -5,7 +5,7 @@ from yaml import load, FullLoader, safe_load
 from shutil import copyfile
 
 
-def strtobool(val):
+def strtobool(val, default=False):
     """Convert a string representation of truth to true (1) or false (0).
 
     True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
@@ -18,7 +18,8 @@ def strtobool(val):
     elif val in ('n', 'no', 'f', 'false', 'off', '0'):
         return 0
     else:
-        raise ValueError("invalid truth value %r" % (val,))
+        print("[Degrade] invalid truth value %r" % (val,))
+        return default
 
 
 try:
@@ -35,17 +36,20 @@ class Config:
         API_HASH = os.environ.get("API_HASH", config["api_hash"])
         STRING_SESSION = os.environ.get("STRING_SESSION")
         DEBUG = strtobool(os.environ.get("PGM_DEBUG", config["debug"]))
-        ERROR_REPORT = strtobool(os.environ.get("PGM_ERROR_REPORT", config["error_report"]))
+        ERROR_REPORT = strtobool(os.environ.get("PGM_ERROR_REPORT", config["error_report"]), True)
         LANGUAGE = os.environ.get("PGM_LANGUAGE", config["application_language"])
         REGION = os.environ.get("PGM_REGION", config["application_region"])
         TTS = os.environ.get("PGM_TTS", config["application_tts"])
         LOG = strtobool(os.environ.get("PGM_LOG", config["log"]))
         LOG_ID = int(os.environ.get("PGM_LOG_ID", config["log_chatid"]))
         IPV6 = strtobool(os.environ.get("PGM_IPV6", config["ipv6"]))
+        ALLOW_ANALYTIC = strtobool(os.environ.get("PGM_ALLOW_ANALYTIC", config["allow_analytic"]), True)
+        SENTRY_API = "https://0785960e63e04279a694d0486d47d9ea@o1342815.ingest.sentry.io/6617119"
+        MIXPANEL_API = "c79162511383b0fa1e9c062a2a86c855"
         TIME_FORM = os.environ.get("PGM_TIME_FORM", config["time_form"])
         DATE_FORM = os.environ.get("PGM_DATE_FORM", config["date_form"])
         START_FORM = os.environ.get("PGM_START_FORM", config["start_form"])
-        SILENT = strtobool(os.environ.get("PGM_PGM_SILENT", config["silent"]))
+        SILENT = strtobool(os.environ.get("PGM_PGM_SILENT", config["silent"]), True)
         PROXY_ADDRESS = os.environ.get("PGM_PROXY_ADDRESS", config["proxy_addr"])
         PROXY_PORT = os.environ.get("PGM_PROXY_PORT", config["proxy_port"])
         PROXY = None

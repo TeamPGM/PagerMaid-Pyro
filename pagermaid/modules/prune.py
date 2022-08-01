@@ -4,7 +4,8 @@ from asyncio import sleep
 
 from pagermaid import log
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message
+from pagermaid.enums import Client, Message
+from pagermaid.utils import lang
 
 import contextlib
 
@@ -44,40 +45,31 @@ async def prune(message: Message):
           need_admin=True,
           description=lang('sp_des'),
           parameters=lang('sp_parameters'))
-async def self_prune(message: Message):
+async def self_prune(bot: Client, message: Message):
     """ Deletes specific amount of messages you sent. """
     msgs = []
     count_buffer = 0
+    offset = 0
     if len(message.parameter) != 1:
         if not message.reply_to_message:
             return await message.edit(lang('arg_error'))
-        async for msg in message.bot.search_messages(
-                message.chat.id,
-                from_user="me",
-                offset=message.reply_to_message.id,
-        ):
-            msgs.append(msg.id)
-            count_buffer += 1
-            if len(msgs) == 100:
-                await message.bot.delete_messages(message.chat.id, msgs)
-                msgs = []
-        if msgs:
-            await message.bot.delete_messages(message.chat.id, msgs)
-        if count_buffer == 0:
-            await message.delete()
-            count_buffer += 1
-        await log(f"{lang('prune_hint1')}{lang('sp_hint')} {str(count_buffer)} {lang('prune_hint2')}")
-        notification = await send_prune_notify(message, count_buffer, count_buffer)
-        await sleep(1)
-        await notification.delete()
-        return
+        offset = message.reply_to_message.id
     try:
         count = int(message.parameter[0])
         await message.delete()
     except ValueError:
         await message.edit(lang('arg_error'))
         return
-    async for msg in message.bot.search_messages(message.chat.id, from_user="me"):
+    async for msg in bot.get_chat_history(message.chat.id, limit=100):
+        if count_buffer == count:
+            break
+        if msg.from_user and msg.from_user.is_self:
+            msgs.append(msg.id)
+            count_buffer += 1
+            if len(msgs) == 100:
+                await message.bot.delete_messages(message.chat.id, msgs)
+                msgs = []
+    async for msg in bot.search_messages(message.chat.id, from_user="me", offset=offset):
         if count_buffer == count:
             break
         msgs.append(msg.id)
@@ -101,7 +93,7 @@ async def self_prune(message: Message):
           need_admin=True,
           description=lang('yp_des'),
           parameters=lang('sp_parameters'))
-async def your_prune(message: Message):
+async def your_prune(bot: Client, message: Message):
     """ Deletes specific amount of messages someone sent. """
     if not message.reply_to_message:
         return await message.edit(lang('not_reply'))
@@ -119,18 +111,34 @@ async def your_prune(message: Message):
     except Exception:  # noqa
         pass
     count_buffer = 0
-    async for msg in message.bot.search_messages(message.chat.id, from_user=target.from_user.id):
+    msgs = []
+    async for msg in bot.get_chat_history(message.chat.id, limit=100):
         if count_buffer == count:
             break
-        await msg.delete()
+        if msg.from_user and msg.from_user.id == target.from_user.id:
+            msgs.append(msg.id)
+            count_buffer += 1
+            if len(msgs) == 100:
+                await message.bot.delete_messages(message.chat.id, msgs)
+                msgs = []
+    async for msg in bot.search_messages(message.chat.id, from_user=target.from_user.id):
+        if count_buffer == count:
+            break
         count_buffer += 1
+        msgs.append(msg.id)
+        if len(msgs) == 100:
+            await message.bot.delete_messages(message.chat.id, msgs)
+            msgs = []
+    if msgs:
+        await message.bot.delete_messages(message.chat.id, msgs)
     await log(
         f"{lang('prune_hint1')}{lang('yp_hint')} {str(count_buffer)} / {count} {lang('prune_hint2')}"
     )
 
-    notification = await send_prune_notify(message, count_buffer, count)
-    await sleep(1)
-    await notification.delete()
+    with contextlib.suppress(ValueError):
+        notification = await send_prune_notify(message, count_buffer, count)
+        await sleep(1)
+        await notification.delete()
 
 
 @listener(is_plugin=False, outgoing=True, command="del",
