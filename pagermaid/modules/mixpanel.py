@@ -3,9 +3,9 @@ from pagermaid.enums import Client, Message
 from pagermaid.hook import Hook
 
 from mixpanel import Mixpanel
+from mixpanel_async import AsyncBufferedConsumer
 
-
-mp = Mixpanel(Config.MIXPANEL_API)
+mp = Mixpanel(Config.MIXPANEL_API, consumer=AsyncBufferedConsumer())
 
 
 @Hook.on_startup()
