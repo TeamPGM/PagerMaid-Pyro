@@ -2,13 +2,15 @@ import io
 import sys
 import traceback
 
+from os.path import exists, sep
 from sys import exit
 from platform import node
 from getpass import getuser
 
-from pagermaid import bot
 from pagermaid.listener import listener
-from pagermaid.utils import attach_log, execute, Message, lang
+from pagermaid.enums import Message
+from pagermaid.services import bot
+from pagermaid.utils import attach_log, execute, lang, upload_attachment
 
 
 @listener(is_plugin=False, command="sh",
@@ -93,6 +95,21 @@ async def sh_eval(message: Message):
         await attach_log(evaluation, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
+
+
+@listener(is_plugin=False, command="send_log",
+          need_admin=True,
+          description=lang("send_log_des"))
+async def send_log(message: Message):
+    """ Send log to a chat. """
+    if not exists("pagermaid.log.txt"):
+        return await message.edit(lang("send_log_not_found"))
+    await upload_attachment("pagermaid.log.txt",
+                            message.chat.id,
+                            message.reply_to_message_id,
+                            thumb=f"pagermaid{sep}assets{sep}logo.jpg",
+                            caption=lang("send_log_caption"))
+    await message.safe_delete()
 
 
 async def aexec(code, event, client):

@@ -128,6 +128,8 @@ keyword.list
 requirements2.txt
 languages/custom.yml
 unknown_errors.txt
+pagermaid*.txt
+exception*.txt
 output.log
 
 # Spyder project settings

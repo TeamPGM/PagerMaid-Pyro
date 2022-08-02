@@ -35,6 +35,7 @@ def move_plugin(file_path):
 
 async def download(name):
     html = await client.get(f'{Config.GIT_SOURCE}{name}/main.py')
+    assert html.status_code == 200
     with open(f'plugins{sep}{name}.py', mode='wb') as f:
         f.write(html.text.encode('utf-8'))
     return f'plugins{sep}{name}.py'
@@ -107,15 +108,16 @@ async def plugin(message: Message):
                     if x["name"] == i:
                         if (float(x["version"]) - float(plugin_version)) <= 0:
                             no_need_list.append(i)
-                            temp = False
-                            break
                         else:
                             remove_plugin(i)
-                            await download(i)
+                            try:
+                                await download(i)
+                            except AssertionError:
+                                break
                             update_version(i, x["version"])
                             success_list.append(i)
-                            temp = False
-                            break
+                        temp = False
+                        break
                 if temp:
                     failed_list.append(i)
             text = f"<b>{lang('apt_name')}</b>\n\n"
@@ -274,7 +276,10 @@ async def plugin(message: Message):
                 plugin_directory = f"{working_dir}{sep}plugins{sep}"
                 for i in need_update_list:
                     remove_plugin(i)
-                    await download(i)
+                    try:
+                        await download(i)
+                    except AssertionError:
+                        continue
                     with open(f"{plugin_directory}version.json", "r", encoding="utf-8") as f:
                         version_json = json.load(f)
                     for m in plugin_online:

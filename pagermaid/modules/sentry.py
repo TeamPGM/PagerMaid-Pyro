@@ -3,7 +3,7 @@ import sentry_sdk
 from subprocess import run, PIPE
 from time import time
 
-from pyrogram.errors import Unauthorized
+from pyrogram.errors import Unauthorized, UsernameInvalid
 
 from pagermaid import Config
 from pagermaid.enums import Client, Message
@@ -14,7 +14,7 @@ from pagermaid.single_utils import safe_remove
 def sentry_before_send(event, hint):
     global sentry_sdk_report_time
     exc_info = hint.get("exc_info")
-    if exc_info and isinstance(exc_info[1], Unauthorized):
+    if exc_info and isinstance(exc_info[1], (Unauthorized, UsernameInvalid)):
         # The user has been deleted/deactivated or session revoked
         safe_remove('pagermaid.session')
         exit(1)

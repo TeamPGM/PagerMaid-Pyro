@@ -494,6 +494,10 @@ eval_parameters: <command>
 eval_channel: Something went wrong ~ The current PagerMaid-Pyro configuration prohibits the execution of Python commands in the channel.
 eval_success: execute Python commands remotely
 eval_need_dev: '**Please note: This command can directly operate your account** This command is only for developers. If you know what you are doing, please manually configure the `dev` item in the Redis database to any value or create the `dev` file in the `data` folder.'
+## send_log
+send_log_des: Send the log file to the specified user.
+send_log_not_found: The log file does not exist.
+send_log_caption: Log file of PagerMaid-Pyro.
 ## restart
 restart_des: Restart PagerMaid-Pyro
 restart_processing: Try to restart PagerMaid-Pyro.

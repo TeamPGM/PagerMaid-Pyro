@@ -494,6 +494,10 @@ eval_parameters: <命令>
 eval_channel: 出错了呜呜呜 ~ 当前 PagerMaid-Pyro 的配置禁止在频道中执行 Python 命令。
 eval_success: 远程执行 Python 命令
 eval_need_dev: '**请注意：此命令可以直接操作您的账户** 此命令仅适用于开发者，如果您知道您在做什么的话，请手动在 Redis 数据库配置 dev 项为任意值或者在 data 文件夹下创建 dev 文件。'
+## send_log
+send_log_des: 将日志文件发送给指定用户
+send_log_not_found: 日志文件不存在。
+send_log_caption: PagerMaid-Pyro 日志文件
 ## restart
 restart_des: 使 PagerMaid-Pyro 重新启动
 restart_processing: 尝试重启 PagerMaid-Pyro...

@@ -494,6 +494,10 @@ eval_parameters: <指令>
 eval_channel: Error！不能在頻道執行指令。
 eval_success: 執行 Python 指令
 eval_need_dev: '**請注意：此命令可以直接操作您的賬戶** 此命令僅適用於開發者，如果您知道您在做什麼的話，請手動在 Redis 數據庫配置 dev 項為任意值或者在 data 文件夾下創建 dev 文件。'
+## send_log
+send_log_des: 將日誌文件發送到指定的用戶
+send_log_not_found: 日誌文件不存在
+send_log_caption: PagerMaid-Pyro 日誌文件
 ## restart
 restart_des: 重新啟動
 restart_processing: 正在嘗試重新啟動

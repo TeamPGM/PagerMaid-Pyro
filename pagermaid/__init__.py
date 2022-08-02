@@ -1,9 +1,10 @@
 import contextlib
+
 from typing import Callable, Awaitable, Set, Dict
 
 from coloredlogs import ColoredFormatter
 from datetime import datetime, timezone
-from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG
+from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG, Formatter, FileHandler
 from os import getcwd
 
 from pyrogram.errors import PeerIdInvalid
@@ -14,7 +15,7 @@ import pyromod.listen
 from pyrogram import Client
 import sys
 
-pgm_version = "1.2.4"
+pgm_version = "1.2.5"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -35,6 +36,9 @@ root_logger.addHandler(logging_handler)
 pyro_logger = getLogger("pyrogram")
 pyro_logger.setLevel(CRITICAL)
 pyro_logger.addHandler(logging_handler)
+file_handler = FileHandler(filename="pagermaid.log.txt", mode="w", encoding="utf-8")
+file_handler.setFormatter(Formatter(logging_format))
+root_logger.addHandler(file_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)
 logs.setLevel(DEBUG if Config.DEBUG else INFO)
 
