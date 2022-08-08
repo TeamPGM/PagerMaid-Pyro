@@ -116,7 +116,6 @@ async def stats(message: Message):
 async def ping_dc(message: Message):
     """ Ping your or other data center's IP addresses. """
     data = []
-    print("1")
     for dc in range(1, 6):
         if platform == "win32":
             result = await execute(f'ping -n 1 {DCs[dc]} | find "最短"')
