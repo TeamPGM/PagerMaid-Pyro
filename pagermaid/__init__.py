@@ -1,4 +1,5 @@
 import contextlib
+import sys
 
 from typing import Callable, Awaitable, Set, Dict
 
@@ -7,15 +8,12 @@ from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG, Formatter, FileHandler
 from os import getcwd
 
-from pyrogram.errors import PeerIdInvalid
-
 from pagermaid.config import Config
 from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
-import sys
 
-pgm_version = "1.2.5"
+pgm_version = "1.2.6"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -78,5 +76,6 @@ async def log(message):
                 Config.LOG_ID,
                 message
         )
-    except PeerIdInvalid:
+    except Exception:
         Config.LOG = False
+        Config.LOG_ID = "me"

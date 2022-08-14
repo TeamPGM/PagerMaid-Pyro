@@ -95,4 +95,4 @@ async def recovery(message: Message):
         os.remove(pgm_backup_zip_name)
 
     await message.edit(lang('recovery_success') + " " + lang('apt_reboot'))
-    sys.exit(1)
+    sys.exit(0)
