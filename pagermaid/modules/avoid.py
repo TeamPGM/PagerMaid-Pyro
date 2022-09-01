@@ -2,19 +2,20 @@
 
 from pagermaid import log
 from pagermaid.single_utils import sqlite
-from pagermaid.utils import lang, Message
+from pagermaid.utils import lang
+from pagermaid.enums import Client, Message
 from pagermaid.listener import listener
 
 
 @listener(is_plugin=False, outgoing=True, command="ghost",
           description=lang('ghost_des'),
           parameters="<true|false|status>")
-async def ghost(message: Message):
+async def ghost(client: Client, message: Message):
     """ Toggles ghosting of a user. """
     if len(message.parameter) != 1:
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
-    myself = await message.bot.get_me()
+    myself = await client.get_me()
     self_user_id = myself.id
     if message.parameter[0] == "true":
         if message.chat.id == self_user_id:
@@ -45,12 +46,12 @@ async def ghost(message: Message):
           need_admin=True,
           description=lang('deny_des'),
           parameters="<true|false|status>")
-async def deny(message: Message):
+async def deny(client: Client, message: Message):
     """ Toggles denying of a user. """
     if len(message.parameter) != 1:
         await message.edit(f"{lang('error_prefix')}{lang('arg_error')}")
         return
-    myself = await message.bot.get_me()
+    myself = await client.get_me()
     self_user_id = myself.id
     if message.parameter[0] == "true":
         if message.chat.id == self_user_id:
@@ -78,10 +79,10 @@ async def deny(message: Message):
 
 
 @listener(is_plugin=False, incoming=True, outgoing=False, ignore_edited=True)
-async def set_read_acknowledgement(message: Message):
+async def set_read_acknowledgement(client: Client, message: Message):
     """ Event handler to infinitely read ghosted messages. """
     if sqlite.get(f"ghosted.chat_id.{str(message.chat.id)}", None):
-        await message.bot.read_chat_history(message.chat.id)
+        await client.read_chat_history(message.chat.id)
 
 
 @listener(is_plugin=False, incoming=True, outgoing=False, ignore_edited=True)

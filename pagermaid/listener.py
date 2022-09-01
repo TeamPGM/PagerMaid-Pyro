@@ -119,9 +119,6 @@ def listener(**args):
     def decorator(function):
 
         async def handler(client: Client, message: Message):
-            message.bot = client
-            message.request = httpx_client
-
             try:
                 try:
                     parameter = message.matches[0].group(2).split(" ")
@@ -235,9 +232,6 @@ def raw_listener(filter_s):
 
     def decorator(function):
         async def handler(client, message):
-            message.bot = client
-            message.request = httpx_client
-
             try:
                 if function.__code__.co_argcount == 1:
                     await function(message)

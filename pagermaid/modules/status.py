@@ -19,8 +19,9 @@ from shutil import disk_usage
 from subprocess import Popen, PIPE
 
 from pagermaid import start_time, Config, pgm_version
+from pagermaid.enums import Client, Message
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message, execute
+from pagermaid.utils import lang, execute
 
 DCs = {
     1: "149.154.175.50",
@@ -84,10 +85,10 @@ async def status(message: Message):
 
 @listener(is_plugin=False, command="stats",
           description=lang("stats_des"))
-async def stats(message: Message):
+async def stats(client: Client, message: Message):
     msg = await message.edit(lang("stats_loading"))
     a, u, g, s, c, b = 0, 0, 0, 0, 0, 0
-    async for dialog in message.bot.get_dialogs():
+    async for dialog in client.get_dialogs():
         chat_type = dialog.chat.type
         if chat_type == ChatType.BOT:
             b += 1
@@ -141,10 +142,10 @@ async def ping_dc(message: Message):
 
 @listener(is_plugin=False, command="ping",
           description=lang("ping_des"))
-async def ping(message: Message):
+async def ping(client: Client, message: Message):
     """ Calculates latency between PagerMaid and Telegram. """
     start = datetime.now()
-    await message.bot.invoke(Ping(ping_id=0))
+    await client.invoke(Ping(ping_id=0))
     end = datetime.now()
     ping_duration = (end - start).microseconds / 1000
     start = datetime.now()

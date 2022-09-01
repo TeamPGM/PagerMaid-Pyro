@@ -58,8 +58,6 @@ class Client(Client):  # noqa
 class Message(Message):  # noqa
     arguments: str
     parameter: List
-    bot: Client
-    request: Optional[AsyncClient] = None
 
     def obtain_message(self) -> Optional[str]:
         """ Obtains a message from either the reply message or command arguments. """
