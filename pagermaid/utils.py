@@ -45,7 +45,7 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
 
 async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None):
     """ Attach plaintext as logs. """
-    with open(file_name, "w+") as file:
+    with open(file_name, "w+", encoding='utf-8') as file:
         file.write(plaintext)
     await bot.send_document(
         chat_id,

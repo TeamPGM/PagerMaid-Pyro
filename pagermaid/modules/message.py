@@ -60,15 +60,16 @@ async def userid(message: Message):
             pass
         if reply.forward_from_chat:
             text += "\n\n**Forward From Channel**\n" \
-                    "id: `" + str(message.forward_from_chat.id) + \
-                    "`\ntitle: `" + message.forward_from_chat.title + "`"
-            if message.forward_from_chat.username:
-                text += "\nusername: @" + message.forward_from_chat.username
-            text += "\nmessage_id: `" + str(message.forward_from_message_id) + "`"
-            if message.forward_sender_name:
-                text += "\npost_author: `" + message.forward_sender_name + "`"
+                    "id: `" + str(reply.forward_from_chat.id) + \
+                    "`\ntitle: `" + reply.forward_from_chat.title + "`"
+            if reply.forward_from_chat.username:
+                text += "\nusername: @" + reply.forward_from_chat.username
+            if reply.forward_from_message_id:
+                text += "\nmessage_id: `" + str(reply.forward_from_message_id) + "`"
+            if reply.forward_sender_name:
+                text += "\npost_author: `" + reply.forward_sender_name + "`"
         elif reply.forward_from:
-            text += "\n\n**Forward From User**\nid: `" + str(message.forward_from.id) + "`"
+            text += "\n\n**Forward From User**\nid: `" + str(reply.forward_from.id) + "`"
             try:
                 if reply.forward_from.is_bot:
                     text += f"\nis_bot: {lang('id_is_bot_yes')}"
@@ -84,6 +85,8 @@ async def userid(message: Message):
                     text += "\ndc: `" + str(reply.forward_from.dc_id) + "`"
             except AttributeError:
                 pass
+        elif reply.forward_sender_name:
+            text += "\n\n**Forward From User**\nsender_name: `" + str(reply.forward_sender_name) + "`"
     await message.edit(text)
 
 
