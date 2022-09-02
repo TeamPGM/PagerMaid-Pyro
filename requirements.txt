@@ -11,4 +11,4 @@ sqlitedict
 casbin==1.17.1
 mixpanel==4.10.0
 mixpanel-py-async
-sentry-sdk==1.9.6
+sentry-sdk==1.9.7
