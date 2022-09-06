@@ -44,28 +44,6 @@ configure () {
     else
         sed -i "s/zh-CN/$application_tts/" $config_file
     fi
-    printf "启用日志记录？ [Y/n]"
-    read -r logging_confirmation <&1
-    case $logging_confirmation in
-        [yY][eE][sS] | [yY])
-            printf "请输入您的日志记录群组/频道的 ChatID （如果要发送给 原 PagerMaid 作者 ，请按Enter）："
-            read -r log_chatid <&1
-            if [ -z "$log_chatid" ]
-            then
-                echo "LOG 将发送到 原 PagerMaid 作者."
-            else
-                sed -i "s/503691334/$log_chatid/" $config_file
-            fi
-            sed -i "s/log: False/log: True/" $config_file
-            ;;
-        [nN][oO] | [nN])
-            echo "安装过程继续 . . ."
-            ;;
-        *)
-            echo "输入错误 . . ."
-            exit 1
-            ;;
-    esac
 }
 
 login () {
@@ -87,8 +65,10 @@ main () {
         login
     else
         if [ ! -f "/pagermaid/workdir/pagermaid.session" ]; then
-            login
+            welcome
+            configure
         fi
+        login
     fi
 }
 

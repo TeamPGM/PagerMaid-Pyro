@@ -1,16 +1,12 @@
 FROM ubuntu:latest
-ARG S6_VERSION=v2.2.0.3
-ARG S6_ARCH=amd64
-ARG DEBIAN_FRONTEND=noninteractive
-ARG USER_NAME=pagermaid
-ARG WORK_DIR=/pagermaid/workdir
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-    SHELL=/bin/bash \
     LANG=zh_CN.UTF-8 \
+    SHELL=/bin/bash \
     PS1="\u@\h:\w \$ " \
-    RUN_AS_ROOT=true
+    PAGERMAID_DIR=/pagermaid \
+    DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
-WORKDIR $WORK_DIR
+WORKDIR /pagermaid/workdir
 RUN source ~/.bashrc \
     ## 安装运行环境依赖，自编译建议修改为国内镜像源
 #   && sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
@@ -38,10 +34,6 @@ RUN source ~/.bashrc \
         libmagic1 \
         libzbar0 \
         iputils-ping \
-    ## 安装s6
-    && curl -L -o /tmp/s6-overlay-installer https://github.com/just-containers/s6-overlay/releases/download/${S6_VERSION}/s6-overlay-${S6_ARCH}-installer \
-    && chmod +x /tmp/s6-overlay-installer \
-    && /tmp/s6-overlay-installer / \
     ## 安装编译依赖
     && apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -78,14 +70,12 @@ RUN source ~/.bashrc \
 #   && pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple \
     && python -m pip install --upgrade pip \
     ## 添加用户
-    && useradd $USER_NAME -u 917 -U -r -m -d /$USER_NAME -s /bin/bash \
-    && usermod -aG sudo,users $USER_NAME \
-    && echo "$USER_NAME ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$USER_NAME \
+    && echo "pagermaid ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/pagermaid \
+    && useradd pagermaid -r -m -d /pagermaid -s /bin/bash \
+    && usermod -aG sudo,users pagermaid \
     ## 克隆仓库
-    && git clone -b master https://github.com/TeamPGM/PagerMaid-Pyro.git $WORK_DIR \
+    && git clone -b master https://github.com/TeamPGM/PagerMaid-Pyro.git /pagermaid/workdir \
     && git config --global pull.ff only \
-    ## 复制s6启动脚本
-    && cp -r s6/* / \
     ## pip install
     && pip install -r requirements.txt \
     ## 卸载编译依赖，清理安装缓存
@@ -120,4 +110,4 @@ RUN source ~/.bashrc \
         /var/lib/apt/lists/* \
         /var/tmp/* \
         ~/.cache
-ENTRYPOINT ["/init"]
+ENTRYPOINT ["sh","utils/docker-config.sh"]

@@ -64,6 +64,10 @@ start_docker () {
     sleep 3
     docker exec -it $container_name bash utils/docker-config.sh
     echo
+    echo "Docker 重启中，如果失败，请手动重启容器。"
+    echo
+    docker restart $container_name
+    echo
     echo "Docker 创建完毕。"
     echo
 }
@@ -203,7 +207,7 @@ shon_online () {
     echo "  7) 将 PagerMaid 数据持久化"
     echo "  8) 退出脚本"
     echo
-    echo "     Version：1.0.1"
+    echo "     Version：2.0.0"
     echo
     echo -n "请输入编号: "
     read N
