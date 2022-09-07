@@ -4,6 +4,7 @@ from subprocess import run, PIPE
 from time import time
 
 from pyrogram.errors import Unauthorized, UsernameInvalid
+from sentry_sdk.integrations.httpx import HttpxIntegration
 
 from pagermaid import Config
 from pagermaid.enums import Client, Message
@@ -34,16 +35,20 @@ sentry_sdk.init(
     release=sentry_sdk_git_hash,
     before_send=sentry_before_send,
     environment="production",
+    integrations=[
+        HttpxIntegration(),
+    ],
 )
 
 
 @Hook.on_startup()
 async def sentry_init_id(bot: Client):
-    me = await bot.get_me()
-    if me.username:
-        sentry_sdk.set_user({"id": me.id, "name": me.first_name, "username": me.username, "ip_address": "{{auto}}"})
-    else:
-        sentry_sdk.set_user({"id": me.id, "name": me.first_name, "ip_address": "{{auto}}"})
+    if not bot.me:
+        bot.me = await bot.get_me()
+    data = {"id": bot.me.id, "name": bot.me.first_name, "ip_address": "{{auto}}"}
+    if bot.me.username:
+        data["username"] = bot.me.username
+    sentry_sdk.set_user(data)
 
 
 @Hook.process_error()
