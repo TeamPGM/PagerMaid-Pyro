@@ -55,8 +55,9 @@ class Config:
         PROXY = None
         if PROXY_ADDRESS and PROXY_PORT:
             PROXY = dict(
+                scheme="socks5",
                 hostname=PROXY_ADDRESS,
-                port=PROXY_PORT,
+                port=int(PROXY_PORT)
             )
         GIT_SOURCE = os.environ.get("PGM_GIT_SOURCE", config["git_source"])
         GIT_SOURCE = GIT_SOURCE.replace("TeamPGM/PagerMaid_Plugins/", "TeamPGM/PagerMaid_Plugins_Pyro/")
