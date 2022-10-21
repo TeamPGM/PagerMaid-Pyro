@@ -13,7 +13,7 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.2.12"
+pgm_version = "1.2.13"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -41,12 +41,10 @@ basicConfig(level=DEBUG if Config.DEBUG else INFO)
 logs.setLevel(DEBUG if Config.DEBUG else INFO)
 
 # easy check
-if not Config.API_ID:
-    logs.error("Api-ID Not Found!")
-    sys.exit(1)
-elif not Config.API_HASH:
-    logs.error("Api-Hash Not Found!")
-    sys.exit(1)
+if not Config.API_ID or not Config.API_HASH:
+    logs.warning("Api-ID or Api-HASH Not Found!")
+    Config.API_ID = Config.DEFAULT_API_ID
+    Config.API_HASH = Config.DEFAULT_API_HASH
 
 start_time = datetime.now(timezone.utc)
 
