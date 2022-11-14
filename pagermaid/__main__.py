@@ -38,6 +38,7 @@ async def main():
 
     await process_exit(start=True, _client=bot)
     logs.info(lang('start'))
+    await Hook.load_success_exec()
     await Hook.startup()
 
     await idle()

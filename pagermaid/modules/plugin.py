@@ -80,7 +80,7 @@ async def plugin(message: Message):
                                f"{lang('apt_plugin')} "
                                f"{path.basename(file_path)[:-3]} {lang('apt_installed')}")
             await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
-            reload_all()
+            await reload_all()
         elif len(message.parameter) >= 2:
             process_list = message.parameter
             message = await message.edit(lang('apt_processing'))
@@ -131,7 +131,7 @@ async def plugin(message: Message):
             restart = len(success_list) > 0
             await message.edit(text)
             if restart:
-                reload_all()
+                await reload_all()
         else:
             await message.edit(lang('arg_error'))
     elif message.parameter[0] == "remove":
@@ -147,7 +147,7 @@ async def plugin(message: Message):
                         json.dump(version_json, f)
                 await message.edit(f"{lang('apt_remove_success')} {message.parameter[1]}")
                 await log(f"{lang('apt_remove')} {message.parameter[1]}.")
-                reload_all()
+                await reload_all()
             elif "/" in message.parameter[1]:
                 await message.edit(lang('arg_error'))
             else:
@@ -198,7 +198,7 @@ async def plugin(message: Message):
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
                                    f"{lang('apt_enable')}")
                 await log(f"{lang('apt_enable')} {message.parameter[1]}.")
-                reload_all()
+                await reload_all()
             else:
                 await message.edit(lang('apt_not_exist'))
         else:
@@ -211,7 +211,7 @@ async def plugin(message: Message):
                 await message.edit(f"{lang('apt_plugin')} {message.parameter[1]} "
                                    f"{lang('apt_disable')}")
                 await log(f"{lang('apt_disable')} {message.parameter[1]}.")
-                reload_all()
+                await reload_all()
             else:
                 await message.edit(lang('apt_not_exist'))
         else:
@@ -288,7 +288,7 @@ async def plugin(message: Message):
                     with open(f"{plugin_directory}version.json", "w") as f:
                         json.dump(version_json, f)
                 await message.edit(f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + need_update)
-                reload_all()
+                await reload_all()
     elif message.parameter[0] == "search":
         if len(message.parameter) == 1:
             await message.edit(lang("apt_search_no_name"))

@@ -4,11 +4,12 @@ import pagermaid.config
 import pagermaid.modules
 
 from pagermaid import bot, logs, help_messages, all_permissions, hook_functions
+from pagermaid.hook import Hook
 from pagermaid.listener import listener
 from pagermaid.utils import lang, Message
 
 
-def reload_all():
+async def reload_all():
     bot.dispatcher.remove_all_handlers()
     bot.job.remove_all_jobs()
     with contextlib.suppress(RuntimeError):
@@ -38,6 +39,7 @@ def reload_all():
         except BaseException as exception:
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
             pagermaid.modules.plugin_list.remove(plugin_name)
+    await Hook.load_success_exec()
 
 
 @listener(is_plugin=False, command="reload",
@@ -45,5 +47,5 @@ def reload_all():
           description=lang('reload_des'))
 async def reload_plugins(message: Message):
     """ To reload plugins. """
-    reload_all()
+    await reload_all()
     await message.edit(lang("reload_ok"))

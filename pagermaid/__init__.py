@@ -1,5 +1,4 @@
 import contextlib
-import sys
 
 from typing import Callable, Awaitable, Set, Dict
 
@@ -13,7 +12,7 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.2.13"
+pgm_version = "1.2.14"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -21,7 +20,9 @@ working_dir = getcwd()
 read_context = {}
 help_messages = {}
 hook_functions: Dict[str, Set[Callable[[], Awaitable[None]]]] = {
-    "startup": set(), "shutdown": set(), "command_pre": set(), "command_post": set(), "process_error": set(), }
+    "startup": set(), "shutdown": set(), "command_pre": set(), "command_post": set(), "process_error": set(),
+    "load_plugins_finished": set(),
+}
 all_permissions = []
 
 logs = getLogger(__name__)
@@ -40,7 +41,6 @@ root_logger.addHandler(file_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)
 logs.setLevel(DEBUG if Config.DEBUG else INFO)
 
-# easy check
 if not Config.API_ID or not Config.API_HASH:
     logs.warning("Api-ID or Api-HASH Not Found!")
     Config.API_ID = Config.DEFAULT_API_ID

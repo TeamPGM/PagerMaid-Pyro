@@ -108,7 +108,7 @@ async def lang_change(message: Message):
         with open('config.yml', 'w', encoding="utf-8") as f:
             f.write(file)
         await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
-        reload_all()
+        await reload_all()
     else:
         await message.edit(f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n'
                            f'{lang("lang_all_lang")}{"，".join(dir__)}')
@@ -146,7 +146,7 @@ async def alias_commands(message: Message):
             with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
                 json_dump(Config.alias_dict, f)
             await message.edit(lang('alias_success'))
-            reload_all()
+            await reload_all()
         except KeyError:
             await message.edit(lang('alias_no_exist'))
             return
@@ -160,4 +160,4 @@ async def alias_commands(message: Message):
         with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
             json_dump(Config.alias_dict, f)
         await message.edit(lang('alias_success'))
-        reload_all()
+        await reload_all()

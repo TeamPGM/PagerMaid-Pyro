@@ -66,6 +66,18 @@ class Hook:
         return decorator
 
     @staticmethod
+    def load_success():
+        """
+        注册一个插件加载完成钩子
+        """
+
+        def decorator(function):
+            hook_functions["load_plugins_finished"].add(function)
+            return function
+
+        return decorator
+
+    @staticmethod
     async def startup():
         if cors := [startup(**inject(None, startup)) for startup in hook_functions["startup"]]:  # noqa
             try:
@@ -143,3 +155,11 @@ class Hook:
             raise StopPropagation from e
         except Exception as exception:
             logs.info(f"[process_error]: {type(exception)}: {exception}")
+
+    @staticmethod
+    async def load_success_exec():
+        if cors := [load(**inject(None, load)) for load in hook_functions["load_plugins_finished"]]:  # noqa
+            try:
+                await asyncio.gather(*cors)
+            except Exception as exception:
+                logs.info(f"[load_success_exec]: {type(exception)}: {exception}")

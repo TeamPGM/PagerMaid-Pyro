@@ -51,7 +51,7 @@ class Config:
         LOG_ID = int(os.environ.get("PGM_LOG_ID", config["log_chatid"]))
         IPV6 = strtobool(os.environ.get("PGM_IPV6", config["ipv6"]))
         ALLOW_ANALYTIC = strtobool(os.environ.get("PGM_ALLOW_ANALYTIC", config["allow_analytic"]), True)
-        SENTRY_API = "https://262b310907314998ba2931fa8b3b3624@o1342815.ingest.sentry.io/6617119"
+        SENTRY_API = "https://fbff8c554f6a44b989b490864679546e@o1342815.ingest.sentry.io/6617119"
         MIXPANEL_API = "c79162511383b0fa1e9c062a2a86c855"
         TIME_FORM = os.environ.get("PGM_TIME_FORM", config["time_form"])
         DATE_FORM = os.environ.get("PGM_DATE_FORM", config["date_form"])
@@ -85,7 +85,6 @@ class Config:
             with open(f"data{os.sep}alias.json", encoding="utf-8") as f:
                 alias_dict = load_json(f)
         except Exception as e:
-            print(f"[Degrade] Reading alias file failed：{e}")
             alias_dict = {}
     except ValueError as e:
         print(e)
