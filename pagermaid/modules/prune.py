@@ -160,4 +160,5 @@ async def send_prune_notify(bot: Client, message: Message, count_buffer, count):
     return await bot.send_message(
         message.chat.id,
         f"{lang('spn_deleted')} {str(count_buffer)} / {str(count)} {lang('prune_hint2')}",
+        reply_to_message_id=message.reply_to_top_message_id,
     )

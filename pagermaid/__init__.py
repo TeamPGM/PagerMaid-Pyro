@@ -2,6 +2,7 @@ import contextlib
 
 from typing import Callable, Awaitable, Set, Dict
 
+import pyrogram.types
 from coloredlogs import ColoredFormatter
 from datetime import datetime, timezone
 from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG, Formatter, FileHandler
@@ -12,7 +13,9 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.2.14"
+from pyromod.listen.temp_fix import temp_fix
+
+pgm_version = "1.2.15"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -60,6 +63,9 @@ bot = Client("pagermaid",
              api_hash=Config.API_HASH,
              ipv6=Config.IPV6,
              proxy=Config.PROXY)
+# temp fix topics group
+setattr(pyrogram.types.Message, "old_parse", getattr(pyrogram.types.Message, "_parse"))
+setattr(pyrogram.types.Message, "_parse", temp_fix)
 bot.job = scheduler
 
 

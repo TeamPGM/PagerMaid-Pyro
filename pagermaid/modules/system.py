@@ -7,6 +7,8 @@ from sys import exit
 from platform import node
 from getpass import getuser
 
+from pyrogram.enums import ParseMode
+
 from pagermaid.listener import listener
 from pagermaid.enums import Message
 from pagermaid.services import bot
@@ -64,9 +66,11 @@ async def restart(message: Message):
           parameters=lang('eval_parameters'))
 async def sh_eval(message: Message):
     """ Run python commands from Telegram. """
+    dev_mode = exists(f"data{sep}dev")
     try:
+        assert dev_mode
         cmd = message.text.split(" ", maxsplit=1)[1]
-    except IndexError:
+    except (IndexError, AssertionError):
         return await message.edit(lang('eval_need_dev'))
     old_stderr = sys.stderr
     old_stdout = sys.stdout
@@ -89,9 +93,9 @@ async def sh_eval(message: Message):
         evaluation = stdout
     else:
         evaluation = "Success"
-    final_output = f"**>>>** ```{cmd}``` \n```{evaluation}```"
+    final_output = f"**>>>** `{cmd}` \n`{evaluation}`"
     if len(final_output) > 4096:
-        message = await message.edit(f"**>>>** ```{cmd}```")
+        message = await message.edit(f"**>>>** `{cmd}`", parse_mode=ParseMode.MARKDOWN)
         await attach_log(evaluation, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
@@ -106,7 +110,7 @@ async def send_log(message: Message):
         return await message.edit(lang("send_log_not_found"))
     await upload_attachment("pagermaid.log.txt",
                             message.chat.id,
-                            message.reply_to_message_id,
+                            message.reply_to_message_id or message.reply_to_top_message_id,
                             thumb=f"pagermaid{sep}assets{sep}logo.jpg",
                             caption=lang("send_log_caption"))
     await message.safe_delete()

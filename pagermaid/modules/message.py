@@ -1,11 +1,13 @@
 """ Pagermaid message plugin. """
-
+from pyrogram.enums import ChatType
 from pyrogram.errors import Forbidden, FloodWait
+from pyrogram.raw.functions.messages import ForwardMessages
 
 from pagermaid import log
 from pagermaid.config import Config
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message
+from pagermaid.utils import lang
+from pagermaid.enums import Client, Message
 
 
 @listener(is_plugin=False, outgoing=True, command="id",
@@ -16,7 +18,7 @@ async def userid(message: Message):
     text = f"Message ID: `{str(message.id)}" + "`\n\n"
     text += "**Chat**\nid:`" + str(message.chat.id) + "`\n"
     msg_from = message.chat
-    if msg_from.type == "private":
+    if msg_from.type == ChatType.PRIVATE:
         try:
             text += f"first_name: `{msg_from.first_name}" + "`\n"
         except TypeError:
@@ -25,7 +27,7 @@ async def userid(message: Message):
             text += f"last_name: `{msg_from.last_name}" + "`\n"
         if msg_from.username:
             text += f"username: @{msg_from.username}" + "\n"
-    if msg_from.type in ["supergroup", "channel"]:
+    if msg_from.type in [ChatType.SUPERGROUP, ChatType.CHANNEL]:
         text += f"title: `{msg_from.title}" + "`\n"
         try:
             if msg_from.username:
@@ -129,7 +131,7 @@ async def logging(message: Message):
 @listener(is_plugin=False, outgoing=True, command="re",
           description=lang('re_des'),
           parameters=lang('re_parameters'))
-async def re(message: Message):
+async def re(bot: Client, message: Message):
     """ Forwards a message into this group """
     if reply := message.reply_to_message:
         if message.arguments == '':
@@ -145,16 +147,26 @@ async def re(message: Message):
         for _ in range(num):
             try:
                 if not message.chat.has_protected_content:
-                    await reply.forward(reply.chat.id)
+                    await forward_msg(bot, message.reply_to_message)
                 else:
-                    await reply.copy(reply.chat.id)
-            except Forbidden:
-                return
-            except FloodWait:
-                return
-            except ValueError:
-                return
-            except Exception as e:  # noqa
+                    await reply.copy(reply.chat.id, reply_to_message_id=message.reply_to_top_message_id)
+            except (Forbidden, FloodWait, Exception):
                 return
     else:
         await message.edit(lang('not_reply'))
+
+
+async def forward_msg(bot: Client, message: Message):
+    message_ids = [message.id]
+    await bot.invoke(
+        ForwardMessages(
+            to_peer=await bot.resolve_peer(message.chat.id),
+            from_peer=await bot.resolve_peer(message.chat.id),
+            id=message_ids,
+            silent=None,
+            random_id=[bot.rnd_id() for _ in message_ids],
+            schedule_date=None,
+            noforwards=None,
+            top_msg_id=message.reply_to_top_message_id,
+        )
+    )
