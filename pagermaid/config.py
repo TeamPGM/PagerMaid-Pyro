@@ -59,12 +59,20 @@ class Config:
         SILENT = strtobool(os.environ.get("PGM_PGM_SILENT", config["silent"]), True)
         PROXY_ADDRESS = os.environ.get("PGM_PROXY_ADDRESS", config["proxy_addr"])
         PROXY_PORT = os.environ.get("PGM_PROXY_PORT", config["proxy_port"])
+        PROXY_HTTP_ADDRESS = os.environ.get("PGM_PROXY_HTTP_ADDRESS", config["http_addr"])
+        PROXY_HTTP_PORT = os.environ.get("PGM_PROXY_HTTP_PORT", config["http_port"])
         PROXY = None
         if PROXY_ADDRESS and PROXY_PORT:
             PROXY = dict(
                 scheme="socks5",
                 hostname=PROXY_ADDRESS,
                 port=int(PROXY_PORT)
+            )
+        elif PROXY_HTTP_ADDRESS and PROXY_HTTP_PORT:
+            PROXY = dict(
+                scheme="http",
+                hostname=PROXY_HTTP_ADDRESS,
+                port=int(PROXY_HTTP_PORT)
             )
         GIT_SOURCE = os.environ.get("PGM_GIT_SOURCE", config["git_source"])
         GIT_SOURCE = GIT_SOURCE.replace("TeamPGM/PagerMaid_Plugins/", "TeamPGM/PagerMaid_Plugins_Pyro/")

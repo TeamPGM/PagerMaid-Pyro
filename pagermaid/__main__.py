@@ -29,7 +29,7 @@ async def main():
             import_module(f"pagermaid.modules.{module_name}")
         except BaseException as exception:
             logs.info(f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}")
-    for plugin_name in plugin_list:
+    for plugin_name in plugin_list.copy():
         try:
             import_module(f"plugins.{plugin_name}")
         except BaseException as exception:

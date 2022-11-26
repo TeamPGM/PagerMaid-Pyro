@@ -13,11 +13,10 @@ configure () {
 
     echo "生成配置文件中 . . ."
     cp config.gen.yml $config_file
-    echo "api_id、api_hash 申请地址： https://my.telegram.org/"
-    printf "请输入应用程序 api_id："
+    printf "请输入应用程序 api_id（不懂请直接回车）："
     read -r api_id <&1
     sed -i "s/ID_HERE/$api_id/" $config_file
-    printf "请输入应用程序 api_hash："
+    printf "请输入应用程序 api_hash（不懂请直接回车）："
     read -r api_hash <&1
     sed -i "s/HASH_HERE/$api_hash/" $config_file
     printf "请输入应用程序语言（默认：zh-cn）："

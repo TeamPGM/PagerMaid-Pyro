@@ -1,4 +1,4 @@
-pyrogram==2.0.61
+pyrogram==2.0.63
 TgCrypto==1.2.5
 Pillow>=8.4.0
 pytz>=2021.3
@@ -9,4 +9,4 @@ httpx
 apscheduler
 sqlitedict
 casbin==1.17.4
-sentry-sdk==1.11.0
+sentry-sdk==1.11.1

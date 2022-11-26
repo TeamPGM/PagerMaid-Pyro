@@ -31,7 +31,7 @@ async def reload_all():
                 importlib.reload(module)
         except BaseException as exception:
             logs.info(f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}")
-    for plugin_name in pagermaid.modules.plugin_list:
+    for plugin_name in pagermaid.modules.plugin_list.copy():
         try:
             plugin = importlib.import_module(f"plugins.{plugin_name}")
             if plugin_name in loaded_plugins:
