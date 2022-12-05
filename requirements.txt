@@ -8,5 +8,5 @@ psutil>=5.8.0
 httpx
 apscheduler
 sqlitedict
-casbin==1.17.4
+casbin==1.17.5
 sentry-sdk==1.11.1
