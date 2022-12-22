@@ -3,6 +3,7 @@ from os import sep
 from importlib import import_module
 
 from pyrogram import idle
+from pyrogram.errors import AuthKeyUnregistered
 
 from pagermaid import bot, logs, working_dir
 from pagermaid.hook import Hook
@@ -16,7 +17,11 @@ path.insert(1, f"{working_dir}{sep}plugins")
 async def main():
     logs.info(lang('platform') + platform + lang('platform_load'))
 
-    await bot.start()
+    try:
+        await bot.start()
+    except AuthKeyUnregistered:
+        safe_remove("pagermaid.session")
+        exit()
 
     me = await bot.get_me()
     if me.is_bot:

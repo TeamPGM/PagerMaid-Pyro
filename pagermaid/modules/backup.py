@@ -56,8 +56,11 @@ async def backup(message: Message):
     # run backup function
     make_tar_gz(pgm_backup_zip_name, ["data", "plugins", "config.yml"])
     if Config.LOG:
-        await upload_attachment(pgm_backup_zip_name, Config.LOG_ID, None)
-        await message.edit(lang("backup_success_channel"))
+        try:
+            await upload_attachment(pgm_backup_zip_name, Config.LOG_ID, None)
+            await message.edit(lang("backup_success_channel"))
+        except Exception:
+            await message.edit(lang("backup_success"))
     else:
         await message.edit(lang("backup_success"))
 

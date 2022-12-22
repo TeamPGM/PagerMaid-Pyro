@@ -1,5 +1,7 @@
 import contextlib
 import importlib
+import os
+
 import pagermaid.config
 import pagermaid.modules
 
@@ -34,7 +36,7 @@ async def reload_all():
     for plugin_name in pagermaid.modules.plugin_list.copy():
         try:
             plugin = importlib.import_module(f"plugins.{plugin_name}")
-            if plugin_name in loaded_plugins:
+            if plugin_name in loaded_plugins and os.path.exists(plugin.__file__):
                 importlib.reload(plugin)
         except BaseException as exception:
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
