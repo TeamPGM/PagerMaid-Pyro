@@ -15,7 +15,7 @@ from pyrogram import Client
 
 from pyromod.listen.temp_fix import temp_fix
 
-pgm_version = "1.2.20"
+pgm_version = "1.2.21"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()

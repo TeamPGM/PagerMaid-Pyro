@@ -11,7 +11,7 @@ from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid,
     MessageNotModified,
     MessageEmpty,
-    UserNotParticipant
+    UserNotParticipant, PeerIdInvalid
 )
 from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
@@ -20,7 +20,6 @@ from pagermaid.group_manager import Permission
 from pagermaid.inject import inject
 from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
-from pagermaid.utils import client as httpx_client
 from pagermaid.hook import Hook
 
 secret_generator = secrets.SystemRandom()
@@ -153,8 +152,10 @@ def listener(**args):
                 raise StopPropagation from e
             except KeyboardInterrupt as e:
                 raise KeyboardInterrupt from e
-            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden):
-                pass
+            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden, PeerIdInvalid):
+                logs.warning(
+                    "An unknown chat error occurred while processing a command.",
+                )
             except MessageIdInvalid:
                 logs.warning(
                     "Please Don't Delete Commands While it's Processing.."
