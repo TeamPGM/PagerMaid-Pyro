@@ -178,13 +178,13 @@ def get_uptime():
     minutes, seconds = divmod(remainder, 60)
     days, hours = divmod(hours, 24)
 
-    def includeS(text: str, num: int):
+    def include_s(text: str, num: int):
         return f"{num} {text}{'' if num == 1 else 's'}"
 
-    d = includeS("day", days)
-    h = includeS("hour", hours)
-    m = includeS("minute", minutes)
-    s = includeS("second", seconds)
+    d = include_s("day", days)
+    h = include_s("hour", hours)
+    m = include_s("minute", minutes)
+    s = include_s("second", seconds)
 
     if days:
         output = f"{d}, {h}, {m} and {s}"

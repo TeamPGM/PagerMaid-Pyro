@@ -13,9 +13,9 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-from pyromod.listen.temp_fix import temp_fix
+from pyromod.listen.temp_fix import temp_fix, read_chat_history
 
-pgm_version = "1.2.21"
+pgm_version = "1.2.22"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -69,6 +69,7 @@ bot = Client(
 # temp fix topics group
 setattr(pyrogram.types.Message, "old_parse", getattr(pyrogram.types.Message, "_parse"))
 setattr(pyrogram.types.Message, "_parse", temp_fix)
+pyrogram.Client.read_chat_history = read_chat_history
 bot.job = scheduler
 
 

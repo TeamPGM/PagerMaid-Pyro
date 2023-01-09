@@ -21,9 +21,12 @@ async def prune(client: Client, message: Message):
     input_chat = message.chat.id
     messages = []
     count = 0
-    async for msg in client.get_chat_history(
-            input_chat,
-            limit=message.id - message.reply_to_message.id + 1):
+    limit = message.id - message.reply_to_message.id + 1
+    if message.reply_to_top_message_id:
+        func = client.get_discussion_replies(input_chat, message.reply_to_top_message_id, limit=limit)
+    else:
+        func = client.get_chat_history(input_chat, limit=limit)
+    async for msg in func:
         if msg.id < message.reply_to_message.id:
             break
         messages.append(msg.id)
