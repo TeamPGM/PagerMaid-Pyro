@@ -20,6 +20,8 @@ async def temp_fix(
         parsed.reply_to_top_message_id = parsed.reply_to_message_id
         parsed.reply_to_message_id = None
         parsed.reply_to_message = None
+    # make message.text as message.caption
+    parsed.text = parsed.text or parsed.caption
     return parsed
 
 

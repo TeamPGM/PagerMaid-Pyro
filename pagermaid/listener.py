@@ -1,7 +1,6 @@
+import asyncio
 import contextlib
 import sys
-import secrets
-from asyncio import sleep
 from time import strftime, gmtime, time
 from traceback import format_exc
 
@@ -22,11 +21,7 @@ from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutC
 from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
 from pagermaid.hook import Hook
 
-secret_generator = secrets.SystemRandom()
-
-
-def noop(*args, **kw):
-    pass
+_lock = asyncio.Lock()
 
 
 def listener(**args):
@@ -129,8 +124,7 @@ def listener(**args):
                     message.parameter = None
                     message.arguments = None
                 # solve same process
-                if not message.outgoing:
-                    await sleep(secret_generator.randint(1, 100) / 1000)
+                async with _lock:
                     if (message.chat.id, message.id) in read_context:
                         raise ContinuePropagation
                     read_context[(message.chat.id, message.id)] = True
@@ -206,10 +200,12 @@ def listener(**args):
             message.continue_propagation()
 
         bot.add_handler(MessageHandler(handler, filters=base_filters), group=0 + priority)
-        bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=50 + priority)
+        if command:
+            bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=50 + priority)
         if not ignore_edited:
             bot.add_handler(EditedMessageHandler(handler, filters=base_filters), group=1 + priority)
-            bot.add_handler(EditedMessageHandler(handler, filters=sudo_filters), group=51 + priority)
+            if command:
+                bot.add_handler(EditedMessageHandler(handler, filters=sudo_filters), group=51 + priority)
 
         return handler
 
@@ -233,6 +229,11 @@ def raw_listener(filter_s):
 
     def decorator(function):
         async def handler(client, message):
+            # solve same process
+            async with _lock:
+                if (message.chat.id, message.id) in read_context:
+                    raise ContinuePropagation
+                read_context[(message.chat.id, message.id)] = True
             try:
                 if function.__code__.co_argcount == 1:
                     await function(message)

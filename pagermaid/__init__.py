@@ -15,7 +15,7 @@ from pyrogram import Client
 
 from pyromod.listen.temp_fix import temp_fix, read_chat_history
 
-pgm_version = "1.2.22"
+pgm_version = "1.2.23"
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()

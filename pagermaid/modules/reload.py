@@ -4,14 +4,16 @@ import os
 
 import pagermaid.config
 import pagermaid.modules
-
-from pagermaid import bot, logs, help_messages, all_permissions, hook_functions
+from pagermaid import logs, help_messages, all_permissions, hook_functions, read_context
+from pagermaid.enums import Message
 from pagermaid.hook import Hook
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message
+from pagermaid.services import bot, scheduler
+from pagermaid.utils import lang
 
 
 async def reload_all():
+    read_context.clear()
     bot.dispatcher.remove_all_handlers()
     bot.job.remove_all_jobs()
     with contextlib.suppress(RuntimeError):
@@ -51,3 +53,8 @@ async def reload_plugins(message: Message):
     """ To reload plugins. """
     await reload_all()
     await message.edit(lang("reload_ok"))
+
+
+@scheduler.scheduled_job("cron", hour="4", id="reload.clear_read_context")
+async def clear_read_context_cron():
+    read_context.clear()
