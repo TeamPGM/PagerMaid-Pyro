@@ -26,6 +26,7 @@ web_interface:
 application_language: "zh-cn"
 application_region: "China"
 application_tts: "zh-CN"
+timezone: "Asia/ShangHai"
 
 # In-Chat logging settings, default settings logs directly into Kat, strongly advised to change
 log: "False"

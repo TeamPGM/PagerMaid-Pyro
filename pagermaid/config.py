@@ -1,8 +1,10 @@
 import os
-from json import load as load_json
 import sys
-from yaml import load, FullLoader, safe_load
+from json import load as load_json
 from shutil import copyfile
+from typing import Dict
+
+from yaml import load, FullLoader, safe_load
 
 
 def strtobool(val, default=False):
@@ -23,7 +25,7 @@ def strtobool(val, default=False):
 
 
 try:
-    config = load(open(r"config.yml", encoding="utf-8"), Loader=FullLoader)
+    config: Dict = load(open(r"config.yml", encoding="utf-8"), Loader=FullLoader)
 except FileNotFoundError:
     print("The configuration file does not exist, and a new configuration file is being generated.")
     copyfile(f"{os.getcwd()}{os.sep}config.gen.yml", "config.yml")
@@ -46,6 +48,7 @@ class Config:
         ERROR_REPORT = strtobool(os.environ.get("PGM_ERROR_REPORT", config["error_report"]), True)
         LANGUAGE = os.environ.get("PGM_LANGUAGE", config["application_language"])
         REGION = os.environ.get("PGM_REGION", config["application_region"])
+        TIME_ZONE = os.environ.get("PGM_TIME_ZONE", config.get("timezone", "Asia/Shanghai"))
         TTS = os.environ.get("PGM_TTS", config["application_tts"])
         LOG = strtobool(os.environ.get("PGM_LOG", config["log"]))
         LOG_ID = int(os.environ.get("PGM_LOG_ID", config["log_chatid"]))
