@@ -38,37 +38,12 @@ jobs:
 
       - name: Build
         run: |
-          declare -a IMAGES
-
-          echo "Build amd64"
           docker buildx build \
             --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
-            --platform linux/amd64 \
+            --platform "linux/amd64,linux/arm64/v8" \
             --build-arg "S6_ARCH=amd64" \
-            --tag "${DOCKERHUB_REPOSITORY}:latest-amd64" \
+            --tag "${DOCKERHUB_REPOSITORY}:latest" \
             -f Dockerfile \
             .
-          IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-amd64" )
-          
-          echo "Build arm64-v8"
-          docker buildx build \
-            --cache-from "type=local,src=/tmp/.buildx-cache" \
-            --cache-to "type=local,dest=/tmp/.buildx-cache" \
-            --output "type=image,push=true" \
-            --platform linux/arm64/v8 \
-            --build-arg "S6_ARCH=aarch64" \
-            --tag "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" \
-            -f Dockerfile \
-            .
-          IMAGES+=( "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" )
-          
-          echo "Create manifest lists"
-          docker manifest create "${DOCKERHUB_REPOSITORY}:latest" "${IMAGES[@]}"
-
-          echo "Annotate manifest lists to add architecture variants that aren't picked up automatically"
-          docker manifest annotate "${DOCKERHUB_REPOSITORY}:latest" "${DOCKERHUB_REPOSITORY}:latest-arm64-v8" --variant "v8"
-
-          echo "Push manifest lists & delete local copies"
-          docker manifest push --purge "${DOCKERHUB_REPOSITORY}:latest"
