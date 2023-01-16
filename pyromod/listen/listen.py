@@ -21,6 +21,7 @@ along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 import asyncio
 import contextlib
 import functools
+from datetime import datetime
 from typing import Optional, List, Union
 
 import pyrogram
@@ -93,6 +94,34 @@ class Client:
     @patchable
     def conversation(self, chat_id: Union[int, str], once_timeout: int = 60, filters=None):
         return Conversation(self, chat_id, once_timeout, filters)
+
+    @patchable
+    async def read_chat_history(
+        self: "pyrogram.Client",
+        chat_id: Union[int, str],
+        max_id: int = 0
+    ) -> bool:
+        peer = await self.resolve_peer(chat_id)
+        if isinstance(peer, pyrogram.raw.types.InputPeerChannel):
+            with contextlib.suppress(pyrogram.errors.BadRequest):    # noqa
+                topics: pyrogram.raw.types.messages.ForumTopics = await self.invoke(
+                    pyrogram.raw.functions.channels.GetForumTopics(
+                        channel=peer,    # noqa
+                        offset_date=0,
+                        offset_id=0,
+                        offset_topic=0,
+                        limit=0
+                    )
+                )
+                for i in topics.topics:
+                    await self.invoke(
+                        pyrogram.raw.functions.messages.ReadDiscussion(
+                            peer=peer,
+                            msg_id=i.id,
+                            read_max_id=i.read_inbox_max_id + i.unread_count,
+                        )
+                    )
+        return await self.oldread_chat_history(chat_id, max_id)  # noqa
 
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)
@@ -200,7 +229,7 @@ class Message(pyrogram.types.Message):
                 message_ids=self.id,
                 revoke=revoke
             )
-        except Exception as e:  # noqa
+        except Exception:  # noqa
             return False
 
     @patchable
@@ -317,6 +346,59 @@ class Message(pyrogram.types.Message):
         return msg
 
     edit = edit_text
+
+    @patchable
+    @staticmethod
+    async def _parse(
+        client: "pyrogram.Client",
+        message: pyrogram.raw.base.Message,
+        users: dict,
+        chats: dict,
+        is_scheduled: bool = False,
+        replies: int = 1
+    ):
+        parsed = await pyrogram.types.Message.old_parse(client, message, users, chats, is_scheduled, replies)  # noqa
+        if isinstance(message, pyrogram.raw.types.Message) and message.reply_to \
+                and hasattr(message.reply_to, "forum_topic") and message.reply_to.forum_topic \
+                and not message.reply_to.reply_to_top_id:
+            parsed.reply_to_top_message_id = parsed.reply_to_message_id
+            parsed.reply_to_message_id = None
+            parsed.reply_to_message = None
+        # make message.text as message.caption
+        parsed.text = parsed.text or parsed.caption
+        return parsed
+
+    @patchable
+    async def copy(
+        self,
+        chat_id: Union[int, str],
+        caption: str = None,
+        parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
+        caption_entities: List["pyrogram.types.MessageEntity"] = None,
+        disable_notification: bool = None,
+        reply_to_message_id: int = None,
+        schedule_date: datetime = None,
+        protect_content: bool = None,
+        reply_markup: Union[
+            "pyrogram.types.InlineKeyboardMarkup",
+            "pyrogram.types.ReplyKeyboardMarkup",
+            "pyrogram.types.ReplyKeyboardRemove",
+            "pyrogram.types.ForceReply"
+        ] = object
+    ) -> Union["pyrogram.types.Message", List["pyrogram.types.Message"]]:
+        if self.media:
+            self.text = None
+        return await self.oldcopy(
+            chat_id,
+            caption,
+            parse_mode,
+            caption_entities,
+            disable_notification,
+            reply_to_message_id,
+            schedule_date,
+            protect_content,
+            reply_markup,
+        )  # noqa
 
 
 @patch(pyrogram.dispatcher.Dispatcher)  # noqa
