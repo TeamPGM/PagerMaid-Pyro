@@ -131,6 +131,7 @@ unknown_errors.txt
 pagermaid*.txt
 exception*.txt
 output.log
+qrcode.png
 
 # Spyder project settings
 .spyderproject

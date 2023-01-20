@@ -10,6 +10,7 @@ from pagermaid.hook import Hook
 from pagermaid.modules import module_list, plugin_list
 from pagermaid.single_utils import safe_remove
 from pagermaid.utils import lang, process_exit
+from pyromod.methods.sign_in_qrcode import start_client
 
 path.insert(1, f"{working_dir}{sep}plugins")
 
@@ -18,7 +19,7 @@ async def main():
     logs.info(lang('platform') + platform + lang('platform_load'))
 
     try:
-        await bot.start()
+        await start_client(bot)
     except AuthKeyUnregistered:
         safe_remove("pagermaid.session")
         exit()

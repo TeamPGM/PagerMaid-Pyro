@@ -43,6 +43,7 @@ class Config:
             # TGX
             API_ID = DEFAULT_API_ID
             API_HASH = DEFAULT_API_HASH
+        QRCODE_LOGIN = strtobool(os.environ.get("QRCODE_LOGIN", config.get("qrcode_login", "false")))
         STRING_SESSION = os.environ.get("STRING_SESSION")
         DEBUG = strtobool(os.environ.get("PGM_DEBUG", config["debug"]))
         ERROR_REPORT = strtobool(os.environ.get("PGM_ERROR_REPORT", config["error_report"]), True)

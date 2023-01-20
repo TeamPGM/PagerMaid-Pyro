@@ -10,6 +10,7 @@
 # API Credentials of your telegram application created at https://my.telegram.org/apps
 api_id: "ID_HERE"
 api_hash: "HASH_HERE"
+qrcode_login: "False"
 
 # Either debug logging is enabled or not
 debug: "False"

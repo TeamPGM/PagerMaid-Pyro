@@ -19,7 +19,10 @@ configure () {
     printf "请输入应用程序 api_hash（不懂请直接回车）："
     read -r api_hash <&1
     sed -i "s/HASH_HERE/$api_hash/" $config_file
-    printf "请输入应用程序语言（默认：zh-cn）："
+    read -p "二维码扫码登录？（避免无法收到验证码） [Y/n]" choi
+    if [ "$choi" == "y" ] || [ "$choi" == "Y" ]; then
+        sed -i "s/qrcode_login: \"False\"/qrcode_login: \"True\"/" $config_file
+    fi
     read -r application_language <&1
     if [ -z "$application_language" ]
     then
