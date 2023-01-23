@@ -18,4 +18,14 @@ You should have received a copy of the GNU General Public License
 along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-__version__ = "1.5"
+__version__ = 2
+
+
+def require_mod_version(version: int = __version__):
+    if version > __version__:
+        raise ImportError("This plugin requires higher pagermaid-pyro version")
+
+    def decorator(function):
+        return function
+
+    return decorator

@@ -34,7 +34,7 @@ from ..utils import patch, patchable
 from ..utils.conversation import Conversation
 from ..utils.errors import TimeoutConversationError, ListenerCanceled
 
-pyrogram.errors.ListenerCanceled = ListenerCanceled
+pyrogram.errors.ListenerCanceled = ListenerCanceled  # noqa
 
 
 @patch(pyrogram.client.Client)
@@ -190,30 +190,51 @@ class EditedMessageHandler:
 class Chat(pyrogram.types.Chat):
     @patchable
     def listen(self, *args, **kwargs):
-        return self._client.listen(self.id, *args, **kwargs)
+        return self._client.listen(self.id, *args, **kwargs)  # noqa
 
     @patchable
     def ask(self, *args, **kwargs):
-        return self._client.ask(self.id, *args, **kwargs)
+        return self._client.ask(self.id, *args, **kwargs)  # noqa
 
     @patchable
     def cancel_listener(self):
-        return self._client.cancel_listener(self.id)
+        return self._client.cancel_listener(self.id)  # noqa
+
+    @patchable
+    @staticmethod
+    def _parse_user_chat(client, user: pyrogram.raw.types.User) -> "Chat":
+        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_user_chat(client, user)  # noqa
+        chat.is_forum = None
+        return chat
+
+    @patchable
+    @staticmethod
+    def _parse_chat_chat(client, chat: pyrogram.raw.types.Chat) -> "Chat":
+        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_chat_chat(client, chat)  # noqa
+        chat.is_forum = None
+        return chat
+
+    @patchable
+    @staticmethod
+    def _parse_channel_chat(client, channel: pyrogram.raw.types.Channel) -> "Chat":
+        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_channel_chat(client, channel)  # noqa
+        chat.is_forum = getattr(channel, "forum", None)
+        return chat
 
 
 @patch(pyrogram.types.user_and_chats.user.User)
 class User(pyrogram.types.User):
     @patchable
     def listen(self, *args, **kwargs):
-        return self._client.listen(self.id, *args, **kwargs)
+        return self._client.listen(self.id, *args, **kwargs)  # noqa
 
     @patchable
     def ask(self, *args, **kwargs):
-        return self._client.ask(self.id, *args, **kwargs)
+        return self._client.ask(self.id, *args, **kwargs)  # noqa
 
     @patchable
     def cancel_listener(self):
-        return self._client.cancel_listener(self.id)
+        return self._client.cancel_listener(self.id)  # noqa
 
 
 # pagermaid-pyro
@@ -358,9 +379,10 @@ class Message(pyrogram.types.Message):
         replies: int = 1
     ):
         parsed = await pyrogram.types.Message.old_parse(client, message, users, chats, is_scheduled, replies)  # noqa
+        # forum_topic
+        parsed.forum_topic = getattr(message.reply_to, "forum_topic", None)
         if isinstance(message, pyrogram.raw.types.Message) and message.reply_to \
-                and hasattr(message.reply_to, "forum_topic") and message.reply_to.forum_topic \
-                and not message.reply_to.reply_to_top_id:
+                and parsed.forum_topic and not message.reply_to.reply_to_top_id:
             parsed.reply_to_top_message_id = parsed.reply_to_message_id
             parsed.reply_to_message_id = None
             parsed.reply_to_message = None

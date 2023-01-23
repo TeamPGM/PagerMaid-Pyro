@@ -23,6 +23,7 @@ configure () {
     if [ "$choi" == "y" ] || [ "$choi" == "Y" ]; then
         sed -i "s/qrcode_login: \"False\"/qrcode_login: \"True\"/" $config_file
     fi
+    printf "请输入应用程序语言（默认：zh-cn）："
     read -r application_language <&1
     if [ -z "$application_language" ]
     then

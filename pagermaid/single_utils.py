@@ -5,8 +5,8 @@ from typing import List, Optional, Union
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from httpx import AsyncClient
 
-from pyrogram import Client
-from pyrogram.types import Message
+from pyrogram import Client as OldClient
+from pyrogram.types import Chat as OldChat, Message as OldMessage
 
 from pyromod.utils.conversation import Conversation
 from pyromod.utils.errors import AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
@@ -32,43 +32,53 @@ def safe_remove(name: str) -> None:
         remove(name)
 
 
-class Client(Client):  # noqa
+class Message(OldMessage):
+    arguments: str
+    parameter: List
+    forum_topic: Optional[bool] = None
+    chat: "Chat"
+
+    def obtain_message(self) -> Optional[str]:
+        """ Obtains a message from either the reply message or command arguments. """
+
+    def obtain_user(self) -> Optional[int]:
+        """ Obtains a user from either the reply message or command arguments. """
+
+    async def delay_delete(self, delete_seconds: int = 60) -> Optional[bool]:
+        """ Deletes the message after a specified amount of seconds. """
+
+    async def safe_delete(self, revoke: bool = True) -> None:
+        """ Safely deletes the message. """
+
+
+class Client(OldClient):
     job: Optional[AsyncIOScheduler] = None
 
     async def listen(self, chat_id, filters=None, timeout=None) -> Optional[Message]:
-        return
+        """ Listen for a message in a conversation. """
 
     async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs) -> Optional[Message]:
-        return
+        """ Ask a message in a conversation. """
 
     def cancel_listener(self, chat_id):
         """ Cancel the conversation with the given chat_id. """
-        return
 
     def cancel_all_listeners(self):
         """ Cancel all conversations. """
-        return
 
     def conversation(self, chat_id: Union[int, str],
                      once_timeout: int = 60, filters=None) -> Optional[Conversation]:
         """ Initialize a conversation with the given chat_id. """
-        return
 
 
-class Message(Message):  # noqa
-    arguments: str
-    parameter: List
+class Chat(OldChat):
+    is_forum: Optional[bool] = None
 
-    def obtain_message(self) -> Optional[str]:
-        """ Obtains a message from either the reply message or command arguments. """
-        return
+    async def listen(self, chat_id, filters=None, timeout=None) -> Optional[Message]:
+        """ Listen for a message in a conversation. """
 
-    def obtain_user(self) -> Optional[int]:
-        """ Obtains a user from either the reply message or command arguments. """
-        return
+    async def ask(self, chat_id, text, filters=None, timeout=None, *args, **kwargs) -> Optional[Message]:
+        """ Ask a message in a conversation. """
 
-    async def delay_delete(self, delete_seconds: int = 60) -> Optional[bool]:
-        return
-
-    async def safe_delete(self, revoke: bool = True) -> None:
-        return
+    def cancel_listener(self, chat_id):
+        """ Cancel the conversation with the given chat_id. """
