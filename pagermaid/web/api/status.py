@@ -62,8 +62,3 @@ async def run_sh(token: Optional[str] = Header(...), cmd: str = ''):
 @route.get('/status', response_class=JSONResponse, dependencies=[authentication()])
 async def status():
     return (await get_status()).dict()
-
-
-@route.get('/status', response_class=JSONResponse, dependencies=[authentication()])
-async def status():
-    return (await get_status()).dict()

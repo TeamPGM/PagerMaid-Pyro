@@ -154,6 +154,10 @@ status = Service(
         column=2,
         items=[
             Property.Item(
+                label='Bot 版本',
+                content='${version}'
+            ),
+            Property.Item(
                 label='Bot 运行时间',
                 content='${run_time}'
             ),
