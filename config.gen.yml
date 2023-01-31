@@ -22,6 +22,7 @@ web_interface:
   secret_key: "RANDOM_STRING_HERE"
   host: "127.0.0.1"
   port: "3333"
+  origins: ["*"]
 
 # Locale settings
 application_language: "zh-cn"

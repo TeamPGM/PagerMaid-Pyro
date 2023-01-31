@@ -103,6 +103,7 @@ class Config:
         WEB_SECRET_KEY = os.environ.get("WEB_SECRET_KEY", web_interface.get("secret_key", "secret_key"))
         WEB_HOST = os.environ.get("WEB_HOST", web_interface.get("host", "127.0.0.1"))
         WEB_PORT = int(os.environ.get("WEB_PORT", web_interface.get("port", 3333)))
+        WEB_ORIGINS = web_interface.get("origins", ["*"])
     except ValueError as e:
         print(e)
         sys.exit(1)

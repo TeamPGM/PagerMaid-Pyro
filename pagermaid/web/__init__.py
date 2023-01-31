@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from .api import base_api_router
-from .pages import admin_app, login_page
+from pagermaid.config import Config
+from pagermaid.web.api import base_api_router
+from pagermaid.web.pages import admin_app, login_page
 
 requestAdaptor = '''
 requestAdaptor(api) {
@@ -28,6 +30,14 @@ app: FastAPI = FastAPI()
 
 def init_web():
     app.include_router(base_api_router)
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=Config.WEB_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
 
     @app.get('/', response_class=RedirectResponse)
     async def index():

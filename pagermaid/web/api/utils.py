@@ -12,10 +12,11 @@ TOKEN_EXPIRE_MINUTES = 30
 
 def authentication():
     def inner(token: Optional[str] = Header(...)):
-        try:
-            jwt.decode(token, Config.WEB_SECRET_KEY, algorithms=ALGORITHM)
-        except (jwt.JWTError, jwt.ExpiredSignatureError, AttributeError):
-            raise HTTPException(status_code=400, detail='登录验证失败或已失效，请重新登录')
+        if Config.WEB_SECRET_KEY:
+            try:
+                jwt.decode(token, Config.WEB_SECRET_KEY, algorithms=ALGORITHM)
+            except (jwt.JWTError, jwt.ExpiredSignatureError, AttributeError):
+                raise HTTPException(status_code=400, detail='登录验证失败或已失效，请重新登录')
 
     return Depends(inner)
 

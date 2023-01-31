@@ -1,3 +1,4 @@
+from pagermaid import logs
 from pagermaid.config import Config
 from pagermaid.hook import Hook
 from pagermaid.services import bot
@@ -7,6 +8,8 @@ from pagermaid.services import bot
 async def init_web():
     if not Config.WEB_ENABLE:
         return
+    if not Config.WEB_SECRET_KEY:
+        logs.warn("未设置 WEB_SECRET_KEY ，请勿将 PagerMaid-Pyro 暴露在公网")
     import uvicorn
     from pagermaid.web import app, init_web
 
