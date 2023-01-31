@@ -21,4 +21,5 @@ async def bot_update():
 
 @route.post('/bot_restart', response_class=JSONResponse, dependencies=[authentication()])
 async def bot_restart():
-    os.kill(os.getppid(), signal.SIGINT)
+    os.kill(os.getpid(), signal.SIGINT)
+    return {}
