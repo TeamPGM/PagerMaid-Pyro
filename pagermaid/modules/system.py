@@ -1,7 +1,3 @@
-import io
-import sys
-import traceback
-
 from os.path import exists, sep
 from sys import exit
 from platform import node
@@ -9,9 +5,9 @@ from getpass import getuser
 
 from pyrogram.enums import ParseMode
 
+from pagermaid.common.system import run_eval
 from pagermaid.listener import listener
 from pagermaid.enums import Message
-from pagermaid.services import bot
 from pagermaid.utils import attach_log, execute, lang, upload_attachment
 
 
@@ -72,31 +68,10 @@ async def sh_eval(message: Message):
         cmd = message.text.split(" ", maxsplit=1)[1]
     except (IndexError, AssertionError):
         return await message.edit(lang('eval_need_dev'))
-    old_stderr = sys.stderr
-    old_stdout = sys.stdout
-    redirected_output = sys.stdout = io.StringIO()
-    redirected_error = sys.stderr = io.StringIO()
-    stdout, stderr, exc = None, None, None
-    try:
-        await aexec(cmd, message, bot)
-    except Exception:  # noqa
-        exc = traceback.format_exc()
-    stdout = redirected_output.getvalue()
-    stderr = redirected_error.getvalue()
-    sys.stdout = old_stdout
-    sys.stderr = old_stderr
-    if exc:
-        evaluation = exc
-    elif stderr:
-        evaluation = stderr
-    elif stdout:
-        evaluation = stdout
-    else:
-        evaluation = "Success"
-    final_output = f"**>>>** `{cmd}` \n`{evaluation}`"
+    final_output = await run_eval(cmd, message)
     if len(final_output) > 4096:
         message = await message.edit(f"**>>>** `{cmd}`", parse_mode=ParseMode.MARKDOWN)
-        await attach_log(evaluation, message.chat.id, "output.log", message.id)
+        await attach_log(final_output, message.chat.id, "output.log", message.id)
     else:
         await message.edit(final_output)
 
@@ -114,18 +89,3 @@ async def send_log(message: Message):
                             thumb=f"pagermaid{sep}assets{sep}logo.jpg",
                             caption=lang("send_log_caption"))
     await message.safe_delete()
-
-
-async def aexec(code, event, client):
-    exec(
-        (
-                (
-                        ("async def __aexec(e, client): " + "\n msg = message = e")
-                        + "\n reply = message.reply_to_message"
-                )
-                + "\n chat = e.chat"
-        )
-        + "".join(f"\n {x}" for x in code.split("\n"))
-    )
-
-    return await locals()["__aexec"](event, client)

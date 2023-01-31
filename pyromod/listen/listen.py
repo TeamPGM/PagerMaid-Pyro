@@ -29,6 +29,7 @@ from pyrogram.enums import ChatType
 
 from pagermaid.single_utils import get_sudo_list, Message
 from pagermaid.scheduler import add_delete_message_job
+from ..methods.get_dialogs_list import get_dialogs_list as get_dialogs_list_func
 
 from ..utils import patch, patchable
 from ..utils.conversation import Conversation
@@ -122,6 +123,10 @@ class Client:
                         )
                     )
         return await self.oldread_chat_history(chat_id, max_id)  # noqa
+
+    @patchable
+    async def get_dialogs_list(self: "Client"):
+        return await get_dialogs_list_func(self)
 
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)

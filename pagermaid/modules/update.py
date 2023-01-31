@@ -1,7 +1,8 @@
-from sys import executable, exit
+from sys import exit
 
+from pagermaid.common.update import update as update_function
 from pagermaid.listener import listener
-from pagermaid.utils import lang, execute, Message, alias_command
+from pagermaid.utils import lang, Message, alias_command
 
 
 @listener(is_plugin=False, outgoing=True, command=alias_command("update"),
@@ -9,11 +10,6 @@ from pagermaid.utils import lang, execute, Message, alias_command
           description=lang('update_des'),
           parameters="<true/debug>")
 async def update(message: Message):
-    await execute('git fetch --all')
-    if len(message.parameter) > 0:
-        await execute('git reset --hard origin/master')
-    await execute('git pull --all')
-    await execute(f"{executable} -m pip install --upgrade -r requirements.txt")
-    await execute(f"{executable} -m pip install -r requirements.txt")
+    await update_function(len(message.parameter) > 0)
     await message.edit(lang('update_success'))
     exit(0)

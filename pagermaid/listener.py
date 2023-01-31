@@ -15,6 +15,7 @@ from pyrogram.errors.exceptions.bad_request_400 import (
 from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
+from pagermaid.common.ignore import ignore_groups_manager
 from pagermaid.group_manager import Permission
 from pagermaid.inject import inject
 from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
@@ -114,6 +115,14 @@ def listener(**args):
 
         async def handler(client: Client, message: Message):
             try:
+                # ignore
+                try:
+                    if ignore_groups_manager.check_id(message.chat.id):
+                        raise ContinuePropagation
+                except ContinuePropagation:
+                    raise ContinuePropagation
+                except BaseException:
+                    pass
                 try:
                     parameter = message.matches[0].group(2).split(" ")
                     if parameter == [""]:
@@ -229,6 +238,14 @@ def raw_listener(filter_s):
 
     def decorator(function):
         async def handler(client, message):
+            # ignore
+            try:
+                if ignore_groups_manager.check_id(message.chat.id):
+                    raise ContinuePropagation
+            except ContinuePropagation:
+                raise ContinuePropagation
+            except BaseException:
+                pass
             # solve same process
             async with _lock:
                 if (message.chat.id, message.id) in read_context:

@@ -19,6 +19,7 @@ from shutil import disk_usage
 from subprocess import Popen, PIPE
 
 from pagermaid import start_time, Config, pgm_version
+from pagermaid.common.status import get_bot_uptime
 from pagermaid.enums import Client, Message
 from pagermaid.listener import listener
 from pagermaid.utils import lang, execute
@@ -50,27 +51,7 @@ async def status(message: Message):
     # database
     # database = lang('status_online') if redis_status() else lang('status_offline')
     # uptime https://gist.github.com/borgstrom/936ca741e885a1438c374824efb038b3
-    time_units = (
-        ('%m', 60 * 60 * 24 * 30),
-        ('%d', 60 * 60 * 24),
-        ('%H', 60 * 60),
-        ('%M', 60),
-        ('%S', 1)
-    )
-
-    async def human_time_duration(seconds):
-        parts = {}
-        for unit, div in time_units:
-            amount, seconds = divmod(int(seconds), div)
-            parts[unit] = str(amount)
-        time_form = Config.START_FORM
-        for key, value in parts.items():
-            time_form = time_form.replace(key, value)
-        return time_form
-
-    current_time = datetime.now(timezone.utc)
-    uptime_sec = (current_time - start_time).total_seconds()
-    uptime = await human_time_duration(int(uptime_sec))
+    uptime = await get_bot_uptime()
     text = (f"**{lang('status_hint')}** \n"
             f"{lang('status_name')}: `{uname().node}` \n"
             f"{lang('status_platform')}: `{platform}` \n"
@@ -88,7 +69,7 @@ async def status(message: Message):
 async def stats(client: Client, message: Message):
     msg = await message.edit(lang("stats_loading"))
     a, u, g, s, c, b = 0, 0, 0, 0, 0, 0
-    async for dialog in client.get_dialogs():
+    for dialog in await client.get_dialogs_list():
         chat_type = dialog.chat.type
         if chat_type == ChatType.BOT:
             b += 1

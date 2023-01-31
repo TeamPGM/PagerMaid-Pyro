@@ -6,8 +6,9 @@ from os import listdir, sep
 from pyrogram.enums import ParseMode
 
 from pagermaid import help_messages, Config
+from pagermaid.common.alias import AliasManager
 from pagermaid.group_manager import enforce_permission
-from pagermaid.modules.reload import reload_all
+from pagermaid.common.reload import reload_all
 from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
 from pagermaid.listener import listener
 
@@ -120,31 +121,18 @@ async def lang_change(message: Message):
           description=lang('alias_des'),
           parameters='{list|del|set} <source> <to>')
 async def alias_commands(message: Message):
-    source_commands = []
-    to_commands = []
-    texts = []
-    for key, value in Config.alias_dict.items():
-        source_commands.append(key)
-        to_commands.append(value)
+    alias_manager = AliasManager()
     if len(message.parameter) == 0:
         await message.edit(lang('arg_error'))
-        return
     elif len(message.parameter) == 1:
-        if source_commands:
-            texts.extend(
-                f'`{source_commands[i]}` > `{to_commands[i]}`'
-                for i in range(len(source_commands))
-            )
-
-            await message.edit(lang('alias_list') + '\n\n' + '\n'.join(texts))
+        if alias_manager.alias_list:
+            await message.edit(lang('alias_list') + '\n\n' + alias_manager.get_all_alias_text())
         else:
             await message.edit(lang('alias_no'))
     elif len(message.parameter) == 2:
         source_command = message.parameter[1]
         try:
-            del Config.alias_dict[source_command]
-            with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
-                json_dump(Config.alias_dict, f)
+            alias_manager.delete_alias(source_command)
             await message.edit(lang('alias_success'))
             await reload_all()
         except KeyError:
@@ -156,8 +144,6 @@ async def alias_commands(message: Message):
         if to_command in help_messages:
             await message.edit(lang('alias_exist'))
             return
-        Config.alias_dict[source_command] = to_command
-        with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
-            json_dump(Config.alias_dict, f)
+        alias_manager.add_alias(source_command, to_command)
         await message.edit(lang('alias_success'))
         await reload_all()

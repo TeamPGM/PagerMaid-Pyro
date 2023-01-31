@@ -98,6 +98,11 @@ class Config:
                 alias_dict = load_json(f)
         except Exception as e:
             alias_dict = {}
+        web_interface = config.get("web_interface", {})
+        WEB_ENABLE = strtobool(os.environ.get("WEB_ENABLE", web_interface.get("enable", "False")))
+        WEB_SECRET_KEY = os.environ.get("WEB_SECRET_KEY", web_interface.get("secret_key", "secret_key"))
+        WEB_HOST = os.environ.get("WEB_HOST", web_interface.get("host", "127.0.0.1"))
+        WEB_PORT = int(os.environ.get("WEB_PORT", web_interface.get("port", 3333)))
     except ValueError as e:
         print(e)
         sys.exit(1)

@@ -77,6 +77,7 @@ async def execute(command, pass_error=True):
     """ Executes command and returns output, with the option of enabling stderr. """
     executor = await create_subprocess_shell(
         command,
+        loop=bot.loop,
         stdout=PIPE,
         stderr=PIPE,
         stdin=PIPE

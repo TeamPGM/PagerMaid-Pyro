@@ -6,6 +6,7 @@ from pyrogram import idle
 from pyrogram.errors import AuthKeyUnregistered
 
 from pagermaid import bot, logs, working_dir
+from pagermaid.common.plugin import plugin_manager
 from pagermaid.hook import Hook
 from pagermaid.modules import module_list, plugin_list
 from pagermaid.single_utils import safe_remove
@@ -41,6 +42,7 @@ async def main():
         except BaseException as exception:
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
             plugin_list.remove(plugin_name)
+    plugin_manager.load_local_plugins()
 
     await process_exit(start=True, _client=bot)
     logs.info(lang('start'))

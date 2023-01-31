@@ -6,7 +6,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from httpx import AsyncClient
 
 from pyrogram import Client as OldClient
-from pyrogram.types import Chat as OldChat, Message as OldMessage
+from pyrogram.types import Chat as OldChat, Message as OldMessage, Dialog
 
 from pyromod.utils.conversation import Conversation
 from pyromod.utils.errors import AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
@@ -69,6 +69,9 @@ class Client(OldClient):
     def conversation(self, chat_id: Union[int, str],
                      once_timeout: int = 60, filters=None) -> Optional[Conversation]:
         """ Initialize a conversation with the given chat_id. """
+
+    async def get_dialogs_list(self) -> List[Dialog]:
+        """ Get a list of all dialogs. """
 
 
 class Chat(OldChat):
