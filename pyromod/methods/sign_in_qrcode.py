@@ -38,9 +38,9 @@ async def sign_in_qrcode(
         )
         await client.session.start()
         req = await client.invoke(pyrogram.raw.functions.auth.ImportLoginToken(token=req.token))
-        await client.storage.user_id(req.user.id)
+        await client.storage.user_id(req.authorization.user.id)
         await client.storage.is_bot(False)
-        return pyrogram.types.User._parse(client, req.user)
+        return pyrogram.types.User._parse(client, req.authorization.user)
     elif isinstance(req, pyrogram.raw.types.auth.LoginTokenSuccess):
         await client.storage.user_id(req.authorization.user.id)
         await client.storage.is_bot(False)
