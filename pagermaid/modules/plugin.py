@@ -42,7 +42,7 @@ def update_version(plugin_name, version):
 
 @listener(is_plugin=False, outgoing=True, command="apt",
           need_admin=True,
-          diagnostics=False,
+          diagnostics=True,
           description=lang('apt_des'),
           parameters=lang('apt_parameters'))
 async def plugin(message: Message):
@@ -206,14 +206,14 @@ async def plugin(message: Message):
             await message.edit(lang('apt_why_not_install_a_plugin'))
             return
         await plugin_manager.load_remote_plugins()
-        updated_plugins = await plugin_manager.update_all_remote_plugin()
+        updated_plugins = [i.name for i in await plugin_manager.update_all_remote_plugin() if i]
         if len(updated_plugins) == 0:
             await message.edit(f"<b>{lang('apt_name')}</b>\n\n" +
                                lang("apt_loading_from_online_but_nothing_need_to_update"))
         else:
             message = await message.edit(lang("apt_loading_from_online_and_updating"))
             await message.edit(
-                f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + "\n".join(updated_plugins)
+                f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + "\n\n" + "、".join(updated_plugins)
             )
             await reload_all()
     elif message.parameter[0] == "search":
