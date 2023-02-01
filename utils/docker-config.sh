@@ -13,6 +13,7 @@ configure () {
 
     echo "生成配置文件中 . . ."
     cp config.gen.yml $config_file
+    sed -i "s/127.0.0.1/0.0.0.0/" $config_file
     printf "请输入应用程序 api_id（不懂请直接回车）："
     read -r api_id <&1
     sed -i "s/ID_HERE/$api_id/" $config_file
