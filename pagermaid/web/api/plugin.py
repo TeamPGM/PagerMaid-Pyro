@@ -27,13 +27,23 @@ async def set_local_plugin_status(data: dict):
     module_name: str = data.get('plugin')
     status: bool = data.get('status')
     if not (plugin := plugin_manager.get_local_plugin(module_name)):
-        return {'status': 1, 'msg': f'插件 {module_name} 不存在'}
+        return {'status': -100, 'msg': f'插件 {module_name} 不存在'}
     if status:
         plugin.enable()
     else:
         plugin.disable()
     await reload_all()
     return {'status': 0, 'msg': f'成功{"开启" if status else "关闭"} {module_name}'}
+
+
+@route.post('/remove_local_plugin', response_class=JSONResponse, dependencies=[authentication()])
+async def remove_local_plugin(data: dict):
+    module_name: str = data.get('plugin')
+    if not (plugin := plugin_manager.get_local_plugin(module_name)):
+        return {'status': -100, 'msg': f'插件 {module_name} 不存在'}
+    plugin_manager.remove_plugin(plugin.name)
+    await reload_all()
+    return {'status': 0, 'msg': f'成功卸载 {module_name}'}
 
 
 @route.get('/get_remote_plugins', response_class=JSONResponse, dependencies=[authentication()])

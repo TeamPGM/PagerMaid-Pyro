@@ -215,7 +215,7 @@ async def plugin(message: Message):
         else:
             message = await message.edit(lang("apt_loading_from_online_and_updating"))
             await message.edit(
-                f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + "\n\n" + "、".join(updated_plugins)
+                f"<b>{lang('apt_name')}</b>\n\n" + lang("apt_reading_list") + "\n" + "、".join(updated_plugins)
             )
             await reload_all()
     elif message.parameter[0] == "search":
@@ -255,8 +255,7 @@ async def plugin(message: Message):
                                     f"{lang('apt_plugin_maintainer')}:`{i['maintainer']}`\n" \
                                     f"{lang('apt_plugin_size')}:`{i['size']}`\n" \
                                     f"{lang('apt_plugin_support')}:{search_support}\n" \
-                                    f"{lang('apt_plugin_des_short')}:{i['des-short']}\n\n" \
-                                    f"{i['des']}"
+                                    f"{lang('apt_plugin_des_short')}:{i['des-short']}"
                     break
             if search_result == '':
                 await message.edit(lang("apt_search_not_found"))

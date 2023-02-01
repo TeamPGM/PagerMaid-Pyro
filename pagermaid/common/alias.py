@@ -51,6 +51,7 @@ class AliasManager:
 
     @staticmethod
     async def save_from_web(data: List[Dict]):
+        Config.alias_dict.clear()
         for i in data:
             temp = Alias(**i)
             Config.alias_dict[temp.command] = temp.alias

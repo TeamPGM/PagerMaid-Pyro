@@ -133,13 +133,13 @@ class PluginManager:
         return next(filter(lambda x: x.name == name, self.plugins), None)
 
     @cache()
-    async def load_remote_plugins(self) -> List[RemotePlugin]:
+    async def _load_remote_plugins(self) -> List[RemotePlugin]:
         plugin_list = await client.get(f"{Config.GIT_SOURCE}list.json")
         plugin_list = plugin_list.json()["list"]
         plugins = [
             RemotePlugin(
                 **plugin,
-                status=self.get_plugin_load_status(plugin["name"])
+                status=False,
             ) for plugin in plugin_list
         ]
         self.remote_plugins = plugins
@@ -147,6 +147,12 @@ class PluginManager:
         for plugin in plugins:
             self.remote_version_map[plugin.name] = plugin.version
         return plugins
+
+    async def load_remote_plugins(self) -> List[RemotePlugin]:
+        plugin_list = await self._load_remote_plugins()
+        for i in plugin_list:
+            i.status = self.get_plugin_load_status(i.name)
+        return plugin_list
 
     def get_remote_plugin(self, name: str) -> RemotePlugin:
         return next(filter(lambda x: x.name == name, self.remote_plugins), None)

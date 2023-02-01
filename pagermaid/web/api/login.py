@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+from pagermaid import pgm_version_code
 from pagermaid.web.api.utils import create_token
 from pagermaid.config import Config
 
@@ -25,6 +26,7 @@ async def login(user: UserModel):
         "status": 0,
         "msg":    "登录成功",
         "data":   {
+            "version": pgm_version_code,
             "token": token
         }
     }
