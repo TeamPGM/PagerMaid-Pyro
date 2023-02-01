@@ -42,7 +42,7 @@ def update_version(plugin_name, version):
 
 @listener(is_plugin=False, outgoing=True, command="apt",
           need_admin=True,
-          diagnostics=True,
+          diagnostics=False,
           description=lang('apt_des'),
           parameters=lang('apt_parameters'))
 async def plugin(message: Message):
@@ -54,10 +54,12 @@ async def plugin(message: Message):
     if message.parameter[0] == "install":
         if len(message.parameter) == 1:
             message = await message.edit(lang('apt_processing'))
-            if reply:
-                file_path = await reply.download()
-            else:
-                file_path = await message.download()
+            file_path = None
+            with contextlib.suppress(Exception):
+                if reply:
+                    file_path = await reply.download()
+                else:
+                    file_path = await message.download()
             if file_path is None or not file_path.endswith('.py'):
                 await message.edit(lang('apt_no_py'))
                 try:

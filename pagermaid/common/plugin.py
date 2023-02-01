@@ -84,7 +84,8 @@ class PluginManager:
             json.dump(self.version_map, f, indent=4)
 
     def get_local_version(self, name: str) -> Optional[float]:
-        return self.version_map.get(name)
+        data = self.version_map.get(name)
+        return float(data) if data else None
 
     def set_local_version(self, name: str, version: float) -> None:
         self.version_map[name] = version

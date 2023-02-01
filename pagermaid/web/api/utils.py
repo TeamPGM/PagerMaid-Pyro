@@ -13,6 +13,8 @@ TOKEN_EXPIRE_MINUTES = 30
 def authentication():
     def inner(token: Optional[str] = Header(...)):
         if Config.WEB_SECRET_KEY:
+            if token == Config.WEB_SECRET_KEY:
+                return
             try:
                 jwt.decode(token, Config.WEB_SECRET_KEY, algorithms=ALGORITHM)
             except (jwt.JWTError, jwt.ExpiredSignatureError, AttributeError):
