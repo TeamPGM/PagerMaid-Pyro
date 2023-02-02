@@ -55,18 +55,44 @@ build_docker () {
     docker pull teampgm/pagermaid_pyro
 }
 
+need_web () {
+  PGM_WEB=false
+  printf "请问是否需要启用 Web 管理界面 [Y/n] ："
+  read -r web <&1
+  case $web in
+      [yY][eE][sS] | [yY])
+          echo "您已确认需要启用 Web 管理界面 . . ."
+          PGM_WEB=true
+          printf "请输入管理员密码（如果不需要密码请直接回车）："
+          read -r admin_password <&1
+          ;;
+      [nN][oO] | [nN])
+          ;;
+      *)
+          echo "输入错误，已跳过。"
+          ;;
+  esac
+}
+
 start_docker () {
     echo "正在启动 Docker 容器 . . ."
-    docker run -dit --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+    case $PGM_WEB in
+        true)
+            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
+            ;;
+        *)
+            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+            ;;
+    esac
     echo
     echo "开始配置参数 . . ."
     echo "在登录后，请按 Ctrl + C 使容器在后台模式下重新启动。"
     sleep 3
-    docker exec -it $container_name bash utils/docker-config.sh
+    docker exec -it "$container_name" bash utils/docker-config.sh
     echo
     echo "Docker 重启中，如果失败，请手动重启容器。"
     echo
-    docker restart $container_name
+    docker restart "$container_name"
     echo
     echo "Docker 创建完毕。"
     echo
@@ -80,27 +106,31 @@ data_persistence () {
         [yY][eE][sS] | [yY])
             printf "请输入将数据保留在宿主机哪个路径（绝对路径），同时请确保该路径下没有名为 workdir 的文件夹 ："
             read -r data_path <&1
-            if [ -d $data_path ]; then
+            if [ -d "$data_path" ]; then
                 if [[ -z $container_name ]]; then
                     printf "请输入 PagerMaid 容器的名称："
                     read -r container_name <&1
                 fi
-                if docker inspect $container_name &>/dev/null; then
-                    docker cp $container_name:/pagermaid/workdir $data_path
-                    docker stop $container_name &>/dev/null
-                    docker rm $container_name &>/dev/null
-                    docker run -dit -e PUID=$PUID -e PGID=$PGID -v $data_path/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+                if docker inspect "$container_name" &>/dev/null; then
+                    docker cp "$container_name":/pagermaid/workdir "$data_path"
+                    docker stop "$container_name" &>/dev/null
+                    docker rm "$container_name" &>/dev/null
+                    case $PGM_WEB in
+                        true)
+                            docker run -dit -v "$data_path"/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
+                            ;;
+                        *)
+                            docker run -dit -v "$data_path"/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+                            ;;
+                    esac
                     echo
                     echo "数据持久化操作完成。"
-                    echo 
-                    shon_online
+                    echo
                 else
                     echo "不存在名为 $container_name 的容器，退出。"
-                    exit 1
                 fi
             else
                 echo "路径 $data_path 不存在，退出。"
-                exit 1
             fi
             ;;
         [nN][oO] | [nN])
@@ -108,7 +138,6 @@ data_persistence () {
             ;;
         *)
             echo "输入错误 . . ."
-            exit 1
             ;;
     esac
 }
@@ -118,6 +147,7 @@ start_installation () {
     docker_check
     access_check
     build_docker
+    need_web
     start_docker
     data_persistence
 }
@@ -126,7 +156,7 @@ cleanup () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "开始删除 Docker 镜像 . . ."
-    if docker inspect $container_name &>/dev/null; then
+    if docker inspect "$container_name" &>/dev/null; then
         docker rm -f "$container_name" &>/dev/null
         echo
         shon_online
@@ -140,7 +170,7 @@ stop_pager () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "正在关闭 Docker 镜像 . . ."
-    if docker inspect $container_name &>/dev/null; then
+    if docker inspect "$container_name" &>/dev/null; then
         docker stop "$container_name" &>/dev/null
         echo
         shon_online
@@ -154,8 +184,8 @@ start_pager () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "正在启动 Docker 容器 . . ."
-    if docker inspect $container_name &>/dev/null; then
-        docker start $container_name &>/dev/null
+    if docker inspect "$container_name" &>/dev/null; then
+        docker start "$container_name" &>/dev/null
         echo
         echo "Docker 启动完毕。"
         echo
@@ -170,8 +200,8 @@ restart_pager () {
     printf "请输入 PagerMaid 容器的名称："
     read -r container_name <&1
     echo "正在重新启动 Docker 容器 . . ."
-    if docker inspect $container_name &>/dev/null; then
-        docker restart $container_name &>/dev/null
+    if docker inspect "$container_name" &>/dev/null; then
+        docker restart "$container_name" &>/dev/null
         echo
         echo "Docker 重新启动完毕。"
         echo
@@ -185,6 +215,7 @@ restart_pager () {
 reinstall_pager () {
     cleanup
     build_docker
+    need_web
     start_docker
     data_persistence
 }
@@ -204,10 +235,9 @@ shon_online () {
     echo "  4) Docker 启动 PagerMaid"
     echo "  5) Docker 重启 PagerMaid"
     echo "  6) Docker 重装 PagerMaid"
-    echo "  7) 将 PagerMaid 数据持久化"
-    echo "  8) 退出脚本"
+    echo "  7) 退出脚本"
     echo
-    echo "     Version：2.0.0"
+    echo "     Version：2.1.0"
     echo
     echo -n "请输入编号: "
     read N
@@ -231,9 +261,6 @@ shon_online () {
             reinstall_pager
             ;;
         7)
-            data_persistence
-            ;;
-        8)
             exit 0
             ;;
         *)
