@@ -12,7 +12,7 @@ casbin==1.17.5
 sentry-sdk==1.14.0
 PyQRCode>=1.2.1
 PyPng
-fastapi~=0.89.1
+fastapi~=0.92.0
 amis-python
 python-jose
 uvicorn
