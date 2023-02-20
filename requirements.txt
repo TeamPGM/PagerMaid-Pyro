@@ -16,5 +16,5 @@ fastapi~=0.89.1
 amis-python
 python-jose
 uvicorn
-pydantic~=1.10.4
+pydantic~=1.10.5
 starlette~=0.22.0
