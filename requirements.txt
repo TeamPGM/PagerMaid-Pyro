@@ -17,4 +17,4 @@ amis-python
 python-jose
 uvicorn
 pydantic~=1.10.4
-starlette~=0.22.0
+starlette~=0.25.0
