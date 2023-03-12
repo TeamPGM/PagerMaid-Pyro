@@ -30,14 +30,20 @@ async def sign_in_qrcode(
         await client.session.stop()
         await client.storage.dc_id(req.dc_id)
         await client.storage.auth_key(
-            await Auth(client, await client.storage.dc_id(), await client.storage.test_mode()).create()
+            await Auth(
+                client, await client.storage.dc_id(), await client.storage.test_mode()
+            ).create()
         )
         client.session = Session(
-            client, await client.storage.dc_id(),
-            await client.storage.auth_key(), await client.storage.test_mode()
+            client,
+            await client.storage.dc_id(),
+            await client.storage.auth_key(),
+            await client.storage.test_mode(),
         )
         await client.session.start()
-        req = await client.invoke(pyrogram.raw.functions.auth.ImportLoginToken(token=req.token))
+        req = await client.invoke(
+            pyrogram.raw.functions.auth.ImportLoginToken(token=req.token)
+        )
         await client.storage.user_id(req.authorization.user.id)
         await client.storage.is_bot(False)
         return pyrogram.types.User._parse(client, req.authorization.user)
@@ -51,8 +57,10 @@ async def authorize_by_qrcode(
     client: Client,
 ):
     print(f"Welcome to Pyrogram (version {pyrogram.__version__})")
-    print(f"Pyrogram is free software and comes with ABSOLUTELY NO WARRANTY. Licensed\n"
-          f"under the terms of the {pyrogram.__license__}.\n")
+    print(
+        f"Pyrogram is free software and comes with ABSOLUTELY NO WARRANTY. Licensed\n"
+        f"under the terms of the {pyrogram.__license__}.\n"
+    )
 
     while True:
         qrcode = None
@@ -66,7 +74,9 @@ async def authorize_by_qrcode(
                 print(f"Password hint: {await client.get_password_hint()}")
 
                 if not client.password:
-                    client.password = await ainput("Enter password (empty to recover): ", hide=client.hide_password)
+                    client.password = await ainput(
+                        "Enter password (empty to recover): ", hide=client.hide_password
+                    )
 
                 try:
                     if client.password:
@@ -96,8 +106,12 @@ async def authorize_by_qrcode(
             except Exception:
                 print("Save qrcode.png failed.")
             print(qr_obj.terminal())
-            print(f"Scan the QR code above, the qrcode.png file or visit {qrcode} to log in.\n")
-            print("QR code will expire in 20 seconds. If you have scanned it, please wait...")
+            print(
+                f"Scan the QR code above, the qrcode.png file or visit {qrcode} to log in.\n"
+            )
+            print(
+                "QR code will expire in 20 seconds. If you have scanned it, please wait..."
+            )
             await asyncio.sleep(20)
         elif isinstance(qrcode, pyrogram.types.User):
             return qrcode
@@ -114,7 +128,9 @@ async def start_client(client: Client):
                 await client.authorize()
 
         if not await client.storage.is_bot() and client.takeout:
-            client.takeout_id = (await client.invoke(pyrogram.raw.functions.account.InitTakeoutSession())).id
+            client.takeout_id = (
+                await client.invoke(pyrogram.raw.functions.account.InitTakeoutSession())
+            ).id
 
         await client.invoke(pyrogram.raw.functions.updates.GetState())
     except (Exception, KeyboardInterrupt):

@@ -39,10 +39,11 @@ def un_tar_gz(filename, dirs):
         return False
 
 
-@listener(is_plugin=False, outgoing=True, command="backup",
-          description=lang('backup_des'))
+@listener(
+    is_plugin=False, outgoing=True, command="backup", description=lang("backup_des")
+)
 async def backup(message: Message):
-    await message.edit(lang('backup_process'))
+    await message.edit(lang("backup_process"))
 
     # Remove old backup
     if os.path.exists(pgm_backup_zip_name):
@@ -50,7 +51,12 @@ async def backup(message: Message):
 
     # remove mp3 , they are so big !
     for i in os.listdir("data"):
-        if i.find(".mp3") != -1 or i.find(".jpg") != -1 or i.find(".flac") != -1 or i.find(".ogg") != -1:
+        if (
+            i.find(".mp3") != -1
+            or i.find(".jpg") != -1
+            or i.find(".flac") != -1
+            or i.find(".ogg") != -1
+        ):
             os.remove(f"data{os.sep}{i}")
 
     # run backup function
@@ -65,37 +71,41 @@ async def backup(message: Message):
         await message.edit(lang("backup_success"))
 
 
-@listener(is_plugin=False, outgoing=True, command="recovery",
-          need_admin=True,
-          description=lang('recovery_des'))
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="recovery",
+    need_admin=True,
+    description=lang("recovery_des"),
+)
 async def recovery(message: Message):
     reply = message.reply_to_message
 
     if not reply:
-        return await message.edit(lang('recovery_file_error'))
+        return await message.edit(lang("recovery_file_error"))
     if not reply.document:
-        return await message.edit(lang('recovery_file_error'))
+        return await message.edit(lang("recovery_file_error"))
 
     try:
         if ".tar.gz" not in reply.document.file_name:
-            return await message.edit(lang('recovery_file_error'))
-        await message.edit(lang('recovery_down'))
+            return await message.edit(lang("recovery_file_error"))
+        await message.edit(lang("recovery_down"))
         # Start download process
         pgm_backup_zip_name = await reply.download()  # noqa
     except Exception as e:  # noqa
         print(e, format_exc())
-        return await message.edit(lang('recovery_file_error'))
+        return await message.edit(lang("recovery_file_error"))
     # Extract backup files
-    await message.edit(lang('recovery_process'))
+    await message.edit(lang("recovery_process"))
     if not os.path.exists(pgm_backup_zip_name):
-        return await message.edit(lang('recovery_file_not_found'))
+        return await message.edit(lang("recovery_file_not_found"))
     elif not un_tar_gz(pgm_backup_zip_name, ""):
         os.remove(pgm_backup_zip_name)
-        return await message.edit(lang('recovery_file_error'))
+        return await message.edit(lang("recovery_file_error"))
 
     # Cleanup
     if os.path.exists(pgm_backup_zip_name):
         os.remove(pgm_backup_zip_name)
 
-    await message.edit(lang('recovery_success') + " " + lang('apt_reboot'))
+    await message.edit(lang("recovery_success") + " " + lang("apt_reboot"))
     sys.exit(0)

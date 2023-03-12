@@ -10,20 +10,26 @@ from pagermaid.utils import lang
 import contextlib
 
 
-@listener(is_plugin=False, outgoing=True, command="prune",
-          need_admin=True,
-          description=lang('prune_des'))
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="prune",
+    need_admin=True,
+    description=lang("prune_des"),
+)
 async def prune(client: Client, message: Message):
-    """ Purge every single message after the message you replied to. """
+    """Purge every single message after the message you replied to."""
     if not message.reply_to_message:
-        await message.edit(lang('not_reply'))
+        await message.edit(lang("not_reply"))
         return
     input_chat = message.chat.id
     messages = []
     count = 0
     limit = message.id - message.reply_to_message.id + 1
     if message.reply_to_top_message_id:
-        func = client.get_discussion_replies(input_chat, message.reply_to_top_message_id, limit=limit)
+        func = client.get_discussion_replies(
+            input_chat, message.reply_to_top_message_id, limit=limit
+        )
     else:
         func = client.get_chat_history(input_chat, limit=limit)
     async for msg in func:
@@ -45,24 +51,28 @@ async def prune(client: Client, message: Message):
     await notification.delete()
 
 
-@listener(is_plugin=False, outgoing=True, command="selfprune",
-          need_admin=True,
-          description=lang('sp_des'),
-          parameters=lang('sp_parameters'))
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="selfprune",
+    need_admin=True,
+    description=lang("sp_des"),
+    parameters=lang("sp_parameters"),
+)
 async def self_prune(bot: Client, message: Message):
-    """ Deletes specific amount of messages you sent. """
+    """Deletes specific amount of messages you sent."""
     msgs = []
     count_buffer = 0
     offset = 0
     if len(message.parameter) != 1:
         if not message.reply_to_message:
-            return await message.edit(lang('arg_error'))
+            return await message.edit(lang("arg_error"))
         offset = message.reply_to_message.id
     try:
         count = int(message.parameter[0])
         await message.delete()
     except ValueError:
-        await message.edit(lang('arg_error'))
+        await message.edit(lang("arg_error"))
         return
     async for msg in bot.get_chat_history(message.chat.id, limit=100):
         if count_buffer == count:
@@ -73,7 +83,9 @@ async def self_prune(bot: Client, message: Message):
             if len(msgs) == 100:
                 await bot.delete_messages(message.chat.id, msgs)
                 msgs = []
-    async for msg in bot.search_messages(message.chat.id, from_user="me", offset=offset):
+    async for msg in bot.search_messages(
+        message.chat.id, from_user="me", offset=offset
+    ):
         if count_buffer == count:
             break
         msgs.append(msg.id)
@@ -93,25 +105,29 @@ async def self_prune(bot: Client, message: Message):
         await notification.delete()
 
 
-@listener(is_plugin=False, outgoing=True, command="yourprune",
-          need_admin=True,
-          description=lang('yp_des'),
-          parameters=lang('sp_parameters'))
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="yourprune",
+    need_admin=True,
+    description=lang("yp_des"),
+    parameters=lang("sp_parameters"),
+)
 async def your_prune(bot: Client, message: Message):
-    """ Deletes specific amount of messages someone sent. """
+    """Deletes specific amount of messages someone sent."""
     if not message.reply_to_message:
-        return await message.edit(lang('not_reply'))
+        return await message.edit(lang("not_reply"))
     target = message.reply_to_message
     if not target.from_user:
-        return await message.edit(lang('not_reply'))
+        return await message.edit(lang("not_reply"))
     if len(message.parameter) != 1:
-        return await message.edit(lang('arg_error'))
+        return await message.edit(lang("arg_error"))
     count = 0
     try:
         count = int(message.parameter[0])
         await message.delete()
     except ValueError:
-        return await message.edit(lang('arg_error'))
+        return await message.edit(lang("arg_error"))
     except Exception:  # noqa
         pass
     count_buffer = 0
@@ -125,7 +141,9 @@ async def your_prune(bot: Client, message: Message):
             if len(msgs) == 100:
                 await bot.delete_messages(message.chat.id, msgs)
                 msgs = []
-    async for msg in bot.search_messages(message.chat.id, from_user=target.from_user.id):
+    async for msg in bot.search_messages(
+        message.chat.id, from_user=target.from_user.id
+    ):
         if count_buffer == count:
             break
         count_buffer += 1
@@ -145,16 +163,20 @@ async def your_prune(bot: Client, message: Message):
         await notification.delete()
 
 
-@listener(is_plugin=False, outgoing=True, command="del",
-          need_admin=True,
-          description=lang('del_des'))
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="del",
+    need_admin=True,
+    description=lang("del_des"),
+)
 async def delete(message: Message):
-    """ Deletes the message you replied to. """
+    """Deletes the message you replied to."""
     if target := message.reply_to_message:
         with contextlib.suppress(Exception):
             await target.delete()
         await message.delete()
-        await log(lang('del_notification'))
+        await log(lang("del_notification"))
     else:
         await message.delete()
 

@@ -6,5 +6,11 @@ from pagermaid.utils import client
 
 
 def get(name: str):
-    data = {"Client": bot, "Logger": logs, "SqliteDict": sqlite, "AsyncIOScheduler": scheduler, "AsyncClient": client}
+    data = {
+        "Client": bot,
+        "Logger": logs,
+        "SqliteDict": sqlite,
+        "AsyncIOScheduler": scheduler,
+        "AsyncClient": client,
+    }
     return data.get(name, None)

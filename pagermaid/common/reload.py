@@ -4,7 +4,14 @@ import os
 
 import pagermaid.config
 import pagermaid.modules
-from pagermaid import read_context, bot, help_messages, all_permissions, hook_functions, logs
+from pagermaid import (
+    read_context,
+    bot,
+    help_messages,
+    all_permissions,
+    hook_functions,
+    logs,
+)
 from pagermaid.common.plugin import plugin_manager
 from pagermaid.hook import Hook
 from pagermaid.utils import lang
@@ -32,7 +39,9 @@ async def reload_all():
             if module_name in loaded_plugins:
                 importlib.reload(module)
         except BaseException as exception:
-            logs.info(f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}")
+            logs.info(
+                f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}"
+            )
     for plugin_name in pagermaid.modules.plugin_list.copy():
         try:
             plugin = importlib.import_module(f"plugins.{plugin_name}")

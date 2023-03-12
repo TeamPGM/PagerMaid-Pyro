@@ -5,6 +5,7 @@ from sys import executable, exit
 try:
     from pyrogram.errors import ApiIdInvalid, PhoneNumberInvalid
     from pyrogram import Client
+
     print("Found an existing installation of Pyrogram...\nSuccessfully Imported.")
 except ImportError:
     print("Installing Pyrogram...")
@@ -32,10 +33,14 @@ async def main():
                 "me",
                 f"**PagerMaid** `String SESSION`:\n\n`{await bot.export_session_string()}`",
             )
-            print("Your SESSION has been generated. Check your telegram saved messages!")
+            print(
+                "Your SESSION has been generated. Check your telegram saved messages!"
+            )
             exit(0)
     except ApiIdInvalid:
-        print("Your API ID/API HASH combination is invalid. Kindly recheck.\nQuitting...")
+        print(
+            "Your API ID/API HASH combination is invalid. Kindly recheck.\nQuitting..."
+        )
         exit(0)
     except ValueError:
         print("API HASH must not be empty!\nQuitting...")

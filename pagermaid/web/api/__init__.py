@@ -8,7 +8,7 @@ from pagermaid.web.api.login import route as login_route
 from pagermaid.web.api.plugin import route as plugin_route
 from pagermaid.web.api.status import route as status_route
 
-base_api_router = APIRouter(prefix='/pagermaid/api')
+base_api_router = APIRouter(prefix="/pagermaid/api")
 
 base_api_router.include_router(plugin_route)
 base_api_router.include_router(bot_info_route)

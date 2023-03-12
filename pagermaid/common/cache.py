@@ -20,7 +20,7 @@ def cache(ttl=datetime.timedelta(minutes=15)):
             nonlocal cache_data
             bound = inspect.signature(func).bind(*args, **kw)
             bound.apply_defaults()
-            ins_key = '|'.join([f'{k}_{v}' for k, v in bound.arguments.items()])
+            ins_key = "|".join([f"{k}_{v}" for k, v in bound.arguments.items()])
             data: Cache = cache_data.get(ins_key, Cache(value=None, time=None))
             now = datetime.datetime.now()
             if (not data.time) or ((now - data.time) > ttl):
@@ -31,5 +31,7 @@ def cache(ttl=datetime.timedelta(minutes=15)):
                 except Exception as e:
                     raise e
             return data.value
+
         return wrapped
+
     return wrap

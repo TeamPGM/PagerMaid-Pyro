@@ -17,11 +17,11 @@ class Status(BaseModel):
 async def human_time_duration(seconds) -> str:
     parts = {}
     time_units = (
-        ('%m', 60 * 60 * 24 * 30),
-        ('%d', 60 * 60 * 24),
-        ('%H', 60 * 60),
-        ('%M', 60),
-        ('%S', 1)
+        ("%m", 60 * 60 * 24 * 30),
+        ("%d", 60 * 60 * 24),
+        ("%H", 60 * 60),
+        ("%M", 60),
+        ("%S", 1),
     )
     for unit, div in time_units:
         amount, seconds = divmod(int(seconds), div)
@@ -48,7 +48,7 @@ async def get_status() -> Status:
     return Status(
         version=pgm_version,
         run_time=uptime,
-        cpu_percent=f'{cpu_percent}%',
-        ram_percent=f'{ram_stat.percent}%',
-        swap_percent=f'{swap_stat.percent}%',
+        cpu_percent=f"{cpu_percent}%",
+        ram_percent=f"{ram_stat.percent}%",
+        swap_percent=f"{swap_stat.percent}%",
     )

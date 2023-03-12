@@ -6,11 +6,11 @@ from pagermaid.services import scheduler
 from pagermaid.utils import lang
 
 
-@listener(is_plugin=False, command="reload",
-          need_admin=True,
-          description=lang('reload_des'))
+@listener(
+    is_plugin=False, command="reload", need_admin=True, description=lang("reload_des")
+)
 async def reload_plugins(message: Message):
-    """ To reload plugins. """
+    """To reload plugins."""
     await reload_all()
     await message.edit(lang("reload_ok"))
 

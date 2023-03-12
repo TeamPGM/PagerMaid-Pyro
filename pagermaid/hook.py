@@ -14,9 +14,11 @@ class Hook:
         """
         注册一个启动钩子
         """
+
         def decorator(function):
             hook_functions["startup"].add(function)
             return function
+
         return decorator
 
     @staticmethod
@@ -24,9 +26,11 @@ class Hook:
         """
         注册一个关闭钩子
         """
+
         def decorator(function):
             hook_functions["shutdown"].add(function)
             return function
+
         return decorator
 
     @staticmethod
@@ -79,7 +83,9 @@ class Hook:
 
     @staticmethod
     async def startup():
-        if cors := [startup(**inject(None, startup)) for startup in hook_functions["startup"]]:  # noqa
+        if cors := [
+            startup(**inject(None, startup)) for startup in hook_functions["startup"]
+        ]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
@@ -87,7 +93,10 @@ class Hook:
 
     @staticmethod
     async def shutdown():
-        if cors := [shutdown(**inject(None, shutdown)) for shutdown in hook_functions["shutdown"]]:  # noqa
+        if cors := [
+            shutdown(**inject(None, shutdown))
+            for shutdown in hook_functions["shutdown"]
+        ]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
@@ -136,12 +145,20 @@ class Hook:
             logs.info(f"[command_post]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def process_error_exec(message: Message, command, exc_info: BaseException, exc_format: str):
+    async def process_error_exec(
+        message: Message, command, exc_info: BaseException, exc_format: str
+    ):
         cors = []
         try:
             for error in hook_functions["process_error"]:
                 try:
-                    data = inject(message, error, command=command, exc_info=exc_info, exc_format=exc_format)
+                    data = inject(
+                        message,
+                        error,
+                        command=command,
+                        exc_info=exc_info,
+                        exc_format=exc_format,
+                    )
                 except Exception as exception:
                     logs.info(f"[process_error]: {type(exception)}: {exception}")
                     continue
@@ -158,7 +175,10 @@ class Hook:
 
     @staticmethod
     async def load_success_exec():
-        if cors := [load(**inject(None, load)) for load in hook_functions["load_plugins_finished"]]:  # noqa
+        if cors := [
+            load(**inject(None, load))
+            for load in hook_functions["load_plugins_finished"]
+        ]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:

@@ -12,12 +12,14 @@ def _checks_cancelled(f):
             raise asyncio.CancelledError("The conversation was cancelled before")
 
         return f(self, *args, **kwargs)
+
     return wrapper
 
 
 class Conversation:
-    def __init__(self, client, chat_id: Union[int, str],
-                 once_timeout: int = 60, filters=None):
+    def __init__(
+        self, client, chat_id: Union[int, str], once_timeout: int = 60, filters=None
+    ):
         self._client = client
         self._chat_id = chat_id
         self._once_timeout = once_timeout
@@ -56,7 +58,9 @@ class Conversation:
     async def ask(self, text, filters=None, timeout=None, *args, **kwargs):
         filters = filters or self._filters
         timeout = timeout or self._once_timeout
-        return await self._client.ask(self._chat_id, text, filters=filters, timeout=timeout, *args, **kwargs)
+        return await self._client.ask(
+            self._chat_id, text, filters=filters, timeout=timeout, *args, **kwargs
+        )
 
     @_checks_cancelled
     async def get_response(self, filters=None, timeout=None):
@@ -65,7 +69,9 @@ class Conversation:
         return await self._client.listen(self._chat_id, filters, timeout)
 
     def mark_as_read(self, message=None):
-        return self._client.read_chat_history(self._chat_id, max_id=message.id if message else 0)
+        return self._client.read_chat_history(
+            self._chat_id, max_id=message.id if message else 0
+        )
 
     def cancel(self):
         self._cancelled = True

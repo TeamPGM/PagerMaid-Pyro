@@ -22,7 +22,7 @@ import pyrogram
 
 
 def dice(ctx, message):
-    return hasattr(message, 'dice') and message.dice
+    return hasattr(message, "dice") and message.dice
 
 
 pyrogram.filters.dice = dice

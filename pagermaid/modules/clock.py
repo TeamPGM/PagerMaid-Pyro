@@ -8,11 +8,15 @@ from pagermaid.listener import listener
 from pagermaid.utils import lang, Message
 
 
-@listener(is_plugin=False, outgoing=True, command="time",
-          description=lang('time_des'),
-          parameters=lang('time_parameters'))
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="time",
+    description=lang("time_des"),
+    parameters=lang("time_parameters"),
+)
 async def time(message: Message):
-    """ For querying time. """
+    """For querying time."""
     if len(message.parameter) == 1:
         country = message.parameter[0].title()
     else:
@@ -37,24 +41,24 @@ async def time(message: Message):
     time_zone = await get_timezone(country)
     if not time_zone:
         if len(message.parameter) < 1:
-            await message.edit(lang('time_config'))
+            await message.edit(lang("time_config"))
             return
         try:
             time_num, utc_num = int(message.parameter[0]), int(message.parameter[0])
             if time_num == 0:
-                time_num, utc_num = '', ''
+                time_num, utc_num = "", ""
             elif 0 < time_num < 13:
-                time_num, utc_num = f'-{time_num}', f'+{time_num}'
+                time_num, utc_num = f"-{time_num}", f"+{time_num}"
             elif -13 < time_num < 0:
-                time_num, utc_num = f'+{-time_num}', f'{time_num}'
+                time_num, utc_num = f"+{-time_num}", f"{time_num}"
             elif time_num < -12:
-                time_num, utc_num = '+12', '-12'
+                time_num, utc_num = "+12", "-12"
             elif time_num > 12:
-                time_num, utc_num = '-12', '+12'
-            time_zone = timezone(f'Etc/GMT{time_num}')
-            country_name = f'UTC{utc_num}'
+                time_num, utc_num = "-12", "+12"
+            time_zone = timezone(f"Etc/GMT{time_num}")
+            country_name = f"UTC{utc_num}"
         except ValueError:
-            await message.edit(lang('arg_error'))
+            await message.edit(lang("arg_error"))
             return
     else:
         try:
@@ -62,13 +66,15 @@ async def time(message: Message):
         except KeyError:
             country_name = country
 
-    await message.edit(f"**{country_name} {lang('time_time')}：**\n"
-                       f"`{datetime.now(time_zone).strftime(date_form)} "
-                       f"{datetime.now(time_zone).strftime(time_form)}`")
+    await message.edit(
+        f"**{country_name} {lang('time_time')}：**\n"
+        f"`{datetime.now(time_zone).strftime(date_form)} "
+        f"{datetime.now(time_zone).strftime(time_form)}`"
+    )
 
 
 async def get_timezone(target):
-    """ Returns timezone of the parameter in command. """
+    """Returns timezone of the parameter in command."""
     if "(Uk)" in target:
         target = target.replace("Uk", "UK")
     if "(Us)" in target:

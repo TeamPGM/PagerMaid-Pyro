@@ -54,12 +54,8 @@ class Client:
             chat_id = chat.id
 
         future = self.loop.create_future()
-        future.add_done_callback(
-            functools.partial(self.clear_listener, chat_id)
-        )
-        self.listening.update({
-            chat_id: {"future": future, "filters": filters}
-        })
+        future.add_done_callback(functools.partial(self.clear_listener, chat_id))
+        self.listening.update({chat_id: {"future": future, "filters": filters}})
         try:
             return await asyncio.wait_for(future, timeout)
         except asyncio.exceptions.TimeoutError as e:
@@ -81,11 +77,11 @@ class Client:
     @patchable
     def cancel_listener(self, chat_id):
         listener = self.listening.get(chat_id)
-        if not listener or listener['future'].done():
+        if not listener or listener["future"].done():
             return
 
-        listener['future'].set_exception(ListenerCanceled())
-        self.clear_listener(chat_id, listener['future'])
+        listener["future"].set_exception(ListenerCanceled())
+        self.clear_listener(chat_id, listener["future"])
 
     @patchable
     def cancel_all_listener(self):
@@ -93,25 +89,25 @@ class Client:
             self.cancel_listener(chat_id)
 
     @patchable
-    def conversation(self, chat_id: Union[int, str], once_timeout: int = 60, filters=None):
+    def conversation(
+        self, chat_id: Union[int, str], once_timeout: int = 60, filters=None
+    ):
         return Conversation(self, chat_id, once_timeout, filters)
 
     @patchable
     async def read_chat_history(
-        self: "pyrogram.Client",
-        chat_id: Union[int, str],
-        max_id: int = 0
+        self: "pyrogram.Client", chat_id: Union[int, str], max_id: int = 0
     ) -> bool:
         peer = await self.resolve_peer(chat_id)
         if isinstance(peer, pyrogram.raw.types.InputPeerChannel):
-            with contextlib.suppress(pyrogram.errors.BadRequest):    # noqa
+            with contextlib.suppress(pyrogram.errors.BadRequest):  # noqa
                 topics: pyrogram.raw.types.messages.ForumTopics = await self.invoke(
                     pyrogram.raw.functions.channels.GetForumTopics(
-                        channel=peer,    # noqa
+                        channel=peer,  # noqa
                         offset_date=0,
                         offset_id=0,
                         offset_topic=0,
-                        limit=0
+                        limit=0,
                     )
                 )
                 for i in topics.topics:
@@ -139,25 +135,25 @@ class MessageHandler:
     @patchable
     async def resolve_listener(self, client, message, *args):
         listener = client.listening.get(message.chat.id)
-        if listener and not listener['future'].done():
-            listener['future'].set_result(message)
+        if listener and not listener["future"].done():
+            listener["future"].set_result(message)
         else:
-            if listener and listener['future'].done():
-                client.clear_listener(message.chat.id, listener['future'])
+            if listener and listener["future"].done():
+                client.clear_listener(message.chat.id, listener["future"])
             await self.user_callback(client, message, *args)
 
     @patchable
     async def check(self, client, update):
         listener = client.listening.get(update.chat.id)
 
-        if listener and not listener['future'].done():
-            return await listener['filters'](client, update) if callable(listener['filters']) else True
+        if listener and not listener["future"].done():
+            return (
+                await listener["filters"](client, update)
+                if callable(listener["filters"])
+                else True
+            )
 
-        return (
-            await self.filters(client, update)
-            if callable(self.filters)
-            else True
-        )
+        return await self.filters(client, update) if callable(self.filters) else True
 
 
 @patch(pyrogram.handlers.edited_message_handler.EditedMessageHandler)
@@ -170,25 +166,25 @@ class EditedMessageHandler:
     @patchable
     async def resolve_listener(self, client, message, *args):
         listener = client.listening.get(message.chat.id)
-        if listener and not listener['future'].done():
-            listener['future'].set_result(message)
+        if listener and not listener["future"].done():
+            listener["future"].set_result(message)
         else:
-            if listener and listener['future'].done():
-                client.clear_listener(message.chat.id, listener['future'])
+            if listener and listener["future"].done():
+                client.clear_listener(message.chat.id, listener["future"])
             await self.user_callback(client, message, *args)
 
     @patchable
     async def check(self, client, update):
         listener = client.listening.get(update.chat.id)
 
-        if listener and not listener['future'].done():
-            return await listener['filters'](client, update) if callable(listener['filters']) else True
+        if listener and not listener["future"].done():
+            return (
+                await listener["filters"](client, update)
+                if callable(listener["filters"])
+                else True
+            )
 
-        return (
-            await self.filters(client, update)
-            if callable(self.filters)
-            else True
-        )
+        return await self.filters(client, update) if callable(self.filters) else True
 
 
 @patch(pyrogram.types.user_and_chats.chat.Chat)
@@ -208,21 +204,27 @@ class Chat(pyrogram.types.Chat):
     @patchable
     @staticmethod
     def _parse_user_chat(client, user: pyrogram.raw.types.User) -> "Chat":
-        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_user_chat(client, user)  # noqa
+        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_user_chat(
+            client, user
+        )  # noqa
         chat.is_forum = None
         return chat
 
     @patchable
     @staticmethod
     def _parse_chat_chat(client, chat: pyrogram.raw.types.Chat) -> "Chat":
-        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_chat_chat(client, chat)  # noqa
+        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_chat_chat(
+            client, chat
+        )  # noqa
         chat.is_forum = None
         return chat
 
     @patchable
     @staticmethod
     def _parse_channel_chat(client, channel: pyrogram.raw.types.Channel) -> "Chat":
-        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_channel_chat(client, channel)  # noqa
+        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_channel_chat(
+            client, channel
+        )  # noqa
         chat.is_forum = getattr(channel, "forum", None)
         return chat
 
@@ -251,23 +253,21 @@ class Message(pyrogram.types.Message):
     async def safe_delete(self, revoke: bool = True):
         try:
             return await self._client.delete_messages(
-                chat_id=self.chat.id,
-                message_ids=self.id,
-                revoke=revoke
+                chat_id=self.chat.id, message_ids=self.id, revoke=revoke
             )
         except Exception:  # noqa
             return False
 
     @patchable
     def obtain_message(self) -> Optional[str]:
-        """ Obtains a message from either the reply message or command arguments. """
+        """Obtains a message from either the reply message or command arguments."""
         return self.arguments or (
             self.reply_to_message.text if self.reply_to_message else None
         )
 
     @patchable
     def obtain_user(self) -> Optional[int]:
-        """ Obtains a user from either the reply message or command arguments. """
+        """Obtains a user from either the reply message or command arguments."""
         user = None
         # Priority: reply > argument > current_chat
         if self.reply_to_message:  # Reply to a user
@@ -279,9 +279,14 @@ class Message(pyrogram.types.Message):
             if raw_user.isnumeric():
                 user = int(raw_user)
             elif self.entities is not None:
-                if self.entities[0].type == pyrogram.enums.MessageEntityType.TEXT_MENTION:
+                if (
+                    self.entities[0].type
+                    == pyrogram.enums.MessageEntityType.TEXT_MENTION
+                ):
                     user = self.entities[0].user.id
-        if not user and self.chat.type == pyrogram.enums.ChatType.PRIVATE:  # Current chat
+        if (
+            not user and self.chat.type == pyrogram.enums.ChatType.PRIVATE
+        ):  # Current chat
             user = self.chat.id
         return user
 
@@ -291,13 +296,13 @@ class Message(pyrogram.types.Message):
 
     @patchable
     async def edit_text(
-            self,
-            text: str,
-            parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
-            entities: List["pyrogram.types.MessageEntity"] = None,
-            disable_web_page_preview: bool = None,
-            reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
-            no_reply: bool = None,
+        self,
+        text: str,
+        parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
+        entities: List["pyrogram.types.MessageEntity"] = None,
+        disable_web_page_preview: bool = None,
+        reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
+        no_reply: bool = None,
     ) -> "Message":
         msg = None
         sudo_users = get_sudo_list()
@@ -317,7 +322,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview,
-                        quote=True
+                        quote=True,
                     )
                 elif is_self:
                     msg = await self._client.edit_message_text(
@@ -327,14 +332,14 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         disable_web_page_preview=disable_web_page_preview,
-                        reply_markup=reply_markup
+                        reply_markup=reply_markup,
                     )
                 elif not no_reply:
                     msg = await self.reply(
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview,
-                        quote=True
+                        quote=True,
                     )
             else:
                 try:
@@ -345,9 +350,11 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         disable_web_page_preview=disable_web_page_preview,
-                        reply_markup=reply_markup
+                        reply_markup=reply_markup,
                     )
-                except pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired:  # noqa
+                except (
+                    pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired
+                ):  # noqa
                     if not no_reply:
                         msg = await self.reply(
                             text=text,
@@ -355,15 +362,13 @@ class Message(pyrogram.types.Message):
                             entities=entities,
                             disable_web_page_preview=disable_web_page_preview,
                             reply_markup=reply_markup,
-                            quote=True
+                            quote=True,
                         )
         else:
             with open("output.log", "w+") as file:
                 file.write(text)
             msg = await self._client.send_document(
-                chat_id=self.chat.id,
-                document="output.log",
-                reply_to_message_id=self.id
+                chat_id=self.chat.id, document="output.log", reply_to_message_id=self.id
             )
         if not msg:
             return self
@@ -381,9 +386,11 @@ class Message(pyrogram.types.Message):
         users: dict,
         chats: dict,
         is_scheduled: bool = False,
-        replies: int = 1
+        replies: int = 1,
     ):
-        parsed = await pyrogram.types.Message.old_parse(client, message, users, chats, is_scheduled, replies)  # noqa
+        parsed = await pyrogram.types.Message.old_parse(
+            client, message, users, chats, is_scheduled, replies
+        )  # noqa
         # forum topic
         if isinstance(message, pyrogram.raw.types.Message):
             parsed.forum_topic = getattr(message.reply_to, "forum_topic", None)
@@ -414,8 +421,8 @@ class Message(pyrogram.types.Message):
             "pyrogram.types.InlineKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardRemove",
-            "pyrogram.types.ForceReply"
-        ] = object
+            "pyrogram.types.ForceReply",
+        ] = object,
     ) -> Union["pyrogram.types.Message", List["pyrogram.types.Message"]]:
         if self.media:
             self.text = None

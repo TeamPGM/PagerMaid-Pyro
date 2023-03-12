@@ -10,7 +10,7 @@ from pagermaid import Config
 from pagermaid.common.cache import cache
 from pagermaid.utils import client
 
-plugins_path = Path('plugins')
+plugins_path = Path("plugins")
 
 
 class LocalPlugin(BaseModel):
@@ -57,11 +57,11 @@ class RemotePlugin(LocalPlugin):
     ...
 
     async def install(self) -> bool:
-        html = await client.get(f'{Config.GIT_SOURCE}{self.name}/main.py')
+        html = await client.get(f"{Config.GIT_SOURCE}{self.name}/main.py")
         if html.status_code == 200:
             self.remove()
             with open(plugins_path / f"{self.name}.py", mode="wb") as f:
-                f.write(html.text.encode('utf-8'))
+                f.write(html.text.encode("utf-8"))
             return True
         return False
 
@@ -76,11 +76,11 @@ class PluginManager:
     def load_local_version_map(self):
         if not os.path.exists(plugins_path / "version.json"):
             return
-        with open(plugins_path / "version.json", 'r', encoding="utf-8") as f:
+        with open(plugins_path / "version.json", "r", encoding="utf-8") as f:
             self.version_map = json.load(f)
 
     def save_local_version_map(self):
-        with open(plugins_path / "version.json", 'w', encoding="utf-8") as f:
+        with open(plugins_path / "version.json", "w", encoding="utf-8") as f:
             json.dump(self.version_map, f, indent=4)
 
     def get_local_version(self, name: str) -> Optional[float]:
@@ -116,15 +116,17 @@ class PluginManager:
     def load_local_plugins(self) -> List[LocalPlugin]:
         self.load_local_version_map()
         self.plugins = []
-        for plugin in os.listdir('plugins'):
-            if plugin.endswith('.py') or plugin.endswith('.py.disabled'):
-                plugin = plugin[:-12] if plugin.endswith('.py.disabled') else plugin[:-3]
+        for plugin in os.listdir("plugins"):
+            if plugin.endswith(".py") or plugin.endswith(".py.disabled"):
+                plugin = (
+                    plugin[:-12] if plugin.endswith(".py.disabled") else plugin[:-3]
+                )
                 self.plugins.append(
                     LocalPlugin(
                         name=plugin,
                         installed=self.get_plugin_install_status(plugin),
                         status=self.get_plugin_load_status(plugin),
-                        version=self.get_local_version(plugin)
+                        version=self.get_local_version(plugin),
                     )
                 )
         return self.plugins
@@ -140,7 +142,8 @@ class PluginManager:
             RemotePlugin(
                 **plugin,
                 status=False,
-            ) for plugin in plugin_list
+            )
+            for plugin in plugin_list
         ]
         self.remote_plugins = plugins
         self.remote_version_map = {}

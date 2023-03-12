@@ -33,11 +33,11 @@ async def run_eval(cmd: str, message=None, only_result: bool = False) -> str:
 async def aexec(code, event, client):
     exec(
         (
-                (
-                        ("async def __aexec(e, client): " + "\n msg = message = e")
-                        + "\n reply = message.reply_to_message if message else None"
-                )
-                + "\n chat = e.chat if e else None"
+            (
+                ("async def __aexec(e, client): " + "\n msg = message = e")
+                + "\n reply = message.reply_to_message if message else None"
+            )
+            + "\n chat = e.chat if e else None"
         )
         + "".join(f"\n {x}" for x in code.split("\n"))
     )

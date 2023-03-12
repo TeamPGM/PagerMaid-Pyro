@@ -17,7 +17,7 @@ def sentry_before_send(event, hint):
     exc_info = hint.get("exc_info")
     if exc_info and isinstance(exc_info[1], (Unauthorized, UsernameInvalid)):
         # The user has been deleted/deactivated or session revoked
-        safe_remove('pagermaid.session')
+        safe_remove("pagermaid.session")
         exit(1)
     if time() <= sentry_sdk_report_time + 30:
         sentry_sdk_report_time = time()
@@ -28,7 +28,9 @@ def sentry_before_send(event, hint):
 
 
 sentry_sdk_report_time = time()
-sentry_sdk_git_hash = run("git rev-parse HEAD", stdout=PIPE, shell=True).stdout.decode().strip()
+sentry_sdk_git_hash = (
+    run("git rev-parse HEAD", stdout=PIPE, shell=True).stdout.decode().strip()
+)
 sentry_sdk.init(
     Config.SENTRY_API,
     traces_sample_rate=1.0,
@@ -55,9 +57,14 @@ async def sentry_init_id(bot: Client):
 async def sentry_report(message: Message, command, exc_info, **_):
     sender_id = message.from_user.id if message.from_user else ""
     sender_id = message.sender_chat.id if message.sender_chat else sender_id
-    sentry_sdk.set_context("Target", {"ChatID": str(message.chat.id),
-                                      "UserID": str(sender_id),
-                                      "Msg": message.text or ""})
+    sentry_sdk.set_context(
+        "Target",
+        {
+            "ChatID": str(message.chat.id),
+            "UserID": str(sender_id),
+            "Msg": message.text or "",
+        },
+    )
     if command:
         sentry_sdk.set_tag("com", command)
     sentry_sdk.capture_exception(exc_info)

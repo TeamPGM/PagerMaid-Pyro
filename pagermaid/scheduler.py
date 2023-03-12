@@ -19,9 +19,12 @@ async def delete_message(message: Message) -> bool:
 
 def add_delete_message_job(message: Message, delete_seconds: int = 60):
     scheduler.add_job(
-        delete_message, "date",
+        delete_message,
+        "date",
         id=f"{message.chat.id}|{message.id}|delete_message",
         name=f"{message.chat.id}|{message.id}|delete_message",
         args=[message],
-        run_date=datetime.datetime.now(pytz.timezone(Config.TIME_ZONE)) + datetime.timedelta(seconds=delete_seconds),
-        replace_existing=True)
+        run_date=datetime.datetime.now(pytz.timezone(Config.TIME_ZONE))
+        + datetime.timedelta(seconds=delete_seconds),
+        replace_existing=True,
+    )

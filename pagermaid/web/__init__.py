@@ -7,13 +7,13 @@ from pagermaid.config import Config
 from pagermaid.web.api import base_api_router
 from pagermaid.web.pages import admin_app, login_page
 
-requestAdaptor = '''
+requestAdaptor = """
 requestAdaptor(api) {
     api.headers["token"] = localStorage.getItem("token");
     return api;
 },
-'''
-responseAdaptor = '''
+"""
+responseAdaptor = """
 responseAdaptor(api, payload, query, request, response) {
     if (response.data.detail == '登录验证失败或已失效，请重新登录') {
         window.location.href = '/login'
@@ -23,8 +23,8 @@ responseAdaptor(api, payload, query, request, response) {
     }
     return payload
 },
-'''
-icon_path = 'https://xtaolabs.com/pagermaid-logo.png'
+"""
+icon_path = "https://xtaolabs.com/pagermaid-logo.png"
 app: FastAPI = FastAPI()
 
 
@@ -36,25 +36,25 @@ def init_web():
         allow_origins=Config.WEB_ORIGINS,
         allow_credentials=True,
         allow_methods=["*"],
-        allow_headers=["*"]
+        allow_headers=["*"],
     )
 
-    @app.get('/', response_class=RedirectResponse)
+    @app.get("/", response_class=RedirectResponse)
     async def index():
-        return '/admin'
+        return "/admin"
 
-    @app.get('/admin', response_class=HTMLResponse)
+    @app.get("/admin", response_class=HTMLResponse)
     async def admin():
         return admin_app.render(
-            site_title='PagerMaid-Pyro 后台管理',
+            site_title="PagerMaid-Pyro 后台管理",
             site_icon=icon_path,
             requestAdaptor=requestAdaptor,
-            responseAdaptor=responseAdaptor
+            responseAdaptor=responseAdaptor,
         )
 
-    @app.get('/login', response_class=HTMLResponse)
+    @app.get("/login", response_class=HTMLResponse)
     async def login():
         return login_page.render(
-            site_title='登录 | PagerMaid-Pyro 后台管理',
+            site_title="登录 | PagerMaid-Pyro 后台管理",
             site_icon=icon_path,
         )

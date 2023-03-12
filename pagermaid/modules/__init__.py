@@ -12,9 +12,7 @@ def __list_modules():
     return [
         basename(file)[:-3]
         for file in module_paths
-        if isfile(file)
-        and file.endswith(".py")
-        and not file.endswith("__init__.py")
+        if isfile(file) and file.endswith(".py") and not file.endswith("__init__.py")
     ]
 
 
@@ -25,21 +23,15 @@ def __list_plugins():
     return [
         basename(file)[:-3]
         for file in plugin_paths
-        if isfile(file)
-        and file.endswith(".py")
-        and not file.endswith("__init__.py")
+        if isfile(file) and file.endswith(".py") and not file.endswith("__init__.py")
     ]
 
 
-module_list_string = "".join(
-    f"{module}, " for module in sorted(__list_modules())
-)
+module_list_string = "".join(f"{module}, " for module in sorted(__list_modules()))
 
 module_list_string = module_list_string[:-2]
 
-plugin_list_string = "".join(
-    f"{plugin}, " for plugin in sorted(__list_plugins())
-)
+plugin_list_string = "".join(f"{plugin}, " for plugin in sorted(__list_plugins()))
 
 plugin_list_string = plugin_list_string[:-2]
 

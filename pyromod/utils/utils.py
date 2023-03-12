@@ -21,12 +21,12 @@ along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 
 def patch(obj):
     def is_patchable(item):
-        return getattr(item[1], 'patchable', False)
+        return getattr(item[1], "patchable", False)
 
     def wrapper(container):
         for name, func in filter(is_patchable, container.__dict__.items()):
             old = getattr(obj, name, None)
-            setattr(obj, f'old{name}', old)
+            setattr(obj, f"old{name}", old)
             setattr(obj, name, func)
         return container
 

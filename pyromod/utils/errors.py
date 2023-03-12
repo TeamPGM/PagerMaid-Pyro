@@ -2,6 +2,7 @@ class AlreadyInConversationError(Exception):
     """
     Occurs when another exclusive conversation is opened in the same chat.
     """
+
     def __init__(self):
         super().__init__(
             "Cannot open exclusive conversation in a "
@@ -13,10 +14,9 @@ class TimeoutConversationError(Exception):
     """
     Occurs when the conversation times out.
     """
+
     def __init__(self):
-        super().__init__(
-            "Response read timed out"
-        )
+        super().__init__("Response read timed out")
 
 
 class ListenerCanceled(Exception):
@@ -25,6 +25,4 @@ class ListenerCanceled(Exception):
     """
 
     def __init__(self):
-        super().__init__(
-            "Listener was canceled"
-        )
+        super().__init__("Listener was canceled")

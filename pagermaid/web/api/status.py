@@ -13,7 +13,7 @@ from pagermaid.web.api.utils import authentication
 route = APIRouter()
 
 
-@route.get('/log')
+@route.get("/log")
 async def get_log(token: Optional[str] = Header(...), num: Union[int, str] = 100):
     if token != Config.WEB_SECRET_KEY:
         return "非法请求"
@@ -31,8 +31,8 @@ async def get_log(token: Optional[str] = Header(...), num: Union[int, str] = 100
     return StreamingResponse(streaming_logs())
 
 
-@route.get('/run_eval')
-async def run_cmd(token: Optional[str] = Header(...), cmd: str = ''):
+@route.get("/run_eval")
+async def run_cmd(token: Optional[str] = Header(...), cmd: str = ""):
     if token != Config.WEB_SECRET_KEY:
         return "非法请求"
 
@@ -45,8 +45,8 @@ async def run_cmd(token: Optional[str] = Header(...), cmd: str = ''):
     return StreamingResponse(run_cmd_func()) if cmd else "无效命令"
 
 
-@route.get('/run_sh')
-async def run_sh(token: Optional[str] = Header(...), cmd: str = ''):
+@route.get("/run_sh")
+async def run_sh(token: Optional[str] = Header(...), cmd: str = ""):
     if token != Config.WEB_SECRET_KEY:
         return "非法请求"
 
@@ -59,6 +59,6 @@ async def run_sh(token: Optional[str] = Header(...), cmd: str = ''):
     return StreamingResponse(run_sh_func()) if cmd else "无效命令"
 
 
-@route.get('/status', response_class=JSONResponse, dependencies=[authentication()])
+@route.get("/status", response_class=JSONResponse, dependencies=[authentication()])
 async def status():
     return (await get_status()).dict()

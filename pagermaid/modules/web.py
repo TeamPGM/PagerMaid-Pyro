@@ -14,5 +14,7 @@ async def init_web():
     from pagermaid.web import app, init_web
 
     init_web()
-    server = uvicorn.Server(config=uvicorn.Config(app, host=Config.WEB_HOST, port=Config.WEB_PORT))
+    server = uvicorn.Server(
+        config=uvicorn.Config(app, host=Config.WEB_HOST, port=Config.WEB_PORT)
+    )
     bot.loop.create_task(server.serve())

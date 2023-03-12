@@ -18,17 +18,17 @@ from pagermaid.single_utils import _status_sudo, get_sudo_list, Message, sqlite
 
 
 def lang(text: str) -> str:
-    """ i18n """
+    """i18n"""
     return Config.lang_dict.get(text, text)
 
 
 def alias_command(command: str, disallow_alias: bool = False) -> str:
-    """ alias """
+    """alias"""
     return command if disallow_alias else Config.alias_dict.get(command, command)
 
 
 async def attach_report(plaintext, file_name, reply_id=None, caption=None):
-    """ Attach plaintext as logs. """
+    """Attach plaintext as logs."""
     with open(file_name, "w+") as file:
         file.write(plaintext)
     try:
@@ -36,7 +36,7 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
             "PagerMaid_Modify_bot",
             file_name,
             reply_to_message_id=reply_id,
-            caption=caption
+            caption=caption,
         )
     except Exception:  # noqa
         return
@@ -44,20 +44,17 @@ async def attach_report(plaintext, file_name, reply_id=None, caption=None):
 
 
 async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None):
-    """ Attach plaintext as logs. """
-    with open(file_name, "w+", encoding='utf-8') as file:
+    """Attach plaintext as logs."""
+    with open(file_name, "w+", encoding="utf-8") as file:
         file.write(plaintext)
     await bot.send_document(
-        chat_id,
-        file_name,
-        reply_to_message_id=reply_id,
-        caption=caption
+        chat_id, file_name, reply_to_message_id=reply_id, caption=caption
     )
     remove(file_name)
 
 
 async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=None):
-    """ Uploads a local attachment file. """
+    """Uploads a local attachment file."""
     if not exists(file_path):
         return False
     try:
@@ -66,7 +63,7 @@ async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=No
             file_path,
             thumb=thumb,
             reply_to_message_id=reply_id,
-            caption=caption
+            caption=caption,
         )
     except BaseException as exception:
         raise exception
@@ -74,32 +71,31 @@ async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=No
 
 
 async def execute(command, pass_error=True):
-    """ Executes command and returns output, with the option of enabling stderr. """
+    """Executes command and returns output, with the option of enabling stderr."""
     executor = await create_subprocess_shell(
-        command,
-        stdout=PIPE,
-        stderr=PIPE,
-        stdin=PIPE
+        command, stdout=PIPE, stderr=PIPE, stdin=PIPE
     )
 
     stdout, stderr = await executor.communicate()
     if pass_error:
         try:
-            result = str(stdout.decode().strip()) \
-                     + str(stderr.decode().strip())
+            result = str(stdout.decode().strip()) + str(stderr.decode().strip())
         except UnicodeDecodeError:
-            result = str(stdout.decode('gbk').strip()) \
-                     + str(stderr.decode('gbk').strip())
+            result = str(stdout.decode("gbk").strip()) + str(
+                stderr.decode("gbk").strip()
+            )
     else:
         try:
             result = str(stdout.decode().strip())
         except UnicodeDecodeError:
-            result = str(stdout.decode('gbk').strip())
+            result = str(stdout.decode("gbk").strip())
     return result
 
 
-def pip_install(package: str, version: Optional[str] = "", alias: Optional[str] = "") -> bool:
-    """ Auto install extra pypi packages """
+def pip_install(
+    package: str, version: Optional[str] = "", alias: Optional[str] = ""
+) -> bool:
+    """Auto install extra pypi packages"""
     if not alias:
         # when import name is not provided, use package name
         alias = package
@@ -110,32 +106,42 @@ def pip_install(package: str, version: Optional[str] = "", alias: Optional[str] 
     return True
 
 
-async def edit_delete(message: Message,
-                      text: str,
-                      time: int = 5,
-                      parse_mode: Optional["enums.ParseMode"] = None,
-                      disable_web_page_preview: bool = None):
+async def edit_delete(
+    message: Message,
+    text: str,
+    time: int = 5,
+    parse_mode: Optional["enums.ParseMode"] = None,
+    disable_web_page_preview: bool = None,
+):
     sudo_users = get_sudo_list()
     from_id = message.from_user.id if message.from_user else message.sender_chat.id
     if from_id in sudo_users:
         reply_to = message.reply_to_message
         event = (
-            await reply_to.reply(text, disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode)
+            await reply_to.reply(
+                text,
+                disable_web_page_preview=disable_web_page_preview,
+                parse_mode=parse_mode,
+            )
             if reply_to
             else await message.reply(
-                text, disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode
+                text,
+                disable_web_page_preview=disable_web_page_preview,
+                parse_mode=parse_mode,
             )
         )
     else:
         event = await message.edit(
-            text, disable_web_page_preview=disable_web_page_preview, parse_mode=parse_mode
+            text,
+            disable_web_page_preview=disable_web_page_preview,
+            parse_mode=parse_mode,
         )
     await sleep(time)
     return await event.delete()
 
 
 def get_permission_name(is_plugin: bool, need_admin: bool, command: str) -> str:
-    """ Get permission name. """
+    """Get permission name."""
     if is_plugin:
         return f"plugins_root.{command}" if need_admin else f"plugins.{command}"
     else:
@@ -147,7 +153,9 @@ def sudo_filter(permission: str):
         if not _status_sudo():
             return False
         try:
-            from_id = message.from_user.id if message.from_user else message.sender_chat.id
+            from_id = (
+                message.from_user.id if message.from_user else message.sender_chat.id
+            )
             sudo_list = get_sudo_list()
             if from_id not in sudo_list:
                 if message.chat.id in sudo_list:
@@ -167,13 +175,15 @@ def from_self(message: Message) -> bool:
 
 
 def from_msg_get_sudo_uid(message: Message) -> int:
-    """ Get the sudo uid from the message. """
+    """Get the sudo uid from the message."""
     from_id = message.from_user.id if message.from_user else message.sender_chat.id
     return from_id if from_id in get_sudo_list() else message.chat.id
 
 
 def check_manage_subs(message: Message) -> bool:
-    return from_self(message) or enforce_permission(from_msg_get_sudo_uid(message), "modules.manage_subs")
+    return from_self(message) or enforce_permission(
+        from_msg_get_sudo_uid(message), "modules.manage_subs"
+    )
 
 
 async def process_exit(start: int, _client, message=None):
@@ -184,8 +194,13 @@ async def process_exit(start: int, _client, message=None):
             msg: Message = await _client.get_messages(cid, mid)
             if msg:
                 await msg.edit(
-                    ((msg.text or msg.caption) if msg.from_user.is_self and (msg.text or msg.caption) else "") +
-                    f'\n\n> {lang("restart_complete")}')
+                    (
+                        (msg.text or msg.caption)
+                        if msg.from_user.is_self and (msg.text or msg.caption)
+                        else ""
+                    )
+                    + f'\n\n> {lang("restart_complete")}'
+                )
         del sqlite["exit_msg"]
     if message:
         sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}

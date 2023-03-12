@@ -4,7 +4,16 @@ from typing import Callable, Awaitable, Set, Dict
 
 from coloredlogs import ColoredFormatter
 from datetime import datetime, timezone
-from logging import getLogger, StreamHandler, CRITICAL, INFO, basicConfig, DEBUG, Formatter, FileHandler
+from logging import (
+    getLogger,
+    StreamHandler,
+    CRITICAL,
+    INFO,
+    basicConfig,
+    DEBUG,
+    Formatter,
+    FileHandler,
+)
 from os import getcwd
 
 from pagermaid.config import Config
@@ -12,8 +21,8 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.3.0"
-pgm_version_code = 1300
+pgm_version = "1.3.1"
+pgm_version_code = 1301
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -21,7 +30,11 @@ working_dir = getcwd()
 read_context = {}
 help_messages = {}
 hook_functions: Dict[str, Set[Callable[[], Awaitable[None]]]] = {
-    "startup": set(), "shutdown": set(), "command_pre": set(), "command_post": set(), "process_error": set(),
+    "startup": set(),
+    "shutdown": set(),
+    "command_pre": set(),
+    "command_post": set(),
+    "process_error": set(),
     "load_plugins_finished": set(),
 }
 all_permissions = []
@@ -51,6 +64,7 @@ start_time = datetime.now(timezone.utc)
 
 with contextlib.suppress(ImportError):
     import uvloop  # noqa
+
     uvloop.install()
 
 if not scheduler.running:
@@ -68,16 +82,11 @@ bot.job = scheduler
 
 
 async def log(message):
-    logs.info(
-        message.replace('`', '\"')
-    )
+    logs.info(message.replace("`", '"'))
     if not Config.LOG:
         return
     try:
-        await bot.send_message(
-            Config.LOG_ID,
-            message
-        )
+        await bot.send_message(Config.LOG_ID, message)
     except Exception:
         Config.LOG = False
         Config.LOG_ID = "me"

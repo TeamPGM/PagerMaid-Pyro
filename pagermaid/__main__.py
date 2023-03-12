@@ -17,7 +17,7 @@ path.insert(1, f"{working_dir}{sep}plugins")
 
 
 async def main():
-    logs.info(lang('platform') + platform + lang('platform_load'))
+    logs.info(lang("platform") + platform + lang("platform_load"))
 
     try:
         await start_client(bot)
@@ -35,7 +35,9 @@ async def main():
         try:
             import_module(f"pagermaid.modules.{module_name}")
         except BaseException as exception:
-            logs.info(f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}")
+            logs.info(
+                f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}"
+            )
     for plugin_name in plugin_list.copy():
         try:
             import_module(f"plugins.{plugin_name}")
@@ -45,11 +47,12 @@ async def main():
     plugin_manager.load_local_plugins()
 
     await process_exit(start=True, _client=bot)
-    logs.info(lang('start'))
+    logs.info(lang("start"))
     await Hook.load_success_exec()
     await Hook.startup()
 
     await idle()
     await bot.stop()
+
 
 bot.run(main())

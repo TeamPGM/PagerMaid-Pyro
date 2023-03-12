@@ -28,15 +28,12 @@ class AliasManager:
 
     def get_all_alias_text(self) -> str:
         texts = []
-        texts.extend(
-            f'`{i.command}` > `{i.alias}`'
-            for i in self.alias_list
-        )
-        return '\n'.join(texts)
+        texts.extend(f"`{i.command}` > `{i.alias}`" for i in self.alias_list)
+        return "\n".join(texts)
 
     @staticmethod
     def save():
-        with open(f"data{sep}alias.json", 'w', encoding="utf-8") as f:
+        with open(f"data{sep}alias.json", "w", encoding="utf-8") as f:
             json_dump(Config.alias_dict, f)
 
     @staticmethod

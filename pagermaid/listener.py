@@ -10,7 +10,8 @@ from pyrogram.errors.exceptions.bad_request_400 import (
     MessageIdInvalid,
     MessageNotModified,
     MessageEmpty,
-    UserNotParticipant, PeerIdInvalid
+    UserNotParticipant,
+    PeerIdInvalid,
 )
 from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
@@ -18,15 +19,27 @@ from pagermaid import help_messages, logs, Config, bot, read_context, all_permis
 from pagermaid.common.ignore import ignore_groups_manager
 from pagermaid.group_manager import Permission
 from pagermaid.inject import inject
-from pagermaid.single_utils import Message, AlreadyInConversationError, TimeoutConversationError, ListenerCanceled
-from pagermaid.utils import lang, attach_report, sudo_filter, alias_command, get_permission_name, process_exit
+from pagermaid.single_utils import (
+    Message,
+    AlreadyInConversationError,
+    TimeoutConversationError,
+    ListenerCanceled,
+)
+from pagermaid.utils import (
+    lang,
+    attach_report,
+    sudo_filter,
+    alias_command,
+    get_permission_name,
+    process_exit,
+)
 from pagermaid.hook import Hook
 
 _lock = asyncio.Lock()
 
 
 def listener(**args):
-    """ Register an event listener. """
+    """Register an event listener."""
     command = args.get("command")
     disallow_alias = args.get("disallow_alias", False)
     need_admin = args.get("need_admin", False)
@@ -46,7 +59,7 @@ def listener(**args):
     if priority < 0 or priority > 100:
         raise ValueError("Priority must be between 0 and 100.")
     elif priority == 0 and is_plugin:
-        """ Priority 0 is reserved for modules. """
+        """Priority 0 is reserved for modules."""
         priority = 1
     elif (not is_plugin) and need_admin:
         priority = 0
@@ -54,11 +67,13 @@ def listener(**args):
     if command is not None:
         if command in help_messages:
             if help_messages[alias_command(command)]["priority"] <= priority:
-                raise ValueError(f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}")
+                raise ValueError(
+                    f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}"
+                )
             else:
                 block_process = True
-        pattern = fr"^(,|，){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
-        sudo_pattern = fr"^(/){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
+        pattern = rf"^(,|，){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
+        sudo_pattern = rf"^(/){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith("(?i)"):
         args["pattern"] = f"(?i){pattern}"
     else:
@@ -72,11 +87,7 @@ def listener(**args):
     else:
         base_filters = filters.all
     permission_name = get_permission_name(is_plugin, need_admin, command)
-    sudo_filters = (
-            sudo_filter(permission_name)
-            & ~filters.via_bot
-            & ~filters.forwarded
-    )
+    sudo_filters = sudo_filter(permission_name) & ~filters.via_bot & ~filters.forwarded
     if args["pattern"]:
         base_filters &= filters.regex(args["pattern"])
         sudo_filters &= filters.regex(sudo_pattern)
@@ -112,7 +123,6 @@ def listener(**args):
         del args["block_process"]
 
     def decorator(function):
-
         async def handler(client: Client, message: Message):
             try:
                 # ignore
@@ -155,30 +165,29 @@ def listener(**args):
                 raise StopPropagation from e
             except KeyboardInterrupt as e:
                 raise KeyboardInterrupt from e
-            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden, PeerIdInvalid):
+            except (
+                UserNotParticipant,
+                MessageNotModified,
+                MessageEmpty,
+                Flood,
+                Forbidden,
+                PeerIdInvalid,
+            ):
                 logs.warning(
                     "An unknown chat error occurred while processing a command.",
                 )
             except MessageIdInvalid:
-                logs.warning(
-                    "Please Don't Delete Commands While it's Processing.."
-                )
+                logs.warning("Please Don't Delete Commands While it's Processing..")
             except AlreadyInConversationError:
-                logs.warning(
-                    "Please Don't Send Commands In The Same Conversation.."
-                )
+                logs.warning("Please Don't Send Commands In The Same Conversation..")
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("conversation_already_in_error"))
             except TimeoutConversationError:
-                logs.warning(
-                    "Conversation Timed out while processing commands.."
-                )
+                logs.warning("Conversation Timed out while processing commands..")
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("conversation_timed_out_error"))
             except ListenerCanceled:
-                logs.warning(
-                    "Listener Canceled While Processing Commands.."
-                )
+                logs.warning("Listener Canceled While Processing Commands..")
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("reload_des"))
             except ContinuePropagation as e:
@@ -199,35 +208,54 @@ def listener(**args):
                 if Config.ERROR_REPORT:
                     report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 
-                    await attach_report(report, f"exception.{time()}.pgp.txt", None,
-                                        "PGP Error report generated.")
-                    await Hook.process_error_exec(message, command, exc_info, exc_format)
+                    await attach_report(
+                        report,
+                        f"exception.{time()}.pgp.txt",
+                        None,
+                        "PGP Error report generated.",
+                    )
+                    await Hook.process_error_exec(
+                        message, command, exc_info, exc_format
+                    )
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
             if block_process:
                 message.stop_propagation()
             message.continue_propagation()
 
-        bot.add_handler(MessageHandler(handler, filters=base_filters), group=0 + priority)
+        bot.add_handler(
+            MessageHandler(handler, filters=base_filters), group=0 + priority
+        )
         if command:
-            bot.add_handler(MessageHandler(handler, filters=sudo_filters), group=50 + priority)
+            bot.add_handler(
+                MessageHandler(handler, filters=sudo_filters), group=50 + priority
+            )
         if not ignore_edited:
-            bot.add_handler(EditedMessageHandler(handler, filters=base_filters), group=1 + priority)
+            bot.add_handler(
+                EditedMessageHandler(handler, filters=base_filters), group=1 + priority
+            )
             if command:
-                bot.add_handler(EditedMessageHandler(handler, filters=sudo_filters), group=51 + priority)
+                bot.add_handler(
+                    EditedMessageHandler(handler, filters=sudo_filters),
+                    group=51 + priority,
+                )
 
         return handler
 
     if description is not None and command is not None:
         if parameters is None:
             parameters = ""
-        help_messages.update({
-            f"{alias_command(command)}": {"permission": permission_name,
-                                          "use": f"**{lang('use_method')}:** `,{command} {parameters}`\n"
-                                                 f"**{lang('need_permission')}:** `{permission_name}`\n"
-                                                 f"{description}",
-                                          "priority": priority, }
-        })
+        help_messages.update(
+            {
+                f"{alias_command(command)}": {
+                    "permission": permission_name,
+                    "use": f"**{lang('use_method')}:** `,{command} {parameters}`\n"
+                    f"**{lang('need_permission')}:** `{permission_name}`\n"
+                    f"{description}",
+                    "priority": priority,
+                }
+            }
+        )
         all_permissions.append(Permission(permission_name))
 
     return decorator
@@ -261,49 +289,53 @@ def raw_listener(filter_s):
             except ContinuePropagation as e:
                 raise ContinuePropagation from e
             except MessageIdInvalid:
-                logs.warning(
-                    "Please Don't Delete Commands While it's Processing.."
-                )
+                logs.warning("Please Don't Delete Commands While it's Processing..")
             except AlreadyInConversationError:
-                logs.warning(
-                    "Please Don't Send Commands In The Same Conversation.."
-                )
+                logs.warning("Please Don't Send Commands In The Same Conversation..")
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("conversation_already_in_error"))
             except TimeoutConversationError:
-                logs.warning(
-                    "Conversation Timed out while processing commands.."
-                )
+                logs.warning("Conversation Timed out while processing commands..")
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("conversation_timed_out_error"))
             except ListenerCanceled:
-                logs.warning(
-                    "Listener Canceled While Processing Commands.."
-                )
+                logs.warning("Listener Canceled While Processing Commands..")
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("reload_des"))
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()
                 sys.exit(0)
-            except (UserNotParticipant, MessageNotModified, MessageEmpty, Flood, Forbidden):
+            except (
+                UserNotParticipant,
+                MessageNotModified,
+                MessageEmpty,
+                Flood,
+                Forbidden,
+            ):
                 pass
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 with contextlib.suppress(BaseException):
-                    await message.edit(lang('run_error'), no_reply=True)
+                    await message.edit(lang("run_error"), no_reply=True)
                 if Config.ERROR_REPORT:
-                    report = f"# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n" \
-                             f"# ChatID: {message.chat.id}. \n" \
-                             f"# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n" \
-                             f"# Message: \n-----BEGIN TARGET MESSAGE-----\n" \
-                             f"{message.text}\n-----END TARGET MESSAGE-----\n" \
-                             f"# Traceback: \n-----BEGIN TRACEBACK-----\n" \
-                             f"{str(exc_format)}\n-----END TRACEBACK-----\n" \
-                             f"# Error: \"{str(exc_info)}\". \n"
-                    await attach_report(report, f"exception.{time()}.pagermaid", None,
-                                        "Error report generated.")
+                    report = (
+                        f"# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n"
+                        f"# ChatID: {message.chat.id}. \n"
+                        f"# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n"
+                        f"# Message: \n-----BEGIN TARGET MESSAGE-----\n"
+                        f"{message.text}\n-----END TARGET MESSAGE-----\n"
+                        f"# Traceback: \n-----BEGIN TRACEBACK-----\n"
+                        f"{str(exc_format)}\n-----END TRACEBACK-----\n"
+                        f'# Error: "{str(exc_info)}". \n'
+                    )
+                    await attach_report(
+                        report,
+                        f"exception.{time()}.pagermaid",
+                        None,
+                        "Error report generated.",
+                    )
             message.continue_propagation()
 
         bot.add_handler(MessageHandler(handler, filters=filter_s), group=2)

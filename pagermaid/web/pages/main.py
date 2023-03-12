@@ -8,25 +8,33 @@ from pagermaid.web.pages.plugin_local_manage import page as plugin_local_manage_
 from pagermaid.web.pages.plugin_remote_manage import page as plugin_remote_manage_page
 
 github_logo = Tpl(
-    className='w-full',
+    className="w-full",
     tpl=get_github_logo(),
 )
-header = Flex(className='w-full', justify='flex-end', alignItems='flex-end', items=[github_logo])
+header = Flex(
+    className="w-full", justify="flex-end", alignItems="flex-end", items=[github_logo]
+)
 admin_app = App(
-    brandName='pagermaid',
-    logo='https://xtaolabs.com/pagermaid-logo.png',
+    brandName="pagermaid",
+    logo="https://xtaolabs.com/pagermaid-logo.png",
     header=header,
     pages=[
         {
-            'children': [
+            "children": [
                 home_page,
-                PageSchema(label='Bot 设置', icon='fa fa-wrench',
-                           children=[command_alias_page, ignore_groups_page]),
-                PageSchema(label='插件管理', icon='fa fa-cube',
-                           children=[plugin_local_manage_page, plugin_remote_manage_page]),
+                PageSchema(
+                    label="Bot 设置",
+                    icon="fa fa-wrench",
+                    children=[command_alias_page, ignore_groups_page],
+                ),
+                PageSchema(
+                    label="插件管理",
+                    icon="fa fa-cube",
+                    children=[plugin_local_manage_page, plugin_remote_manage_page],
+                ),
             ]
         }
     ],
     footer=get_footer(),
 )
-blank_page = Page(title='PagerMaid-Pyro 404', body='404')
+blank_page = Page(title="PagerMaid-Pyro 404", body="404")

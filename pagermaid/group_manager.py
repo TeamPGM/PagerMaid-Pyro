@@ -9,8 +9,13 @@ from pagermaid import all_permissions, module_dir
 
 # init permissions
 if not os_path.exists(f"data{os_path.sep}gm_policy.csv"):
-    copyfile(f"{module_dir}{os_path.sep}assets{os_path.sep}gm_policy.csv", f"data{os_path.sep}gm_policy.csv")
-permissions = casbin.Enforcer(f"pagermaid{sep}assets{sep}gm_model.conf", f"data{sep}gm_policy.csv")
+    copyfile(
+        f"{module_dir}{os_path.sep}assets{os_path.sep}gm_policy.csv",
+        f"data{os_path.sep}gm_policy.csv",
+    )
+permissions = casbin.Enforcer(
+    f"pagermaid{sep}assets{sep}gm_model.conf", f"data{sep}gm_policy.csv"
+)
 permissions.logger.setLevel(CRITICAL)
 
 
@@ -27,15 +32,14 @@ def enforce_permission(user: int, permission: str):
     data = permission.split(".")
     if len(data) != 2:
         raise ValueError("Invalid permission format")
-    if permissions.enforce(
-        str(user), data[0], "access"
-    ) and not permissions.enforce(str(user), permission, "ejection"):
+    if permissions.enforce(str(user), data[0], "access") and not permissions.enforce(
+        str(user), permission, "ejection"
+    ):
         return True
-    if permissions.enforce(
-        str(user), permission, "access"
-    ) and not permissions.enforce(str(user), permission, "ejection"):
-        return True
-    return False
+    return bool(
+        permissions.enforce(str(user), permission, "access")
+        and not permissions.enforce(str(user), permission, "ejection")
+    )
 
 
 def parse_pen(pen: Permission) -> List[Permission]:
@@ -45,7 +49,11 @@ def parse_pen(pen: Permission) -> List[Permission]:
         raise ValueError("Wildcard not allowed in root name")
     datas = []
     for i in all_permissions:
-        if pen.root == i.root and len(findall(pen.sub.replace("*", r"([\s\S]*)"), i.sub)) > 0 and i not in datas:
+        if (
+            pen.root == i.root
+            and len(findall(pen.sub.replace("*", r"([\s\S]*)"), i.sub)) > 0
+            and i not in datas
+        ):
             datas.append(i)
     if not datas:
         raise ValueError("No permission found")
