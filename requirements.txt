@@ -1,4 +1,4 @@
-pyrogram==2.0.101
+pyrogram==2.0.102
 TgCrypto==1.2.5
 Pillow>=8.4.0
 pytz>=2021.3
@@ -12,9 +12,9 @@ casbin==1.18.0
 sentry-sdk==1.16.0
 PyQRCode>=1.2.1
 PyPng
-fastapi==0.94.0
+fastapi==0.94.1
 amis-python==1.0.7
 python-jose
 uvicorn
 pydantic==1.10.6
-starlette==0.26.0.post1
+starlette==0.26.1
