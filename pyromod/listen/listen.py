@@ -115,7 +115,7 @@ class Client:
                         pyrogram.raw.functions.messages.ReadDiscussion(
                             peer=peer,
                             msg_id=i.id,
-                            read_max_id=i.read_inbox_max_id + i.unread_count,
+                            read_max_id=i.top_message,
                         )
                     )
         return await self.oldread_chat_history(chat_id, max_id)  # noqa
