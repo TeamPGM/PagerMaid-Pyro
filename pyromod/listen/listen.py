@@ -30,6 +30,7 @@ from pyrogram.enums import ChatType
 from pagermaid.single_utils import get_sudo_list, Message
 from pagermaid.scheduler import add_delete_message_job
 from ..methods.get_dialogs_list import get_dialogs_list as get_dialogs_list_func
+from ..methods.read_chat_history import read_chat_history as read_chat_history_func
 
 from ..utils import patch, patchable
 from ..utils.conversation import Conversation
@@ -98,27 +99,7 @@ class Client:
     async def read_chat_history(
         self: "pyrogram.Client", chat_id: Union[int, str], max_id: int = 0
     ) -> bool:
-        peer = await self.resolve_peer(chat_id)
-        if isinstance(peer, pyrogram.raw.types.InputPeerChannel):
-            with contextlib.suppress(pyrogram.errors.BadRequest):  # noqa
-                topics: pyrogram.raw.types.messages.ForumTopics = await self.invoke(
-                    pyrogram.raw.functions.channels.GetForumTopics(
-                        channel=peer,  # noqa
-                        offset_date=0,
-                        offset_id=0,
-                        offset_topic=0,
-                        limit=0,
-                    )
-                )
-                for i in topics.topics:
-                    await self.invoke(
-                        pyrogram.raw.functions.messages.ReadDiscussion(
-                            peer=peer,
-                            msg_id=i.id,
-                            read_max_id=i.top_message,
-                        )
-                    )
-        return await self.oldread_chat_history(chat_id, max_id)  # noqa
+        return await read_chat_history_func(self, chat_id, max_id)
 
     @patchable
     async def get_dialogs_list(self: "Client"):
