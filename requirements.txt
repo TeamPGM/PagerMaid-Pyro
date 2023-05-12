@@ -1,4 +1,4 @@
-pyrogram==2.0.104
+pyrogram==2.0.106
 TgCrypto==1.2.5
 Pillow>=9.0.0
 pytz>=2023.3
