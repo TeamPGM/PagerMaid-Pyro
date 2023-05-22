@@ -84,10 +84,14 @@ async def sudo_change(client: Client, message: Message):
         if len(sudo) == 0:
             return await edit_delete(message, f"__{lang('sudo_no_one')}__")
         text = f"**{lang('sudo_list')}**\n\n"
-        for i in sudo:
+        for i in sudo.copy():
             try:
                 if i > 0:
                     user = await client.get_users(i)
+                    if user.is_deleted:
+                        sudo.remove(i)
+                        sqlite["sudo_list"] = sudo
+                        continue
                     text += f"• {user.mention()} - {' '.join(permissions.get_roles_for_user(str(i)))}\n"
                 else:
                     chat = await client.get_chat(i)
