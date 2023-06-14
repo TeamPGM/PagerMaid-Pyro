@@ -1,3 +1,5 @@
+import asyncio
+import contextlib
 from sys import path, platform
 from os import sep
 from importlib import import_module
@@ -55,4 +57,5 @@ async def main():
     await bot.stop()
 
 
-bot.run(main())
+with contextlib.closing(asyncio.new_event_loop()):
+    bot.run(main())
