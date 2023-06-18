@@ -116,11 +116,11 @@ env.bak/
 venv.bak/
 config.env
 config.yml
-pagermaid.session
-pagermaid.session-journal
+*.session
+*.session-journal
 *.pagermaid
 docker-compose.yml
-plugins/
+plugins*/
 data/*
 pagermaid.egg-info/
 dump.rdb

@@ -53,3 +53,22 @@ async def reload_all():
     plugin_manager.load_local_plugins()
     plugin_manager.save_local_version_map()
     await Hook.load_success_exec()
+
+
+async def load_all():
+    for module_name in pagermaid.modules.module_list.copy():
+        try:
+            importlib.import_module(f"pagermaid.modules.{module_name}")
+        except BaseException as exception:
+            logs.info(
+                f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}"
+            )
+    for plugin_name in pagermaid.modules.plugin_list.copy():
+        try:
+            importlib.import_module(f"plugins.{plugin_name}")
+        except BaseException as exception:
+            logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
+            pagermaid.modules.plugin_list.remove(plugin_name)
+    plugin_manager.load_local_plugins()
+    await Hook.load_success_exec()
+    await Hook.startup()

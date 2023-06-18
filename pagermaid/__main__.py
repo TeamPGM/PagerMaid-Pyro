@@ -1,58 +1,73 @@
-from sys import path, platform
+import asyncio
 from os import sep
-from importlib import import_module
+from signal import signal as signal_fn, SIGINT, SIGTERM, SIGABRT
+from sys import path, platform
 
-from pyrogram import idle
 from pyrogram.errors import AuthKeyUnregistered
 
 from pagermaid import bot, logs, working_dir
-from pagermaid.common.plugin import plugin_manager
-from pagermaid.hook import Hook
-from pagermaid.modules import module_list, plugin_list
+from pagermaid.common.reload import load_all
 from pagermaid.single_utils import safe_remove
 from pagermaid.utils import lang, process_exit
+from pagermaid.web import web
 from pyromod.methods.sign_in_qrcode import start_client
 
 path.insert(1, f"{working_dir}{sep}plugins")
 
 
-async def main():
-    logs.info(lang("platform") + platform + lang("platform_load"))
+async def idle():
+    task = None
 
+    def signal_handler(_, __):
+        if web.web_server_task:
+            web.web_server_task.cancel()
+        task.cancel()
+
+    for s in (SIGINT, SIGTERM, SIGABRT):
+        signal_fn(s, signal_handler)
+
+    while True:
+        task = asyncio.create_task(asyncio.sleep(600))
+        web.bot_main_task = task
+        try:
+            await task
+        except asyncio.CancelledError:
+            break
+
+
+async def console_bot():
     try:
         await start_client(bot)
     except AuthKeyUnregistered:
         safe_remove("pagermaid.session")
         exit()
-
     me = await bot.get_me()
     if me.is_bot:
         safe_remove("pagermaid.session")
         exit()
     logs.info(f"{lang('save_id')} {me.first_name}({me.id})")
-
-    for module_name in module_list:
-        try:
-            import_module(f"pagermaid.modules.{module_name}")
-        except BaseException as exception:
-            logs.info(
-                f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}"
-            )
-    for plugin_name in plugin_list.copy():
-        try:
-            import_module(f"plugins.{plugin_name}")
-        except BaseException as exception:
-            logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
-            plugin_list.remove(plugin_name)
-    plugin_manager.load_local_plugins()
-
+    await load_all()
     await process_exit(start=True, _client=bot)
-    logs.info(lang("start"))
-    await Hook.load_success_exec()
-    await Hook.startup()
 
-    await idle()
-    await bot.stop()
+
+async def main():
+    logs.info(lang("platform") + platform + lang("platform_load"))
+    await web.start()
+    await console_bot()
+    logs.info(lang("start"))
+
+    try:
+        await idle()
+    finally:
+        try:
+            await bot.stop()
+        except ConnectionError:
+            pass
+        if web.web_server:
+            try:
+                await web.web_server.shutdown()
+            except AttributeError:
+                pass
 
 
 bot.run(main())

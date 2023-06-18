@@ -1,6 +1,3 @@
-import os
-import signal
-
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
@@ -20,5 +17,7 @@ async def bot_update():
     "/bot_restart", response_class=JSONResponse, dependencies=[authentication()]
 )
 async def bot_restart():
-    os.kill(os.getpid(), signal.SIGINT)
+    from pagermaid.web import web
+
+    web.stop()
     return {}

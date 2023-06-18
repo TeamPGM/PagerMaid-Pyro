@@ -58,7 +58,7 @@ mtp_port: ""
 mtp_secret: ""
 
 # Apt Git source
-git_source: "https://raw.githubusercontent.com/TeamPGM/PagerMaid_Plugins_Pyro/v2/"
+git_source: "https://v2.xtaolabs.com/"
 git_ssh: "https://github.com/TeamPGM/PagerMaid-Pyro.git"
 
 # Update Notice

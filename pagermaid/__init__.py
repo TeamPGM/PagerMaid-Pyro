@@ -21,8 +21,8 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.3.3"
-pgm_version_code = 1303
+pgm_version = "1.3.4"
+pgm_version_code = 1304
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -76,7 +76,7 @@ bot = Client(
     api_hash=Config.API_HASH,
     ipv6=Config.IPV6,
     proxy=Config.PROXY,
-    app_version=f"PagerMaid {pgm_version}",
+    app_version=f"PGP {pgm_version}",
 )
 bot.job = scheduler
 

@@ -19,7 +19,7 @@ from pagermaid.single_utils import _status_sudo, get_sudo_list, Message, sqlite
 
 def lang(text: str) -> str:
     """i18n"""
-    return Config.lang_dict.get(text, text)
+    return Config.lang_dict.get(text, Config.lang_default_dict.get(text, text))
 
 
 def alias_command(command: str, disallow_alias: bool = False) -> str:
