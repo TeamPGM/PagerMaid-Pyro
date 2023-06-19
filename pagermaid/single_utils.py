@@ -8,9 +8,18 @@ from pyrogram import Client as OldClient
 from pyrogram.types import Chat as OldChat, Message as OldMessage, Dialog
 
 from pyromod.utils.conversation import Conversation
-
+from pyromod.utils.errors import (
+    AlreadyInConversationError,
+    TimeoutConversationError,
+    ListenerCanceled,
+)
 from sqlitedict import SqliteDict
 
+__all__ = [
+    "AlreadyInConversationError",
+    "TimeoutConversationError",
+    "ListenerCanceled",
+]
 # init folders
 if not exists("data"):
     mkdir("data")

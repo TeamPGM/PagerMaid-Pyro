@@ -4,6 +4,14 @@ from pagermaid.single_utils import sqlite
 from pagermaid.scheduler import scheduler
 from pagermaid.utils import client
 
+__all__ = [
+    "bot",
+    "logs",
+    "sqlite",
+    "scheduler",
+    "client",
+]
+
 
 def get(name: str):
     data = {
