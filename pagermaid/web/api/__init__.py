@@ -1,6 +1,4 @@
 from fastapi import APIRouter
-
-from pagermaid.web.api.utils import authentication
 from pagermaid.web.api.bot_info import route as bot_info_route
 from pagermaid.web.api.command_alias import route as command_alias_route
 from pagermaid.web.api.ignore_groups import route as ignore_groups_route

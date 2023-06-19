@@ -2,7 +2,7 @@
 
 import re
 
-from datetime import datetime, timezone
+from datetime import datetime
 from platform import uname, python_version
 from sys import platform
 
@@ -18,7 +18,7 @@ from psutil import boot_time, virtual_memory, disk_partitions
 from shutil import disk_usage
 from subprocess import Popen, PIPE
 
-from pagermaid import start_time, Config, pgm_version
+from pagermaid import Config, pgm_version
 from pagermaid.common.status import get_bot_uptime
 from pagermaid.enums import Client, Message
 from pagermaid.listener import listener

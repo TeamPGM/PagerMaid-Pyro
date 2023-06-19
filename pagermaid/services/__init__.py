@@ -13,4 +13,4 @@ def get(name: str):
         "AsyncIOScheduler": scheduler,
         "AsyncClient": client,
     }
-    return data.get(name, None)
+    return data.get(name)

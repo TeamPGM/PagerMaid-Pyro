@@ -140,7 +140,7 @@ async def plugin(message: Message):
                 for target_plugin in active_plugins:
                     inactive_plugins.remove(target_plugin)
             chdir(f"plugins{sep}")
-            for target_plugin in glob(f"*.py.disabled"):
+            for target_plugin in glob("*.py.disabled"):
                 disabled_plugins += [f"{target_plugin[:-12]}"]
             chdir(f"..{sep}")
             active_plugins_string = ""

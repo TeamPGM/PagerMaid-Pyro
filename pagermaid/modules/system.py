@@ -65,7 +65,8 @@ async def sh_eval(message: Message):
     """Run python commands from Telegram."""
     dev_mode = exists(f"data{sep}dev")
     try:
-        assert dev_mode
+        if not dev_mode:
+            raise AssertionError
         cmd = message.text.split(" ", maxsplit=1)[1]
     except (IndexError, AssertionError):
         return await message.edit(lang("eval_need_dev"))

@@ -1,7 +1,7 @@
 import asyncio
 from os import sep
 from signal import signal as signal_fn, SIGINT, SIGTERM, SIGABRT
-from sys import path, platform
+from sys import path, platform, exit
 
 from pyrogram.errors import AuthKeyUnregistered
 

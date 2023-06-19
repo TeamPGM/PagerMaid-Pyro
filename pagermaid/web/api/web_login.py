@@ -13,6 +13,7 @@ from pagermaid.web.api import authentication
 from pagermaid.web.html import get_web_login_html
 from pyromod.methods.sign_in_qrcode import authorize_by_qrcode_web
 from pyromod.utils.errors import QRCodeWebCodeError, QRCodeWebNeedPWDError
+import sys
 
 
 class UserModel(BaseModel):
@@ -57,7 +58,7 @@ class WebLogin():
         await bot.invoke(GetState())
         bot.me = await bot.get_me()
         if bot.me.is_bot:
-            exit(0)
+            sys.exit(0)
         await self.initialize()
         await self.init_bot()
 

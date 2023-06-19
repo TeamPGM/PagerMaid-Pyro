@@ -10,7 +10,7 @@ from sys import executable
 from asyncio import create_subprocess_shell, sleep
 from asyncio.subprocess import PIPE
 
-from pyrogram import filters, enums
+from pyrogram import filters
 from pagermaid.config import Config
 from pagermaid import bot
 from pagermaid.group_manager import enforce_permission
