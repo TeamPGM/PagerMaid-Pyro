@@ -22,3 +22,8 @@ def get_github_logo() -> str:
 def get_footer() -> str:
     """获取 footer。"""
     return get_html(html_base_path / "footer.html")
+
+
+def get_web_login_html() -> str:
+    """获取 web login。"""
+    return get_html(html_base_path / "web_login.html")

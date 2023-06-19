@@ -48,6 +48,9 @@ class Config:
         QRCODE_LOGIN = strtobool(
             os.environ.get("QRCODE_LOGIN", config.get("qrcode_login", "false"))
         )
+        WEB_LOGIN = strtobool(
+            os.environ.get("WEB_LOGIN", config.get("web_login", "false"))
+        )
         STRING_SESSION = os.environ.get("STRING_SESSION")
         DEBUG = strtobool(os.environ.get("PGM_DEBUG", config["debug"]))
         ERROR_REPORT = strtobool(

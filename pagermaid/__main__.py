@@ -5,11 +5,12 @@ from sys import path, platform
 
 from pyrogram.errors import AuthKeyUnregistered
 
-from pagermaid import bot, logs, working_dir
+from pagermaid import bot, logs, working_dir, Config
 from pagermaid.common.reload import load_all
 from pagermaid.single_utils import safe_remove
 from pagermaid.utils import lang, process_exit
 from pagermaid.web import web
+from pagermaid.web.api.web_login import web_login
 from pyromod.methods.sign_in_qrcode import start_client
 
 path.insert(1, f"{working_dir}{sep}plugins")
@@ -50,11 +51,29 @@ async def console_bot():
     await process_exit(start=True, _client=bot)
 
 
+async def web_bot():
+    try:
+        await web_login.init()
+    except AuthKeyUnregistered:
+        safe_remove("pagermaid.session")
+        exit()
+    if bot.me is not None:
+        me = await bot.get_me()
+        if me.is_bot:
+            safe_remove("pagermaid.session")
+            exit()
+    else:
+        logs.info("Please use web to login, path: web_login .")
+
+
 async def main():
     logs.info(lang("platform") + platform + lang("platform_load"))
     await web.start()
-    await console_bot()
-    logs.info(lang("start"))
+    if not (Config.WEB_ENABLE and Config.WEB_LOGIN):
+        await console_bot()
+        logs.info(lang("start"))
+    else:
+        await web_bot()
 
     try:
         await idle()

@@ -11,6 +11,7 @@
 api_id: "ID_HERE"
 api_hash: "HASH_HERE"
 qrcode_login: "False"
+web_login: "False"
 
 # Either debug logging is enabled or not
 debug: "False"
