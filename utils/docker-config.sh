@@ -20,7 +20,8 @@ configure () {
     printf "请输入应用程序 api_hash（不懂请直接回车）："
     read -r api_hash <&1
     sed -i "s/HASH_HERE/$api_hash/" $config_file
-    read -p "二维码扫码登录？（避免无法收到验证码） [Y/n]" choi
+    printf "控制台二维码扫码登录？（避免无法收到验证码） [Y/n]"
+    read -r choi <&1
     if [ "$choi" == "y" ] || [ "$choi" == "Y" ]; then
         sed -i "s/qrcode_login: \"False\"/qrcode_login: \"True\"/" $config_file
     fi
@@ -40,29 +41,22 @@ configure () {
     else
         sed -i "s/China/$application_region/" $config_file
     fi
-    printf "请输入 Google TTS 语言（默认：zh-CN）："
-    read -r application_tts <&1
-    if [ -z "$application_tts" ]
-    then
-        echo "tts发音语言设置为 简体中文"
-    else
-        sed -i "s/zh-CN/$application_tts/" $config_file
-    fi
 }
 
 login () {
     echo
     echo "下面进行程序运行。"
     echo "请在账户授权完毕后，按 Ctrl + C 使 Docker 在后台模式下运行。"
+    echo "如果已开启网页登录，请直接使用 Ctrl + C 使 Docker 在后台模式下运行。"
     echo
-    sleep 2
     echo "Hello world!" > /pagermaid/workdir/install.lock
+    sleep 2
     python -m pagermaid
     exit 0
 }
 
 main () {
-    cd /pagermaid/workdir
+    cd /pagermaid/workdir || exit
     if [ ! -s "/pagermaid/workdir/install.lock" ]; then
         welcome
         configure
