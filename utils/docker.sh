@@ -260,7 +260,7 @@ shon_online () {
     echo "  6) Docker 重装 PagerMaid"
     echo "  7) 退出脚本"
     echo
-    echo "     Version：2.1.0"
+    echo "     Version：2.2.0"
     echo
     echo -n "请输入编号: "
     read -r N <&1
