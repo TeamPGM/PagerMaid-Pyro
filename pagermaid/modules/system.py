@@ -1,3 +1,4 @@
+import sys
 from getpass import getuser
 from os.path import exists, sep
 from platform import node
@@ -8,7 +9,6 @@ from pagermaid.common.system import run_eval
 from pagermaid.enums import Message
 from pagermaid.listener import listener
 from pagermaid.utils import attach_log, execute, lang, upload_attachment
-from pagermaid.web import web
 
 
 @listener(
@@ -51,7 +51,7 @@ async def restart(message: Message):
     """To re-execute PagerMaid."""
     if not message.text[0].isalpha():
         await message.edit(lang("restart_log"))
-        web.stop()
+        sys.exit(0)
 
 
 @listener(
