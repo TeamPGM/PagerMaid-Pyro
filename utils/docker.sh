@@ -74,11 +74,32 @@ need_web () {
   esac
 }
 
+need_web_login () {
+  PGM_WEB_LOGIN=false
+  case $PGM_WEB in
+      true)
+        printf "请问是否需要启用 Web 登录界面 [Y/n] ："
+        read -r web_login <&1
+        case $web_login in
+            [yY][eE][sS] | [yY])
+                echo "您已确认需要启用 Web 登录界面 . . ."
+                PGM_WEB_LOGIN=true
+                ;;
+            [nN][oO] | [nN])
+                ;;
+            *)
+                echo "输入错误，已跳过。"
+                ;;
+        esac
+        ;;
+  esac
+}
+
 start_docker () {
     echo "正在启动 Docker 容器 . . ."
     case $PGM_WEB in
         true)
-            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
+            docker run -dit --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -e WEB_LOGIN="$PGM_WEB_LOGIN" -p 3333:3333 teampgm/pagermaid_pyro <&1
             ;;
         *)
             docker run -dit --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
@@ -148,6 +169,7 @@ start_installation () {
     access_check
     build_docker
     need_web
+    need_web_login
     start_docker
     data_persistence
 }
@@ -216,6 +238,7 @@ reinstall_pager () {
     cleanup
     build_docker
     need_web
+    need_web_login
     start_docker
     data_persistence
 }
@@ -237,10 +260,10 @@ shon_online () {
     echo "  6) Docker 重装 PagerMaid"
     echo "  7) 退出脚本"
     echo
-    echo "     Version：2.1.0"
+    echo "     Version：2.2.0"
     echo
     echo -n "请输入编号: "
-    read N
+    read -r N <&1
     case $N in
         1)
             start_installation

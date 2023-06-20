@@ -7,7 +7,7 @@ from starlette.responses import RedirectResponse
 
 from pagermaid import logs
 from pagermaid.config import Config
-from pagermaid.web.api import base_api_router
+from pagermaid.web.api import base_api_router, base_html_router
 from pagermaid.web.pages import admin_app, login_page
 
 requestAdaptor = """
@@ -39,6 +39,7 @@ class Web:
 
     def init_web(self):
         self.app.include_router(base_api_router)
+        self.app.include_router(base_html_router)
 
         self.app.add_middleware(
             CORSMiddleware,

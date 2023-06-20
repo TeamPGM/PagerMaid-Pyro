@@ -3,7 +3,6 @@ from os import sep, remove, mkdir
 from os.path import exists
 from typing import List, Optional, Union
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from httpx import AsyncClient
 
 from pyrogram import Client as OldClient
 from pyrogram.types import Chat as OldChat, Message as OldMessage, Dialog
@@ -14,9 +13,13 @@ from pyromod.utils.errors import (
     TimeoutConversationError,
     ListenerCanceled,
 )
-
 from sqlitedict import SqliteDict
 
+__all__ = [
+    "AlreadyInConversationError",
+    "TimeoutConversationError",
+    "ListenerCanceled",
+]
 # init folders
 if not exists("data"):
     mkdir("data")

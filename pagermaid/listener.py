@@ -34,6 +34,7 @@ from pagermaid.utils import (
     process_exit,
 )
 from pagermaid.hook import Hook
+from pagermaid.web import web
 
 _lock = asyncio.Lock()
 
@@ -197,7 +198,7 @@ def listener(**args):
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()
-                sys.exit(0)
+                web.stop()
             except BaseException:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()

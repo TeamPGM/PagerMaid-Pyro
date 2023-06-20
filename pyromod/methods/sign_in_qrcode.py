@@ -10,6 +10,7 @@ from pyrogram.session import Auth, Session
 from pyrogram.utils import ainput
 
 from pagermaid import Config
+from pyromod.utils.errors import QRCodeWebNeedPWDError, QRCodeWebCodeError
 
 
 async def sign_in_qrcode(
@@ -115,6 +116,32 @@ async def authorize_by_qrcode(
             await asyncio.sleep(20)
         elif isinstance(qrcode, pyrogram.types.User):
             return qrcode
+
+
+async def authorize_by_qrcode_web(
+    client: Client,
+    password: Optional[str] = None,
+):
+    qrcode = None
+    try:
+        if password:
+            client.password = password
+            raise SessionPasswordNeeded()
+        qrcode = await sign_in_qrcode(client)
+    except BadRequest as e:
+        raise e
+    except SessionPasswordNeeded as e:
+        try:
+            if client.password:
+                return await client.check_password(client.password)
+        except BadRequest as e:
+            client.password = None
+            raise e
+        raise QRCodeWebNeedPWDError(await client.get_password_hint()) from e
+    if isinstance(qrcode, str):
+        raise QRCodeWebCodeError(qrcode)
+    elif isinstance(qrcode, pyrogram.types.User):
+        return qrcode
 
 
 async def start_client(client: Client):

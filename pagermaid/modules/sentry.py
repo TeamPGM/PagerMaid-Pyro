@@ -1,6 +1,7 @@
 import sentry_sdk
 
 from subprocess import run, PIPE
+import sys
 from time import time
 
 from pyrogram.errors import Unauthorized, UsernameInvalid
@@ -18,7 +19,7 @@ def sentry_before_send(event, hint):
     if exc_info and isinstance(exc_info[1], (Unauthorized, UsernameInvalid)):
         # The user has been deleted/deactivated or session revoked
         safe_remove("pagermaid.session")
-        exit(1)
+        sys.exit(1)
     if time() <= sentry_sdk_report_time + 30:
         sentry_sdk_report_time = time()
         return None
@@ -29,7 +30,7 @@ def sentry_before_send(event, hint):
 
 sentry_sdk_report_time = time()
 sentry_sdk_git_hash = (
-    run("git rev-parse HEAD", stdout=PIPE, shell=True).stdout.decode().strip()
+    run("git rev-parse HEAD", stdout=PIPE, shell=True, check=True).stdout.decode(check=True).strip(check=True)
 )
 sentry_sdk.init(
     Config.SENTRY_API,

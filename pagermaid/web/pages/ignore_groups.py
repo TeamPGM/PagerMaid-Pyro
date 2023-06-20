@@ -2,13 +2,10 @@ from amis import (
     InputText,
     Switch,
     Card,
-    Tpl,
     CardsCRUD,
     PageSchema,
     Page,
-    Button,
-    Select,
-)
+    )
 
 card = Card(
     header=Card.Header(

@@ -1,3 +1,4 @@
+import sys
 from getpass import getuser
 from os.path import exists, sep
 from platform import node
@@ -8,7 +9,6 @@ from pagermaid.common.system import run_eval
 from pagermaid.enums import Message
 from pagermaid.listener import listener
 from pagermaid.utils import attach_log, execute, lang, upload_attachment
-from pagermaid.web import web
 
 
 @listener(
@@ -51,7 +51,7 @@ async def restart(message: Message):
     """To re-execute PagerMaid."""
     if not message.text[0].isalpha():
         await message.edit(lang("restart_log"))
-        web.stop()
+        sys.exit(0)
 
 
 @listener(
@@ -65,7 +65,8 @@ async def sh_eval(message: Message):
     """Run python commands from Telegram."""
     dev_mode = exists(f"data{sep}dev")
     try:
-        assert dev_mode
+        if not dev_mode:
+            raise AssertionError
         cmd = message.text.split(" ", maxsplit=1)[1]
     except (IndexError, AssertionError):
         return await message.edit(lang("eval_need_dev"))

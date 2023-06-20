@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-t4GWSVZO1eC8BM339Xd7Uphw5s17a86tIZIj8qRxhnKub6WoyhnrxeCIMeAqBPgdZGlCcG2PrZjMc+Wr78+5Xg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js" integrity="sha512-3dZ9wIrMMij8rOH7X3kLfXAzwtcHpuYpEgQg1OA4QAob1e81H8ntUQmQm3pBudqIoySO5j0tHN4ENzA6+n2r4w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <title>QR Code Login - PagerMaid-Pyro</title>
+    <style>
+        img {
+            display: inline-block!important;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card" style="">
+                <div class="card-header bg-dark text-white text-center">
+                    <h3 class="mb-0">QR Code Login</h3>
+                </div>
+                <div class="card-body" style="display: block" id="qrDiv">
+                    <div id="qr" class="text-center mb-0"></div>
+                    <p class="text-center mb-0">Scan the QR code above to log in.</p>
+                </div>
+                <div style="margin-left: 10%; width: 80%; display: block" class="text-center mb-3" id="pwdDiv">
+                    <form id="pwdForm">
+                        <div class="mb-3" id="pwdHint">
+                            <label for="hint" class="form-label">Hint</label>
+                            <textarea class="form-control" id="hint" name="hint" disabled></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm-password" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirm-password" name="confirm-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" >Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模态框 -->
+<div class="modal" id="errorModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- 模态框头部 -->
+            <div class="modal-header">
+                <h4 class="modal-title">Notice</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- 模态框内容 -->
+            <div class="modal-body" id="errorText"></div>
+
+            <!-- 模态框底部 -->
+            <div class="modal-footer">
+                <button type="button" class="btn" data-bs-dismiss="modal" id="errorButton">我知道了</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    const QRDiv = document.getElementById('qrDiv');
+    const QRC = document.getElementById('qr');
+    const QR = new QRCode(QRC);
+    const PWDDiv = document.getElementById('pwdDiv');
+    const errorModel = new bootstrap.Modal(document.getElementById('errorModal'));
+    const errorText = document.getElementById('errorText');
+    const errorButton = document.getElementById('errorButton');
+    const pwdHint = document.getElementById('pwdHint');
+    const hint = document.getElementById('hint');
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm-password');
+
+    function getHeader() {
+        return {
+            headers: {
+                token: localStorage.getItem("token") || ""
+            }
+        }
+    }
+
+    function redirectToLogin() {
+        window.location.href = '/admin';
+    }
+
+    function showError(text) {
+        if (errorButton.classList.contains('btn-success')) {
+            errorButton.classList.remove('btn-success');
+        }
+        errorButton.classList.add('btn-danger');
+        errorText.innerHTML = text;
+        errorModel.show();
+    }
+
+    function showSuccess(text) {
+        if (errorButton.classList.contains('btn-danger')) {
+            errorButton.classList.remove('btn-danger');
+        }
+        errorButton.classList.add('btn-success');
+        errorText.innerHTML = text;
+        errorModel.show();
+    }
+
+    function process_data(data) {
+        switch (data.status) {
+            case 0:
+                showSuccess(data.msg);
+                redirectToLogin();
+                break;
+            case 1:
+                QRDiv.style.display = 'block';
+                PWDDiv.style.display = 'none';
+                QR.makeCode(data.content);
+                break;
+            case 2:
+                QRDiv.style.display = 'none';
+                PWDDiv.style.display = 'block';
+                if (data.content !== '') {
+                    pwdHint.style.display = 'block';
+                    hint.innerHTML = data.content;
+                } else {
+                    pwdHint.style.display = 'none';
+                }
+                break;
+            case 3:
+                showError(data.msg);
+                break;
+            default:
+                showError('未知错误');
+        }
+    }
+
+    function getQrCode() {
+        if (PWDDiv.style.display === 'block') {
+            return;
+        }
+        axios.get('pagermaid/api/web_login', getHeader())
+            .then(function (response) {
+                const data = response.data;
+                console.log(data);
+                process_data(data);
+            })
+            .catch(function (error) {
+                if (error.response.status !== 200) {
+                    redirectToLogin();
+                    return;
+                }
+                console.log(error);
+                showError(error.message);
+            });
+    }
+
+    function submitPwd() {
+        const pwd = password.value;
+        const confirmPwd = confirmPassword.value;
+        if (pwd !== confirmPwd) {
+            showError('两次输入的密码不一致');
+            return;
+        }
+        axios.post('pagermaid/api/web_login', {
+            password: pwd
+        }, getHeader())
+            .then(function (response) {
+                const data = response.data;
+                console.log(data);
+                process_data(data);
+            })
+            .catch(function (error) {
+                if (error.response.status !== 200) {
+                    redirectToLogin();
+                    return;
+                }
+                console.log(error);
+                showError(error.message);
+            });
+    }
+
+    PWDDiv.style.display = 'none';
+    document.getElementById("pwdForm").addEventListener('submit', function (e) {
+        e.preventDefault();
+        submitPwd();
+    });
+    getQrCode()
+    setInterval(getQrCode, 20000);
+</script>
+</body>
+</html>

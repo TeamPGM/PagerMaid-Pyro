@@ -1,7 +1,5 @@
 """ The help module. """
-
-from json import dump as json_dump
-from os import listdir, sep
+from os import listdir
 
 from pyrogram.enums import ParseMode
 
