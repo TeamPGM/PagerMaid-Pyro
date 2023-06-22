@@ -30,7 +30,7 @@ def sentry_before_send(event, hint):
 
 sentry_sdk_report_time = time()
 sentry_sdk_git_hash = (
-    run("git rev-parse HEAD", stdout=PIPE, shell=True, check=True).stdout.decode(check=True).strip(check=True)
+    run("git rev-parse HEAD", stdout=PIPE, shell=True, check=True).stdout.decode().strip()
 )
 sentry_sdk.init(
     Config.SENTRY_API,
