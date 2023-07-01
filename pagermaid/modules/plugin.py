@@ -306,6 +306,7 @@ async def apt_source(message: Message):
             if status:
                 if plugin_remote_manager.add_remote(url):
                     await message.edit(lang("apt_source_add_success"))
+                    await plugin_manager.load_remote_plugins(enable_cache=False)
                 else:
                     await message.edit(lang("apt_source_add_failed"))
             else:
@@ -313,6 +314,7 @@ async def apt_source(message: Message):
         elif message.parameter[0] == "del":
             if plugin_remote_manager.del_remote(url):
                 await message.edit(lang("apt_source_del_success"))
+                await plugin_manager.load_remote_plugins(enable_cache=False)
             else:
                 await message.edit(lang("apt_source_del_failed"))
         else:

@@ -206,7 +206,7 @@ class PluginManager:
             logs.error(f"获取远程插件列表失败: {e}")
             raise e
 
-    async def __load_remote_plugins(self) -> List[RemotePlugin]:
+    async def load_remote_plugins_no_cache(self) -> List[RemotePlugin]:
         remote_urls = [i.url for i in self.remote_manager.get_remotes()]
         remote_urls.insert(0, Config.GIT_SOURCE)
         plugins = []
@@ -234,11 +234,17 @@ class PluginManager:
         return plugins
 
     @cache()
-    async def _load_remote_plugins(self) -> List[RemotePlugin]:
-        return await self.__load_remote_plugins()
+    async def load_remote_plugins_cache(self) -> List[RemotePlugin]:
+        return await self.load_remote_plugins_no_cache()
 
-    async def load_remote_plugins(self) -> List[RemotePlugin]:
-        plugin_list = await self._load_remote_plugins()
+    async def load_remote_plugins(
+        self, enable_cache: bool = True
+    ) -> List[RemotePlugin]:
+        plugin_list = (
+            await self.load_remote_plugins_cache()
+            if enable_cache
+            else await self.load_remote_plugins_no_cache()
+        )
         for i in plugin_list:
             i.status = self.get_plugin_load_status(i.name)
         return plugin_list
