@@ -293,7 +293,7 @@ async def apt_source(message: Message):
             await message.edit(lang("apt_source_not_found"))
             return
         await message.edit(
-            f"{lang('apt_source_header')}\n" + "\n".join([i.text for i in remotes]),
+            f"{lang('apt_source_header')}\n\n" + "\n".join([i.text for i in remotes]),
             disable_web_page_preview=True,
         )
     elif len(message.parameter) == 2:
@@ -314,7 +314,7 @@ async def apt_source(message: Message):
             else:
                 await message.edit(lang("apt_source_add_invalid"))
         elif message.parameter[0] == "del":
-            if plugin_remote_manager.del_remote(url):
+            if plugin_remote_manager.remove_remote(url):
                 await message.edit(lang("apt_source_del_success"))
                 await plugin_manager.load_remote_plugins(enable_cache=False)
             else:
