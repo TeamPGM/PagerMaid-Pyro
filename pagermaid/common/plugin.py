@@ -92,7 +92,7 @@ class PluginRemoteManager:
         return [PluginRemote(**i) for i in sqlite.get(self.key, [])]
 
     def set_remotes(self, remotes: List[PluginRemote]):
-        sqlite.set(self.key, [i.dict() for i in remotes])
+        sqlite[self.key] = [i.dict() for i in remotes]
 
     def add_remote(self, remote_url: str) -> bool:
         remotes = self.get_remotes()

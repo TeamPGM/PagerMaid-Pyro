@@ -298,6 +298,8 @@ async def apt_source(message: Message):
         )
     elif len(message.parameter) == 2:
         url = message.parameter[1]
+        if not url.endswith("/"):
+            url += "/"
         if message.parameter[0] == "add":
             try:
                 status = await plugin_manager.fetch_remote_url(url)
