@@ -13,5 +13,5 @@ __all__ = [
     "AsyncIOScheduler",
     "SqliteDict",
     "AsyncClient",
-    "Logger"
+    "Logger",
 ]

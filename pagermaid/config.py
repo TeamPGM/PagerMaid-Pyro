@@ -95,9 +95,9 @@ class Config:
         )
         try:
             with open(
-                    f"languages{os.sep}built-in{os.sep}en.yml",
-                    "r",
-                    encoding="utf-8",
+                f"languages{os.sep}built-in{os.sep}en.yml",
+                "r",
+                encoding="utf-8",
             ) as f:
                 lang_default_dict = safe_load(f)
             with open(

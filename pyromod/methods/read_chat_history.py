@@ -5,7 +5,7 @@ import pyrogram
 
 
 async def read_chat_history(
-        self: "pyrogram.Client", chat_id: Union[int, str], max_id: int = 0
+    self: "pyrogram.Client", chat_id: Union[int, str], max_id: int = 0
 ) -> bool:
     peer = await self.resolve_peer(chat_id)
     if isinstance(peer, pyrogram.raw.types.InputPeerChannel):

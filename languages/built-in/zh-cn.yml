@@ -344,6 +344,15 @@ apt_plugin_maintainer: 作者
 apt_plugin_size: 大小
 apt_plugin_support: 支持周期
 apt_plugin_des_short: 说明
+apt_source_des: "添加/删除/查看 自定义插件源"
+apt_source_parameters: "[add/del] [自定义软件源链接]"
+apt_source_not_found: 当前没有自定义插件源
+apt_source_header: "当前自定义插件源:"
+apt_source_add_success: 添加成功
+apt_source_del_success: 删除成功
+apt_source_add_failed: 添加失败，此源已存在
+apt_source_add_invalid: 添加失败，此源无效
+apt_source_del_failed: 删除失败，此源不存在
 #prune
 ## prune
 prune_des: 以此命令回复某条消息，将删除最新一条消息至该条消息之间的所有消息。限制：基于消息 ID 的 1000 条消息，大于 1000 条可能会触发删除消息过快限制。（非群组管理员只删除自己的消息）

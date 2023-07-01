@@ -1,19 +1,17 @@
 """ PagerMaid module to manage plugins. """
 
 import contextlib
-import json
-from glob import glob
-from os import remove, chdir, path, sep
+from os import remove, path, sep
 from os.path import exists
 from re import search, I
 from shutil import copyfile, move
 
-from pagermaid import log, working_dir, Config
-from pagermaid.common.plugin import plugin_manager
+from pagermaid import log, working_dir
+from pagermaid.common.plugin import plugin_remote_manager, plugin_manager
 from pagermaid.common.reload import reload_all
+from pagermaid.enums import Message
 from pagermaid.listener import listener
-from pagermaid.modules import plugin_list as active_plugins, __list_plugins
-from pagermaid.utils import upload_attachment, lang, Message, client
+from pagermaid.utils import upload_attachment, lang
 
 
 def remove_plugin(name):
@@ -29,15 +27,6 @@ def move_plugin(file_path):
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
     remove_plugin(name)
     move(file_path, plugin_directory)
-
-
-def update_version(plugin_name, version):
-    plugin_directory = f"{working_dir}{sep}plugins{sep}"
-    with open(f"{plugin_directory}version.json", "r", encoding="utf-8") as f:
-        version_json = json.load(f)
-        version_json[plugin_name] = version
-    with open(f"{plugin_directory}version.json", "w") as f:
-        json.dump(version_json, f)
 
 
 @listener(
@@ -57,27 +46,19 @@ async def plugin(message: Message):
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
     if message.parameter[0] == "install":
         if len(message.parameter) == 1:
-            message = await message.edit(lang("apt_processing"))
-            file_path = None
-            with contextlib.suppress(Exception):
-                if reply:
-                    file_path = await reply.download()
-                else:
-                    file_path = await message.download()
-            if file_path is None or not file_path.endswith(".py"):
+            file_path = await plugin_manager.download_from_message(message)
+            if file_path is None:
                 await message.edit(lang("apt_no_py"))
-                try:
-                    remove(str(file_path))
-                except FileNotFoundError:
-                    pass
                 return
+            plugin_name = path.basename(file_path)[:-3]
+            plugin_manager.remove_plugin(plugin_name)
             move_plugin(file_path)
             await message.edit(
                 f"<b>{lang('apt_name')}</b>\n\n"
                 f"{lang('apt_plugin')} "
-                f"{path.basename(file_path)[:-3]} {lang('apt_installed')}"
+                f"{plugin_name} {lang('apt_installed')}"
             )
-            await log(f"{lang('apt_install_success')} {path.basename(file_path)[:-3]}.")
+            await log(f"{lang('apt_install_success')} {plugin_name}.")
             await reload_all()
         elif len(message.parameter) >= 2:
             await plugin_manager.load_remote_plugins()
@@ -134,27 +115,14 @@ async def plugin(message: Message):
             await message.edit(lang("arg_error"))
     elif message.parameter[0] == "status":
         if len(message.parameter) == 1:
-            inactive_plugins = sorted(__list_plugins())
-            disabled_plugins = []
-            if not len(inactive_plugins) == 0:
-                for target_plugin in active_plugins:
-                    inactive_plugins.remove(target_plugin)
-            chdir(f"plugins{sep}")
-            for target_plugin in glob("*.py.disabled"):
-                disabled_plugins += [f"{target_plugin[:-12]}"]
-            chdir(f"..{sep}")
-            active_plugins_string = ""
-            inactive_plugins_string = ""
-            disabled_plugins_string = ""
-            for target_plugin in active_plugins:
-                active_plugins_string += f"{target_plugin}, "
-            active_plugins_string = active_plugins_string[:-2]
-            for target_plugin in inactive_plugins:
-                inactive_plugins_string += f"{target_plugin}, "
-            inactive_plugins_string = inactive_plugins_string[:-2]
-            for target_plugin in disabled_plugins:
-                disabled_plugins_string += f"{target_plugin}, "
-            disabled_plugins_string = disabled_plugins_string[:-2]
+            (
+                active_plugins,
+                disabled_plugins,
+                inactive_plugins,
+            ) = plugin_manager.get_plugins_status()
+            active_plugins_string = ", ".join(active_plugins)
+            inactive_plugins_string = ", ".join([i.name for i in inactive_plugins])
+            disabled_plugins_string = ", ".join([i.name for i in disabled_plugins])
             if len(active_plugins) == 0:
                 active_plugins_string = f"`{lang('apt_no_running_plugins')}`"
             if len(inactive_plugins) == 0:
@@ -207,17 +175,19 @@ async def plugin(message: Message):
             elif exists(f"{plugin_directory}{file_name}.disabled"):
                 copyfile(f"{plugin_directory}{file_name}.disabled", file_name)
             if exists(file_name):
-                await message.edit(lang("apt_uploading"))
-                await upload_attachment(
-                    file_name,
-                    message.chat.id,
-                    reply_id,
-                    thumb=f"pagermaid{sep}assets{sep}logo.jpg",
-                    caption=f"<b>{lang('apt_name')}</b>\n\n"
-                    f"PagerMaid-Pyro {message.parameter[1]} plugin.",
-                )
-                remove(file_name)
-                await message.safe_delete()
+                try:
+                    await message.edit(lang("apt_uploading"))
+                    await upload_attachment(
+                        file_name,
+                        message.chat.id,
+                        reply_id,
+                        thumb=f"pagermaid{sep}assets{sep}logo.jpg",
+                        caption=f"<b>{lang('apt_name')}</b>\n\n"
+                        f"PagerMaid-Pyro {message.parameter[1]} plugin.",
+                    )
+                    await message.safe_delete()
+                finally:
+                    remove(file_name)
             else:
                 await message.edit(lang("apt_not_exist"))
         else:
@@ -248,22 +218,12 @@ async def plugin(message: Message):
         if len(message.parameter) == 1:
             await message.edit(lang("apt_search_no_name"))
         elif len(message.parameter) == 2:
+            await plugin_manager.load_remote_plugins()
             search_result = []
             plugin_name = message.parameter[1]
-            plugin_list = await client.get(f"{Config.GIT_SOURCE}list.json")
-            plugin_online = plugin_list.json()["list"]
-            for i in plugin_online:
-                if search(plugin_name, i["name"], I):
-                    search_result.extend(
-                        [
-                            "`"
-                            + i["name"]
-                            + "` / `"
-                            + i["version"]
-                            + "`\n  "
-                            + i["des-short"]
-                        ]
-                    )
+            for i in plugin_manager.remote_plugins:
+                if search(plugin_name, i.name, I):
+                    search_result.append(f"`{i.name}` / `{i.version}`\n  {i.des_short}")
             if len(search_result) == 0:
                 await message.edit(lang("apt_search_not_found"))
             else:
@@ -277,24 +237,23 @@ async def plugin(message: Message):
         if len(message.parameter) == 1:
             await message.edit(lang("apt_search_no_name"))
         elif len(message.parameter) == 2:
+            await plugin_manager.load_remote_plugins()
             search_result = ""
             plugin_name = message.parameter[1]
-            plugin_list = await client.get(f"{Config.GIT_SOURCE}list.json")
-            plugin_online = plugin_list.json()["list"]
-            for i in plugin_online:
-                if plugin_name == i["name"]:
-                    if i["supported"]:
+            for i in plugin_manager.remote_plugins:
+                if plugin_name == i.name:
+                    if i.supported:
                         search_support = lang("apt_search_supporting")
                     else:
                         search_support = lang("apt_search_not_supporting")
                     search_result = (
-                        f"{lang('apt_plugin_name')}:`{i['name']}`\n"
-                        f"{lang('apt_plugin_ver')}:`Ver  {i['version']}`\n"
-                        f"{lang('apt_plugin_section')}:`{i['section']}`\n"
-                        f"{lang('apt_plugin_maintainer')}:`{i['maintainer']}`\n"
-                        f"{lang('apt_plugin_size')}:`{i['size']}`\n"
+                        f"{lang('apt_plugin_name')}:`{i.name}`\n"
+                        f"{lang('apt_plugin_ver')}:`Ver  {i.version}`\n"
+                        f"{lang('apt_plugin_section')}:`{i.section}`\n"
+                        f"{lang('apt_plugin_maintainer')}:`{i.maintainer}`\n"
+                        f"{lang('apt_plugin_size')}:`{i.size}`\n"
                         f"{lang('apt_plugin_support')}:{search_support}\n"
-                        f"{lang('apt_plugin_des_short')}:{i['des-short']}"
+                        f"{lang('apt_plugin_des_short')}:{i.des_short}"
                     )
                     break
             if search_result == "":
@@ -307,20 +266,60 @@ async def plugin(message: Message):
             return
         message = await message.edit(lang("stats_loading"))
         list_plugin = []
-        with open(f"{plugin_directory}version.json", "r", encoding="utf-8") as f:
-            version_json = json.load(f)
-        plugin_list = await client.get(f"{Config.GIT_SOURCE}list.json")
-        plugin_online = plugin_list.json()["list"]
-        for key, value in version_json.items():
-            if value == "0.0":
+        for key, value in plugin_manager.version_map.items():
+            if not value:
                 continue
-            for i in plugin_online:
-                if key == i["name"]:
-                    list_plugin.append(key)
-                    break
+            list_plugin.append(key)
         if len(list_plugin) == 0:
             await message.edit(lang("apt_why_not_install_a_plugin"))
         else:
             await message.edit(",apt install " + " ".join(list_plugin))
+    else:
+        await message.edit(lang("arg_error"))
+
+
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="apt_source",
+    need_admin=True,
+    description=lang("apt_source_des"),
+    parameters=lang("apt_source_parameters"),
+)
+async def apt_source(message: Message):
+    if len(message.parameter) == 0:
+        remotes = plugin_remote_manager.get_remotes()
+        if len(remotes) == 0:
+            await message.edit(lang("apt_source_not_found"))
+            return
+        await message.edit(
+            f"{lang('apt_source_header')}\n\n" + "\n".join([i.text for i in remotes]),
+            disable_web_page_preview=True,
+        )
+    elif len(message.parameter) == 2:
+        url = message.parameter[1]
+        if not url.endswith("/"):
+            url += "/"
+        if message.parameter[0] == "add":
+            try:
+                status = await plugin_manager.fetch_remote_url(url)
+            except Exception:
+                status = False
+            if status:
+                if plugin_remote_manager.add_remote(url):
+                    await message.edit(lang("apt_source_add_success"))
+                    await plugin_manager.load_remote_plugins(enable_cache=False)
+                else:
+                    await message.edit(lang("apt_source_add_failed"))
+            else:
+                await message.edit(lang("apt_source_add_invalid"))
+        elif message.parameter[0] == "del":
+            if plugin_remote_manager.remove_remote(url):
+                await message.edit(lang("apt_source_del_success"))
+                await plugin_manager.load_remote_plugins(enable_cache=False)
+            else:
+                await message.edit(lang("apt_source_del_failed"))
+        else:
+            await message.edit(lang("arg_error"))
     else:
         await message.edit(lang("arg_error"))

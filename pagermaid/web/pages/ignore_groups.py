@@ -5,7 +5,7 @@ from amis import (
     CardsCRUD,
     PageSchema,
     Page,
-    )
+)
 
 card = Card(
     header=Card.Header(
