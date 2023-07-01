@@ -31,7 +31,7 @@ class LocalPlugin(BaseModel):
 
     @property
     def load_status(self) -> bool:
-        """ 插件加载状态 """
+        """插件加载状态"""
         return self.name in active_plugins
 
     def remove(self):
@@ -197,17 +197,28 @@ class PluginManager:
 
     @staticmethod
     async def download_from_message(message: Message) -> str:
-        """ Download a plugin from a message """
+        """Download a plugin from a message"""
         reply = message.reply_to_message
         file_path = None
-        if reply and reply.document and reply.document.file_name and reply.document.file_name.endswith(".py"):
+        if (
+            reply
+            and reply.document
+            and reply.document.file_name
+            and reply.document.file_name.endswith(".py")
+        ):
             file_path = await message.reply_to_message.download()
-        elif message.document and message.document.file_name and message.document.file_name.endswith(".py"):
+        elif (
+            message.document
+            and message.document.file_name
+            and message.document.file_name.endswith(".py")
+        ):
             file_path = await message.download()
         return file_path
 
-    def get_plugins_status(self) -> Tuple[List[LocalPlugin], List[LocalPlugin], List[LocalPlugin]]:
-        """ Get plugins status """
+    def get_plugins_status(
+        self,
+    ) -> Tuple[List[LocalPlugin], List[LocalPlugin], List[LocalPlugin]]:
+        """Get plugins status"""
         all_local_plugins = self.plugins
         disabled_plugins = []
         inactive_plugins = []

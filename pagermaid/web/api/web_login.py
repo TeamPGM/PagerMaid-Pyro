@@ -20,7 +20,7 @@ class UserModel(BaseModel):
     password: str
 
 
-class WebLogin():
+class WebLogin:
     def __init__(self):
         self.is_authorized = False
         self.need_password = False
@@ -51,9 +51,7 @@ class WebLogin():
         if not self.is_authorized:
             return
         if not await bot.storage.is_bot() and bot.takeout:
-            bot.takeout_id = (
-                await bot.invoke(InitTakeoutSession())
-            ).id
+            bot.takeout_id = (await bot.invoke(InitTakeoutSession())).id
 
         await bot.invoke(GetState())
         bot.me = await bot.get_me()

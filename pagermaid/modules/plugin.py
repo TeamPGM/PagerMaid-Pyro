@@ -115,7 +115,11 @@ async def plugin(message: Message):
             await message.edit(lang("arg_error"))
     elif message.parameter[0] == "status":
         if len(message.parameter) == 1:
-            active_plugins, disabled_plugins, inactive_plugins = plugin_manager.get_plugins_status()
+            (
+                active_plugins,
+                disabled_plugins,
+                inactive_plugins,
+            ) = plugin_manager.get_plugins_status()
             active_plugins_string = ", ".join([i.name for i in active_plugins])
             inactive_plugins_string = ", ".join([i.name for i in inactive_plugins])
             disabled_plugins_string = ", ".join([i.name for i in disabled_plugins])
@@ -178,7 +182,7 @@ async def plugin(message: Message):
                     reply_id,
                     thumb=f"pagermaid{sep}assets{sep}logo.jpg",
                     caption=f"<b>{lang('apt_name')}</b>\n\n"
-                            f"PagerMaid-Pyro {message.parameter[1]} plugin.",
+                    f"PagerMaid-Pyro {message.parameter[1]} plugin.",
                 )
                 remove(file_name)
                 await message.safe_delete()
