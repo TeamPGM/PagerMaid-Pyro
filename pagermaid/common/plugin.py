@@ -295,7 +295,7 @@ class PluginManager:
 
     def get_plugins_status(
         self,
-    ) -> Tuple[List[LocalPlugin], List[LocalPlugin], List[LocalPlugin]]:
+    ) -> Tuple[List[str], List[LocalPlugin], List[LocalPlugin]]:
         """Get plugins status"""
         all_local_plugins = self.plugins
         disabled_plugins = []

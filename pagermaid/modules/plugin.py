@@ -120,7 +120,7 @@ async def plugin(message: Message):
                 disabled_plugins,
                 inactive_plugins,
             ) = plugin_manager.get_plugins_status()
-            active_plugins_string = ", ".join([i.name for i in active_plugins])
+            active_plugins_string = ", ".join(active_plugins)
             inactive_plugins_string = ", ".join([i.name for i in inactive_plugins])
             disabled_plugins_string = ", ".join([i.name for i in disabled_plugins])
             if len(active_plugins) == 0:
@@ -175,17 +175,19 @@ async def plugin(message: Message):
             elif exists(f"{plugin_directory}{file_name}.disabled"):
                 copyfile(f"{plugin_directory}{file_name}.disabled", file_name)
             if exists(file_name):
-                await message.edit(lang("apt_uploading"))
-                await upload_attachment(
-                    file_name,
-                    message.chat.id,
-                    reply_id,
-                    thumb=f"pagermaid{sep}assets{sep}logo.jpg",
-                    caption=f"<b>{lang('apt_name')}</b>\n\n"
-                    f"PagerMaid-Pyro {message.parameter[1]} plugin.",
-                )
-                remove(file_name)
-                await message.safe_delete()
+                try:
+                    await message.edit(lang("apt_uploading"))
+                    await upload_attachment(
+                        file_name,
+                        message.chat.id,
+                        reply_id,
+                        thumb=f"pagermaid{sep}assets{sep}logo.jpg",
+                        caption=f"<b>{lang('apt_name')}</b>\n\n"
+                        f"PagerMaid-Pyro {message.parameter[1]} plugin.",
+                    )
+                    await message.safe_delete()
+                finally:
+                    remove(file_name)
             else:
                 await message.edit(lang("apt_not_exist"))
         else:
@@ -221,7 +223,7 @@ async def plugin(message: Message):
             plugin_name = message.parameter[1]
             for i in plugin_manager.remote_plugins:
                 if search(plugin_name, i.name, I):
-                    search_result.append(f"`{i.name}` / `{i.version}`")
+                    search_result.append(f"`{i.name}` / `{i.version}`\n  {i.des_short}")
             if len(search_result) == 0:
                 await message.edit(lang("apt_search_not_found"))
             else:
@@ -281,7 +283,6 @@ async def plugin(message: Message):
     outgoing=True,
     command="apt_source",
     need_admin=True,
-    diagnostics=False,
     description="添加/删除/查看 自定义插件源",
     parameters="[add/del] [source]",
 )
