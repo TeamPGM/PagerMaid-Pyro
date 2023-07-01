@@ -7,7 +7,7 @@ from re import search, I
 from shutil import copyfile, move
 
 from pagermaid import log, working_dir
-from pagermaid.common.plugin import plugin_manager
+from pagermaid.common.plugin import plugin_remote_manager, plugin_manager
 from pagermaid.common.reload import reload_all
 from pagermaid.enums import Message
 from pagermaid.listener import listener
@@ -250,7 +250,8 @@ async def plugin(message: Message):
                         f"{lang('apt_plugin_section')}:`{i.section}`\n"
                         f"{lang('apt_plugin_maintainer')}:`{i.maintainer}`\n"
                         f"{lang('apt_plugin_size')}:`{i.size}`\n"
-                        f"{lang('apt_plugin_support')}:{search_support}"
+                        f"{lang('apt_plugin_support')}:{search_support}\n"
+                        f"{lang('apt_plugin_des_short')}:{i.des_short}"
                     )
                     break
             if search_result == "":
@@ -271,5 +272,46 @@ async def plugin(message: Message):
             await message.edit(lang("apt_why_not_install_a_plugin"))
         else:
             await message.edit(",apt install " + " ".join(list_plugin))
+    else:
+        await message.edit(lang("arg_error"))
+
+
+@listener(
+    is_plugin=False,
+    outgoing=True,
+    command="apt_source",
+    need_admin=True,
+    diagnostics=False,
+    description="添加/删除/查看 自定义插件源",
+    parameters="[add/del] [source]",
+)
+async def apt_source(message: Message):
+    if len(message.parameter) == 0:
+        remotes = plugin_remote_manager.get_remotes()
+        if len(remotes) == 0:
+            await message.edit("当前没有自定义插件源")
+            return
+        await message.edit("当前自定义插件源:\n" + "\n".join([i.text for i in remotes]))
+    elif len(message.parameter) == 2:
+        url = message.parameter[1]
+        if message.parameter[0] == "add":
+            try:
+                status = await plugin_manager.fetch_remote_url(url)
+            except Exception:
+                status = False
+            if status:
+                if plugin_remote_manager.add_remote(url):
+                    await message.edit("添加成功")
+                else:
+                    await message.edit("添加失败，此源已存在")
+            else:
+                await message.edit("添加失败，此源无效")
+        elif message.parameter[0] == "del":
+            if plugin_remote_manager.del_remote(url):
+                await message.edit("删除成功")
+            else:
+                await message.edit("删除失败，此源不存在")
+        else:
+            await message.edit(lang("arg_error"))
     else:
         await message.edit(lang("arg_error"))
