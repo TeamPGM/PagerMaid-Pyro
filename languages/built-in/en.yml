@@ -344,6 +344,15 @@ apt_plugin_maintainer: Author
 apt_plugin_size: size
 apt_plugin_support: support period
 apt_plugin_des_short: description
+apt_source_des: Add or delete or view the source of the plugin repository.
+apt_source_parameters: "[add/del] [source url]"
+apt_source_not_found: Something went wrong ~ The specified source does not exist.
+apt_source_header: "Apt Source List:"
+apt_source_add_success: Add success
+apt_source_del_success: Del success
+apt_source_add_failed: Add failed, this source already exists
+apt_source_add_invalid: Add failed, invalid source
+apt_source_del_failed: Del failed, this source does not exist
 #prune
 ## prune
 prune_des: Replying to a message with this command will delete all messages between the latest message and the message. Limit, 1000 messages based on message ID, more than 1000 messages may trigger the limit of deleting messages too quickly. (Non-group administrators only delete their own messages)

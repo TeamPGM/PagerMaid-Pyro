@@ -283,16 +283,19 @@ async def plugin(message: Message):
     outgoing=True,
     command="apt_source",
     need_admin=True,
-    description="添加/删除/查看 自定义插件源",
-    parameters="[add/del] [source]",
+    description=lang("apt_source_des"),
+    parameters=lang("apt_source_parameters"),
 )
 async def apt_source(message: Message):
     if len(message.parameter) == 0:
         remotes = plugin_remote_manager.get_remotes()
         if len(remotes) == 0:
-            await message.edit("当前没有自定义插件源")
+            await message.edit(lang("apt_source_not_found"))
             return
-        await message.edit("当前自定义插件源:\n" + "\n".join([i.text for i in remotes]))
+        await message.edit(
+            f"{lang('apt_source_header')}\n" + "\n".join([i.text for i in remotes]),
+            disable_web_page_preview=True,
+        )
     elif len(message.parameter) == 2:
         url = message.parameter[1]
         if message.parameter[0] == "add":
@@ -302,16 +305,16 @@ async def apt_source(message: Message):
                 status = False
             if status:
                 if plugin_remote_manager.add_remote(url):
-                    await message.edit("添加成功")
+                    await message.edit(lang("apt_source_add_success"))
                 else:
-                    await message.edit("添加失败，此源已存在")
+                    await message.edit(lang("apt_source_add_failed"))
             else:
-                await message.edit("添加失败，此源无效")
+                await message.edit(lang("apt_source_add_invalid"))
         elif message.parameter[0] == "del":
             if plugin_remote_manager.del_remote(url):
-                await message.edit("删除成功")
+                await message.edit(lang("apt_source_del_success"))
             else:
-                await message.edit("删除失败，此源不存在")
+                await message.edit(lang("apt_source_del_failed"))
         else:
             await message.edit(lang("arg_error"))
     else:
