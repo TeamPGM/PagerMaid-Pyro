@@ -2,12 +2,14 @@ import contextlib
 import json
 import os
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from pydantic import BaseModel
 
 from pagermaid import Config
+from pagermaid.enums import Message
 from pagermaid.common.cache import cache
+from pagermaid.modules import plugin_list as active_plugins
 from pagermaid.utils import client
 
 plugins_path = Path("plugins")
@@ -26,6 +28,11 @@ class LocalPlugin(BaseModel):
     @property
     def disabled_path(self) -> Path:
         return plugins_path / f"{self.name}.py.disabled"
+
+    @property
+    def load_status(self) -> bool:
+        """ 插件加载状态 """
+        return self.name in active_plugins
 
     def remove(self):
         with contextlib.suppress(FileNotFoundError):
@@ -134,8 +141,7 @@ class PluginManager:
     def get_local_plugin(self, name: str) -> LocalPlugin:
         return next(filter(lambda x: x.name == name, self.plugins), None)
 
-    @cache()
-    async def _load_remote_plugins(self) -> List[RemotePlugin]:
+    async def __load_remote_plugins(self) -> List[RemotePlugin]:
         plugin_list = await client.get(f"{Config.GIT_SOURCE}list.json")
         plugin_list = plugin_list.json()["list"]
         plugins = [
@@ -146,10 +152,12 @@ class PluginManager:
             for plugin in plugin_list
         ]
         self.remote_plugins = plugins
-        self.remote_version_map = {}
-        for plugin in plugins:
-            self.remote_version_map[plugin.name] = plugin.version
+        self.remote_version_map = {plugin.name: plugin.version for plugin in plugins}
         return plugins
+
+    @cache()
+    async def _load_remote_plugins(self) -> List[RemotePlugin]:
+        return await self.__load_remote_plugins()
 
     async def load_remote_plugins(self) -> List[RemotePlugin]:
         plugin_list = await self._load_remote_plugins()
@@ -186,6 +194,29 @@ class PluginManager:
             if await self.update_remote_plugin(i.name):
                 updated_plugins.append(i)
         return updated_plugins
+
+    @staticmethod
+    async def download_from_message(message: Message) -> str:
+        """ Download a plugin from a message """
+        reply = message.reply_to_message
+        file_path = None
+        if reply and reply.document and reply.document.file_name and reply.document.file_name.endswith(".py"):
+            file_path = await message.reply_to_message.download()
+        elif message.document and message.document.file_name and message.document.file_name.endswith(".py"):
+            file_path = await message.download()
+        return file_path
+
+    def get_plugins_status(self) -> Tuple[List[LocalPlugin], List[LocalPlugin], List[LocalPlugin]]:
+        """ Get plugins status """
+        all_local_plugins = self.plugins
+        disabled_plugins = []
+        inactive_plugins = []
+        for plugin in all_local_plugins:
+            if not plugin.status:
+                inactive_plugins.append(plugin)
+            elif not plugin.load_status:
+                disabled_plugins.append(plugin)
+        return active_plugins, disabled_plugins, inactive_plugins
 
 
 plugin_manager = PluginManager()
