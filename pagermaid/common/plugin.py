@@ -63,10 +63,11 @@ class RemotePlugin(LocalPlugin):
     supported: bool
     des: str = ""
     des_short: str = ""
+    remote_source: str
     ...
 
     async def install(self) -> bool:
-        html = await client.get(f"{Config.GIT_SOURCE}{self.name}/main.py")
+        html = await client.get(f"{self.remote_source}{self.name}/main.py")
         if html.status_code == 200:
             self.remove()
             with open(plugins_path / f"{self.name}.py", mode="wb") as f:
@@ -221,7 +222,7 @@ class PluginManager:
             self.remote_manager.enable_remote(remote)
             for plugin in plugin_list:
                 try:
-                    plugin_model = RemotePlugin(**plugin, status=False)
+                    plugin_model = RemotePlugin(**plugin, status=False, remote_source=remote)
                     if plugin_model.name in plugins_name:
                         continue
                     plugins.append(plugin_model)
