@@ -49,6 +49,7 @@ def listener(**args):
     pattern = sudo_pattern = args.get("pattern")
     diagnostics = args.get("diagnostics", True)
     ignore_edited = args.get("ignore_edited", False)
+    ignore_forwarded = args.get("ignore_forwarded", True)
     is_plugin = args.get("is_plugin", True)
     incoming = args.get("incoming", False)
     outgoing = args.get("outgoing", True)
@@ -82,13 +83,17 @@ def listener(**args):
     if sudo_pattern is not None and not sudo_pattern.startswith("(?i)"):
         sudo_pattern = f"(?i){sudo_pattern}"
     if outgoing and not incoming:
-        base_filters = filters.me & ~filters.via_bot & ~filters.forwarded
+        base_filters = filters.me & ~filters.via_bot
+        if ignore_forwarded:
+            base_filters &= ~filters.forwarded
     elif incoming and not outgoing:
         base_filters = filters.incoming & ~filters.me
     else:
         base_filters = filters.all
     permission_name = get_permission_name(is_plugin, need_admin, command)
-    sudo_filters = sudo_filter(permission_name) & ~filters.via_bot & ~filters.forwarded
+    sudo_filters = sudo_filter(permission_name) & ~filters.via_bot
+    if ignore_forwarded:
+        sudo_filters &= ~filters.forwarded
     if args["pattern"]:
         base_filters &= filters.regex(args["pattern"])
         sudo_filters &= filters.regex(sudo_pattern)
@@ -100,6 +105,8 @@ def listener(**args):
         sudo_filters &= filters.private
     if "ignore_edited" in args:
         del args["ignore_edited"]
+    if "ignore_forwarded" in args:
+        del args["ignore_forwarded"]
     if "command" in args:
         del args["command"]
     if "diagnostics" in args:
@@ -206,9 +213,10 @@ def listener(**args):
                     await message.edit(lang("run_error"), no_reply=True)  # noqa
                 if not diagnostics:
                     return
-                if Config.ERROR_REPORT:
-                    report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
+                report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 
+                logs.error(report)
+                if Config.ERROR_REPORT:
                     await attach_report(
                         report,
                         f"exception.{time()}.pgp.txt",

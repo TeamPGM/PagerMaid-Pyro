@@ -222,7 +222,9 @@ class PluginManager:
             self.remote_manager.enable_remote(remote)
             for plugin in plugin_list:
                 try:
-                    plugin_model = RemotePlugin(**plugin, status=False, remote_source=remote)
+                    plugin_model = RemotePlugin(
+                        **plugin, status=False, remote_source=remote
+                    )
                     if plugin_model.name in plugins_name:
                         continue
                     plugins.append(plugin_model)
