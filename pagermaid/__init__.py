@@ -3,7 +3,7 @@ import contextlib
 from typing import Callable, Awaitable, Set, Dict
 
 from coloredlogs import ColoredFormatter
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from logging import (
     getLogger,
     StreamHandler,
@@ -81,12 +81,16 @@ bot = Client(
 bot.job = scheduler
 
 
-async def log(message):
+async def log(message: str, notice: bool = False):
     logs.info(message.replace("`", '"'))
     if not Config.LOG:
         return
     try:
-        await bot.send_message(Config.LOG_ID, message)
+        await bot.send_message(
+            Config.LOG_ID,
+            message,
+            schedule_date=(datetime.now() + timedelta(seconds=3)) if notice else None,
+        )
     except Exception:
         Config.LOG = False
         Config.LOG_ID = "me"
