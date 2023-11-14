@@ -404,19 +404,21 @@ class Message(pyrogram.types.Message):
             "pyrogram.types.ReplyKeyboardRemove",
             "pyrogram.types.ForceReply",
         ] = object,
+        **kwargs
     ) -> Union["pyrogram.types.Message", List["pyrogram.types.Message"]]:
         if self.media:
             self.text = None
         return await self.oldcopy(
-            chat_id,
-            caption,
-            parse_mode,
-            caption_entities,
-            disable_notification,
-            reply_to_message_id,
-            schedule_date,
-            protect_content,
-            reply_markup,
+            chat_id=chat_id,
+            caption=caption,
+            parse_mode=parse_mode,
+            caption_entities=caption_entities,
+            disable_notification=disable_notification,
+            reply_to_message_id=reply_to_message_id,
+            schedule_date=schedule_date,
+            protect_content=protect_content,
+            reply_markup=reply_markup,
+            **kwargs
         )  # noqa
 
 
