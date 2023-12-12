@@ -78,7 +78,7 @@ need_web_login () {
   PGM_WEB_LOGIN=false
   case $PGM_WEB in
       true)
-        printf "请问是否需要启用 Web 登录界面 [Y/n] ："
+        printf "请问是否需要启用通过 Web 登录？（不建议开启） [Y/n] ："
         read -r web_login <&1
         case $web_login in
             [yY][eE][sS] | [yY])

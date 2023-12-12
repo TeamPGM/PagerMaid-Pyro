@@ -8,7 +8,7 @@ services:
 #    ports:                 # 是否开启网页控制面板
 #      - "3333:3333"
     volumes:
-      - ./:/pagermaid/workdir
+      - ./data:/pagermaid/workdir/data
     environment:
 #      - WEB_ENABLE=true
 #      - WEB_SECRET_KEY=控制台密码

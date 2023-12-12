@@ -16,13 +16,14 @@ from logging import (
 )
 from os import getcwd
 
+import pagermaid.update
 from pagermaid.config import Config
 from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.4.2"
-pgm_version_code = 1402
+pgm_version = "1.4.3"
+pgm_version_code = 1403
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -47,9 +48,9 @@ root_logger = getLogger()
 root_logger.setLevel(DEBUG if Config.DEBUG else CRITICAL)
 root_logger.addHandler(logging_handler)
 pyro_logger = getLogger("pyrogram")
-pyro_logger.setLevel(CRITICAL)
+pyro_logger.setLevel(INFO if Config.DEBUG else CRITICAL)
 pyro_logger.addHandler(logging_handler)
-file_handler = FileHandler(filename="pagermaid.log.txt", mode="w", encoding="utf-8")
+file_handler = FileHandler(filename="data/pagermaid.log.txt", mode="w", encoding="utf-8")
 file_handler.setFormatter(Formatter(logging_format))
 root_logger.addHandler(file_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)
@@ -77,6 +78,7 @@ bot = Client(
     ipv6=Config.IPV6,
     proxy=Config.PROXY,
     app_version=f"PGP {pgm_version}",
+    workdir="data",
 )
 bot.job = scheduler
 

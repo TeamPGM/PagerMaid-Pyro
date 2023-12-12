@@ -103,7 +103,7 @@ async def authorize_by_qrcode(
         if isinstance(qrcode, str):
             qr_obj = QRCode(qrcode)
             try:
-                qr_obj.png("qrcode.png", scale=6)
+                qr_obj.png("data/qrcode.png", scale=6)
             except Exception:
                 print("Save qrcode.png failed.")
             print(qr_obj.terminal())

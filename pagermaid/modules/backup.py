@@ -60,7 +60,7 @@ async def backup(message: Message):
             os.remove(f"data{os.sep}{i}")
 
     # run backup function
-    make_tar_gz(pgm_backup_zip_name, ["data", "plugins", "config.yml"])
+    make_tar_gz(pgm_backup_zip_name, ["data", "plugins"])
     if Config.LOG:
         try:
             await upload_attachment(pgm_backup_zip_name, Config.LOG_ID, None)
