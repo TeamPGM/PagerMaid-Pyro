@@ -57,6 +57,7 @@ login () {
 
 main () {
     cd /pagermaid/workdir || exit
+    mkdir -p /pagermaid/workdir/data
     if [ -f "/pagermaid/workdir/install.lock" ]; then
         echo "Hello world!" > /pagermaid/workdir/data/install.lock
     fi

@@ -1,10 +1,13 @@
 from pathlib import Path
 
+data = Path("data")
+data.mkdir(exist_ok=True)
+
 
 def rename(old: Path):
     if old.exists():
         old_file_name = old.name
-        new = Path("data") / old_file_name
+        new = data / old_file_name
         if new.exists():
             new.unlink()
         old.rename(new)
