@@ -22,8 +22,8 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.4.3"
-pgm_version_code = 1403
+pgm_version = "1.4.4"
+pgm_version_code = 1404
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()
@@ -50,7 +50,9 @@ root_logger.addHandler(logging_handler)
 pyro_logger = getLogger("pyrogram")
 pyro_logger.setLevel(INFO if Config.DEBUG else CRITICAL)
 pyro_logger.addHandler(logging_handler)
-file_handler = FileHandler(filename="data/pagermaid.log.txt", mode="w", encoding="utf-8")
+file_handler = FileHandler(
+    filename="data/pagermaid.log.txt", mode="w", encoding="utf-8"
+)
 file_handler.setFormatter(Formatter(logging_format))
 root_logger.addHandler(file_handler)
 basicConfig(level=DEBUG if Config.DEBUG else INFO)

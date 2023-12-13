@@ -35,6 +35,7 @@ from pagermaid.utils import (
 )
 from pagermaid.hook import Hook
 from pagermaid.web import web
+from pyromod.utils import mod_filters
 
 _lock = asyncio.Lock()
 
@@ -49,6 +50,7 @@ def listener(**args):
     pattern = sudo_pattern = args.get("pattern")
     diagnostics = args.get("diagnostics", True)
     ignore_edited = args.get("ignore_edited", False)
+    ignore_reacted = args.get("ignore_reacted", True)
     ignore_forwarded = args.get("ignore_forwarded", True)
     is_plugin = args.get("is_plugin", True)
     incoming = args.get("incoming", False)
@@ -84,8 +86,6 @@ def listener(**args):
         sudo_pattern = f"(?i){sudo_pattern}"
     if outgoing and not incoming:
         base_filters = filters.me & ~filters.via_bot
-        if ignore_forwarded:
-            base_filters &= ~filters.forwarded
     elif incoming and not outgoing:
         base_filters = filters.incoming & ~filters.me
     else:
@@ -93,7 +93,11 @@ def listener(**args):
     permission_name = get_permission_name(is_plugin, need_admin, command)
     sudo_filters = sudo_filter(permission_name) & ~filters.via_bot
     if ignore_forwarded:
+        base_filters &= ~filters.forwarded
         sudo_filters &= ~filters.forwarded
+    if ignore_reacted:
+        base_filters &= ~mod_filters.reacted
+        sudo_filters &= ~mod_filters.reacted
     if args["pattern"]:
         base_filters &= filters.regex(args["pattern"])
         sudo_filters &= filters.regex(sudo_pattern)
@@ -105,6 +109,8 @@ def listener(**args):
         sudo_filters &= filters.private
     if "ignore_edited" in args:
         del args["ignore_edited"]
+    if "ignore_reacted" in args:
+        del args["ignore_reacted"]
     if "ignore_forwarded" in args:
         del args["ignore_forwarded"]
     if "command" in args:
