@@ -23,7 +23,7 @@ async def get_log(token: Optional[str] = Header(...), num: Union[int, str] = 100
         num = 100
 
     async def streaming_logs():
-        with open("pagermaid.log.txt", "r", encoding="utf-8") as f:
+        with open("data/pagermaid.log.txt", "r", encoding="utf-8") as f:
             for log in f.readlines()[-num:]:
                 yield log
                 await asyncio.sleep(0.02)

@@ -91,7 +91,7 @@ def listener(**args):
     else:
         base_filters = filters.all
     permission_name = get_permission_name(is_plugin, need_admin, command)
-    sudo_filters = sudo_filter(permission_name) & ~filters.via_bot
+    sudo_filters = sudo_filter(permission_name) & ~filters.via_bot & ~filters.me
     if ignore_forwarded:
         base_filters &= ~filters.forwarded
         sudo_filters &= ~filters.forwarded
