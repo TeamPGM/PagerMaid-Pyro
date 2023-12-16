@@ -86,10 +86,10 @@ async def sh_eval(message: Message):
 )
 async def send_log(message: Message):
     """Send log to a chat."""
-    if not exists("pagermaid.log.txt"):
+    if not exists("data/pagermaid.log.txt"):
         return await message.edit(lang("send_log_not_found"))
     await upload_attachment(
-        "pagermaid.log.txt",
+        "data/pagermaid.log.txt",
         message.chat.id,
         message.reply_to_message_id or message.reply_to_top_message_id,
         thumb=f"pagermaid{sep}assets{sep}logo.jpg",
