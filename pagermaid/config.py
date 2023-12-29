@@ -42,6 +42,7 @@ class Config:
             API_ID = int(os.environ.get("API_ID", config["api_id"]))
             API_HASH = os.environ.get("API_HASH", config["api_hash"])
         except (ValueError, KeyError):
+            print("[Error] API_ID or API_HASH is invalid, use the default value.")
             # TGX
             API_ID = DEFAULT_API_ID
             API_HASH = DEFAULT_API_HASH
@@ -63,15 +64,17 @@ class Config:
         )
         TTS = os.environ.get("PGM_TTS", config["application_tts"])
         LOG = strtobool(os.environ.get("PGM_LOG", config["log"]))
-        LOG_ID = int(os.environ.get("PGM_LOG_ID", config["log_chatid"]))
+        LOG_ID = os.environ.get("PGM_LOG_ID", config["log_chatid"])
         IPV6 = strtobool(os.environ.get("PGM_IPV6", config["ipv6"]))
         ALLOW_ANALYTIC = strtobool(
             os.environ.get("PGM_ALLOW_ANALYTIC", config["allow_analytic"]), True
         )
-        SENTRY_API = (
-            "https://2e13a517aeb542e7a307cba8996b6d1a@o1342815.ingest.sentry.io/6617119"
-        )
-        MIXPANEL_API = "c79162511383b0fa1e9c062a2a86c855"
+        SENTRY_API = os.environ.get("SENTRY_API", config.get("sentry_api", ""))
+        if not SENTRY_API:
+            SENTRY_API = "https://79584904859c93d48dbc71d73e76a51a@o416616.ingest.sentry.io/4506478732443653"
+        MIXPANEL_API = os.environ.get("MIXPANEL_API", config.get("mixpanel_api"))
+        if not MIXPANEL_API:
+            MIXPANEL_API = "c79162511383b0fa1e9c062a2a86c855"
         TIME_FORM = os.environ.get("PGM_TIME_FORM", config["time_form"])
         DATE_FORM = os.environ.get("PGM_DATE_FORM", config["date_form"])
         START_FORM = os.environ.get("PGM_START_FORM", config["start_form"])

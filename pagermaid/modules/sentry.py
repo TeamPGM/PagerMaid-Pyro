@@ -58,6 +58,8 @@ async def sentry_init_id(bot: Client):
 
 @Hook.process_error()
 async def sentry_report(message: Message, command, exc_info, **_):
+    if not Config.ERROR_REPORT:
+        return
     sender_id = message.from_user.id if message.from_user else ""
     sender_id = message.sender_chat.id if message.sender_chat else sender_id
     sentry_sdk.set_context(

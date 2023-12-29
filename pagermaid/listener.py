@@ -229,9 +229,9 @@ def listener(**args):
                         None,
                         "PGP Error report generated.",
                     )
-                    await Hook.process_error_exec(
-                        message, command, exc_info, exc_format
-                    )
+                await Hook.process_error_exec(
+                    message, command, exc_info, exc_format
+                )
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
             if block_process:
