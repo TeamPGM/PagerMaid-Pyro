@@ -344,6 +344,15 @@ apt_plugin_maintainer: Author
 apt_plugin_size: size
 apt_plugin_support: support period
 apt_plugin_des_short: descriptionの
+apt_source_des: "カスタムプラグインソースの追加/削除/表示。"
+apt_source_parameters: "[add/del] [カスタムプラグインのソースリンク]"
+apt_source_not_found: 現在、カスタムプラグインソースはありません。
+apt_source_header: "現在のカスタムプラグインソース:"
+apt_source_add_success: 追加に成功しました。
+apt_source_del_success: 削除しました。
+apt_source_add_failed: 追加に失敗しました。このソースは既に存在します。
+apt_source_add_invalid: 追加に失敗しました。このソースは無効です。
+apt_source_del_failed: 削除に失敗しました。このソースは存在しません。
 #prune
 ## prune
 prune_des: Replying to a message with this command will delete all messages between the latest message and the message. Limit, 1000 messages based on message ID, more than 1000 messages may trigger the limit of deleting messages too quickly. (Non-group administrators only delete their messages)

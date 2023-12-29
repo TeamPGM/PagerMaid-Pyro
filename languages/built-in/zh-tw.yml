@@ -344,6 +344,15 @@ apt_plugin_maintainer: 作者
 apt_plugin_size: 容量
 apt_plugin_support: 支援週期
 apt_plugin_des_short: 說明
+apt_source_des: "新增/刪除/檢視 自訂插件來源"
+apt_source_parameters: "[add/del] [自訂軟體來源連結]"
+apt_source_not_found: 目前沒有自訂插件來源
+apt_source_header: "當前自訂插件來源:"
+apt_source_add_success: 添加成功
+apt_source_del_success: 刪除成功
+apt_source_add_failed: 新增失敗，此來源已存在
+apt_source_add_invalid: 新增失敗，此來源無效
+apt_source_del_failed: 刪除失敗，此來源不存在
 #prune
 ## prune
 prune_des: 刪除回覆的訊息後的所有消息。

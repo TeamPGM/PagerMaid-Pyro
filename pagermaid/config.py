@@ -1,10 +1,13 @@
 import os
 import sys
 from json import load as load_json
+from pathlib import Path
 from shutil import copyfile
 from typing import Dict
 
 from yaml import load, FullLoader, safe_load
+
+CONFIG_PATH = Path("data/config.yml")
 
 
 def strtobool(val, default=False):
@@ -25,12 +28,12 @@ def strtobool(val, default=False):
 
 
 try:
-    config: Dict = load(open(r"data/config.yml", encoding="utf-8"), Loader=FullLoader)
+    config: Dict = load(open(CONFIG_PATH, encoding="utf-8"), Loader=FullLoader)
 except FileNotFoundError:
     print(
         "The configuration file does not exist, and a new configuration file is being generated."
     )
-    copyfile(f"{os.getcwd()}{os.sep}config.gen.yml", "data/config.yml")
+    copyfile(f"{os.getcwd()}{os.sep}config.gen.yml", CONFIG_PATH)
     sys.exit(1)
 
 

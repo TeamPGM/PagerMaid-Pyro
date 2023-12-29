@@ -5,6 +5,7 @@ from pyrogram.enums import ParseMode
 
 from pagermaid import help_messages, Config
 from pagermaid.common.alias import AliasManager
+from pagermaid.config import CONFIG_PATH
 from pagermaid.group_manager import enforce_permission
 from pagermaid.common.reload import reload_all
 from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
@@ -163,12 +164,12 @@ async def lang_change(message: Message):
     for i in dir_:
         if i.find("yml") != -1:
             dir__.append(i[:-4])
-    file = pathlib.Path("config.yml").read_text()
+    file = CONFIG_PATH.read_text()
     if to_lang in dir__:
         file = file.replace(
             f'application_language: "{from_lang}"', f'application_language: "{to_lang}"'
         )
-        with open("config.yml", "w", encoding="utf-8") as f:
+        with open(CONFIG_PATH, "w", encoding="utf-8") as f:
             f.write(file)
         await message.edit(f"{lang('lang_change_to')} {to_lang}, {lang('lang_reboot')}")
         await reload_all()
