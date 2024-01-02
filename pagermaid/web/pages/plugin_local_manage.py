@@ -20,10 +20,19 @@ card = Card(
                                 "api": {
                                     "url": "/pagermaid/api/set_local_plugin_status",
                                     "method": "post",
+                                    "dataType": "json",
+                                    "data": {
+                                        "plugin": "${name}",
+                                        "status": "${IF(event.data.value, 1, 0)}",
+                                    },
                                 },
-                                "messages": {
-                                    "success": '成功${IF(event.data.value, "开启", "禁用")}了 ${name}',
-                                    "failed": "操作失败",
+                                "onSuccess": {
+                                    "type": "tpl",
+                                    "tpl": "${payload.msg}",  # 使用返回的 msg 字段作为成功消息
+                                },
+                                "onError": {
+                                    "type": "tpl",
+                                    "tpl": "操作失败",
                                 },
                                 "status": "${event.data.value}",
                                 "plugin": "${name}",
