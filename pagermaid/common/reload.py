@@ -26,8 +26,8 @@ async def reload_all():
     loaded_plugins = list(pagermaid.modules.plugin_list)
     loaded_plugins.extend(iter(pagermaid.modules.module_list))
     # init
-    importlib.reload(pagermaid.modules)
     importlib.reload(pagermaid.config)
+    importlib.reload(pagermaid.modules)
     help_messages.clear()
     all_permissions.clear()
     for functions in hook_functions.values():

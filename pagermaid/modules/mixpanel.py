@@ -4,7 +4,8 @@ import json
 import time
 import uuid
 
-from pagermaid import Config, logs
+from pagermaid.config import Config
+from pagermaid import logs
 from pagermaid.enums import Client, Message
 from pagermaid.services import client as request
 from pagermaid.hook import Hook
@@ -25,6 +26,7 @@ class Mixpanel:
         self._serializer = DatetimeSerializer
         self._request = request
         self.api_host = "api.mixpanel.com"
+        self.is_people_set = False
 
     @staticmethod
     def _now():
@@ -57,7 +59,9 @@ class Mixpanel:
             await self._request.post(request_url, data=params, timeout=10.0)
         logs.debug(f"Mixpanel request took {self._now() - start} seconds")
 
-    async def people_set(self, distinct_id: str, properties: dict):
+    async def people_set(self, distinct_id: str, properties: dict, force_update: bool = False):
+        if self.is_people_set and (not force_update):
+            return
         message = {
             "$distinct_id": distinct_id,
             "$set": properties,
@@ -65,9 +69,11 @@ class Mixpanel:
         record = {"$token": self._token, "$time": self._now()}
         # sourcery skip: dict-assign-update-to-union
         record.update(message)
-        return await self.api_call(
+        res = await self.api_call(
             "people", self.json_dumps(record, cls=self._serializer)
         )
+        self.is_people_set = True
+        return res
 
     async def track(self, distinct_id: str, event_name: str, properties: dict):
         all_properties = {
@@ -93,20 +99,31 @@ class Mixpanel:
 mp = Mixpanel(Config.MIXPANEL_API)
 
 
-@Hook.on_startup()
-async def mixpanel_init_id(bot: Client):
+async def set_people(bot: Client, force_update: bool = False):
+    if not Config.ALLOW_ANALYTIC:
+        return
+    if mp.is_people_set and (not force_update):
+        return
     if not bot.me:
         bot.me = await bot.get_me()
     data = {"$first_name": bot.me.first_name}
     if bot.me.username:
         data["username"] = bot.me.username
-    bot.loop.create_task(mp.people_set(str(bot.me.id), data))
+    bot.loop.create_task(mp.people_set(str(bot.me.id), data, force_update=force_update))
+
+
+@Hook.on_startup()
+async def mixpanel_init_id(bot: Client):
+    if not Config.ALLOW_ANALYTIC:
+        return
+    await set_people(bot)
 
 
 @Hook.command_postprocessor()
 async def mixpanel_report(bot: Client, message: Message, command):
     if not Config.ALLOW_ANALYTIC:
         return
+    await set_people(bot)
     if not bot.me:
         bot.me = await bot.get_me()
     sender_id = message.from_user.id if message.from_user else ""

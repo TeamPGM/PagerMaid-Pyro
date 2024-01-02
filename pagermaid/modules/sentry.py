@@ -34,16 +34,22 @@ sentry_sdk_git_hash = (
     .stdout.decode()
     .strip()
 )
-sentry_sdk.init(
-    Config.SENTRY_API,
-    traces_sample_rate=1.0,
-    release=sentry_sdk_git_hash,
-    before_send=sentry_before_send,
-    environment="production",
-    integrations=[
-        HttpxIntegration(),
-    ],
-)
+
+# fixme: Not enough for dynamic disable sentry,
+#  web server will still report if pgm start with Config.ERROR_REPORT = True
+if Config.ERROR_REPORT:
+    sentry_sdk.init(
+        Config.SENTRY_API,
+        traces_sample_rate=1.0,
+        release=sentry_sdk_git_hash,
+        before_send=sentry_before_send,
+        environment="production",
+        integrations=[
+            HttpxIntegration(),
+        ],
+    )
+else:
+    sentry_sdk.init()
 
 
 @Hook.on_startup()
