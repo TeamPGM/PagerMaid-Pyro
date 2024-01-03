@@ -23,21 +23,32 @@ card = Card(
             offText="未忽略",
             onEvent={
                 "change": {
-                    "actions": {
-                        "actionType": "ajax",
-                        "args": {
-                            "api": {
-                                "url": "/pagermaid/api/set_ignore_group_status",
-                                "method": "post",
+                    "actions": [
+                        {
+                            "actionType": "ajax",
+                            "args": {
+                                "api": {
+                                    "url": "/pagermaid/api/set_ignore_group_status",
+                                    "method": "post",
+                                    "dataType": "json",
+                                    "data": {
+                                        "id": "${id}",
+                                        "status": "${IF(event.data.value, 1, 0)}",
+                                    },
+                                },
+                                "onSuccess": {
+                                    "type": "tpl",
+                                    "tpl": "${payload.msg}",  # 使用返回的 msg 字段作为成功消息
+                                },
+                                "onError": {
+                                    "type": "tpl",
+                                    "tpl": "操作失败",
+                                },
+                                "status": "${event.data.value}",
+                                "id": "${id}",
                             },
-                            "messages": {
-                                "success": '成功${IF(event.data.value, "忽略", "取消忽略")}了 ${title}',
-                                "failed": "操作失败",
-                            },
-                            "status": "${event.data.value}",
-                            "id": "${id}",
                         },
-                    }
+                    ]
                 }
             },
         )

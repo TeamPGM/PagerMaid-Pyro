@@ -72,4 +72,4 @@ async def set_remote_plugin_status(data: dict):
     else:
         plugin_manager.remove_plugin(module_name)
     await reload_all()
-    return {"status": 0, "msg": f'成功{"开启" if status else "关闭"} {module_name}'}
+    return {"status": 0, "msg": f'成功{"安装" if status else "卸载"} {module_name}'}
