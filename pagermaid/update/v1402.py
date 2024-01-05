@@ -1,16 +1,20 @@
+from datetime import datetime
 from pathlib import Path
+import shutil
 
 data = Path("data")
 data.mkdir(exist_ok=True)
 
 
-def rename(old: Path):
+def rename(old: Path, need_backup: bool = True):
     if old.exists():
         old_file_name = old.name
         new = data / old_file_name
-        if new.exists():
-            new.unlink()
-        old.rename(new)
+        if need_backup and new.exists():
+            datetime_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            backup = new.with_stem(f"{new.stem}.{datetime_str}")
+            shutil.move(new, backup)
+        shutil.move(old, new)
 
 
 # move file
@@ -22,7 +26,7 @@ config = Path("config.yml")
 rename(config)
 # docker
 docker = Path("install.lock")
-rename(docker)
+rename(docker, need_backup=False)
 # delete file
 # log
 log = Path("pagermaid.log.txt")
