@@ -12,7 +12,7 @@ def rename(old: Path, need_backup: bool = True):
         new = data / old_file_name
         if need_backup and new.exists():
             datetime_str = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-            backup = data / (new.stem + f".{datetime_str}" + new.suffix)
+            backup = data / f"{new.stem}.{datetime_str}{new.suffix}"
             shutil.move(new, backup)
         shutil.move(old, new)
 
