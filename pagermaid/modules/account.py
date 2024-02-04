@@ -85,19 +85,22 @@ async def profile(client: Client, message: Message):
         f"{lang('profile_type')}: {user_type} \n"
         f"[{first_name}](tg://user?id={user.id})"
     )
-    photo = await client.download_media(user.photo.big_file_id)
+    photo = await client.download_media(user.photo.big_file_id) if user.photo else None
     reply_to = (
         message.reply_to_message.id
         if message.reply_to_message
-        else message.reply_to_top_message_id
+        else None
     )
-    try:
-        await client.send_photo(
-            message.chat.id, photo, caption=caption, reply_to_message_id=reply_to
-        )
-        await message.delete()
-        return remove(photo)
-    except TypeError:
+    if photo:
+        try:
+            await client.send_photo(
+                message.chat.id, photo, caption=caption, reply_to_message_id=reply_to
+            )
+            await message.delete()
+            return remove(photo)
+        except TypeError:
+            await message.edit(caption)
+    else:
         await message.edit(caption)
 
 

@@ -181,6 +181,7 @@ async def plugin(message: Message):
                         file_name,
                         message.chat.id,
                         reply_id,
+                        message_thread_id=message.message_thread_id,
                         thumb=f"pagermaid{sep}assets{sep}logo.jpg",
                         caption=f"<b>{lang('apt_name')}</b>\n\n"
                         f"PagerMaid-Pyro {message.parameter[1]} plugin.",

@@ -26,9 +26,9 @@ async def prune(client: Client, message: Message):
     messages = []
     count = 0
     limit = message.id - message.reply_to_message.id + 1
-    if message.reply_to_top_message_id:
+    if message.message_thread_id:
         func = client.get_discussion_replies(
-            input_chat, message.reply_to_top_message_id, limit=limit
+            input_chat, message.message_thread_id, limit=limit
         )
     else:
         func = client.get_chat_history(input_chat, limit=limit)
@@ -185,5 +185,5 @@ async def send_prune_notify(bot: Client, message: Message, count_buffer, count):
     return await bot.send_message(
         message.chat.id,
         f"{lang('spn_deleted')} {str(count_buffer)} / {str(count)} {lang('prune_hint2')}",
-        reply_to_message_id=message.reply_to_top_message_id,
+        message_thread_id=message.message_thread_id,
     )

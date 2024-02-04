@@ -53,7 +53,7 @@ async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None)
     remove(file_name)
 
 
-async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=None):
+async def upload_attachment(file_path, chat_id, reply_id, message_thread_id=None, caption=None, thumb=None):
     """Uploads a local attachment file."""
     if not exists(file_path):
         return False
@@ -61,6 +61,7 @@ async def upload_attachment(file_path, chat_id, reply_id, caption=None, thumb=No
         await bot.send_document(
             chat_id,
             file_path,
+            message_thread_id=message_thread_id,
             thumb=thumb,
             reply_to_message_id=reply_id,
             caption=caption,

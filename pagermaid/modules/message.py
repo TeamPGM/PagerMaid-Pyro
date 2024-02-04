@@ -169,29 +169,13 @@ async def re(bot: Client, message: Message):
         for _ in range(num):
             try:
                 if not message.chat.has_protected_content:
-                    await forward_msg(bot, message.reply_to_message)
+                    await reply.forward(reply.chat.id, message_thread_id=reply.message_thread_id)
                 else:
                     await reply.copy(
                         reply.chat.id,
-                        reply_to_message_id=message.reply_to_top_message_id,
+                        message_thread_id=message.message_thread_id,
                     )
             except (Forbidden, FloodWait, Exception):
                 return
     else:
         await message.edit(lang("not_reply"))
-
-
-async def forward_msg(bot: Client, message: Message):
-    message_ids = [message.id]
-    await bot.invoke(
-        ForwardMessages(
-            to_peer=await bot.resolve_peer(message.chat.id),
-            from_peer=await bot.resolve_peer(message.chat.id),
-            id=message_ids,
-            silent=None,
-            random_id=[bot.rnd_id() for _ in message_ids],
-            schedule_date=None,
-            noforwards=None,
-            top_msg_id=message.reply_to_top_message_id,
-        )
-    )
