@@ -169,7 +169,9 @@ async def re(bot: Client, message: Message):
         for _ in range(num):
             try:
                 if not message.chat.has_protected_content:
-                    await reply.forward(reply.chat.id, message_thread_id=reply.message_thread_id)
+                    await reply.forward(
+                        reply.chat.id, message_thread_id=reply.message_thread_id
+                    )
                 else:
                     await reply.copy(
                         reply.chat.id,

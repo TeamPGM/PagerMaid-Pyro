@@ -86,11 +86,7 @@ async def profile(client: Client, message: Message):
         f"[{first_name}](tg://user?id={user.id})"
     )
     photo = await client.download_media(user.photo.big_file_id) if user.photo else None
-    reply_to = (
-        message.reply_to_message.id
-        if message.reply_to_message
-        else None
-    )
+    reply_to = message.reply_to_message.id if message.reply_to_message else None
     if photo:
         try:
             await client.send_photo(

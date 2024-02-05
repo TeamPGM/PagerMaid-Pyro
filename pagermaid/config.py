@@ -17,6 +17,8 @@ def strtobool(val, default=False):
     are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
     'val' is anything else.
     """
+    if val is None:
+        return default
     val = val.lower()
     if val in ("y", "yes", "t", "true", "on", "1"):
         return 1
@@ -143,6 +145,7 @@ class Config:
         WEB_HOST = os.environ.get("WEB_HOST", web_interface.get("host", "127.0.0.1"))
         WEB_PORT = int(os.environ.get("WEB_PORT", web_interface.get("port", 3333)))
         WEB_ORIGINS = web_interface.get("origins", ["*"])
+        USE_PB = strtobool(os.environ.get("PGM_USE_PB", config.get("use_pb")), True)
     except ValueError as e:
         print(e)
         sys.exit(1)

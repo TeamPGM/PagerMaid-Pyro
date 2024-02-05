@@ -1,14 +1,23 @@
+import html
 import sys
 from getpass import getuser
 from os.path import exists, sep
 from platform import node
+from time import perf_counter
 
-from pyrogram.enums import ParseMode
-
-from pagermaid.common.system import run_eval
+from pagermaid import Config
+from pagermaid.common.system import run_eval, paste_pb
 from pagermaid.enums import Message
 from pagermaid.listener import listener
 from pagermaid.utils import attach_log, execute, lang, upload_attachment
+
+code_result = (
+    f"<b>{lang('eval_code')}</b>\n"
+    '<pre language="{}">{}</pre>\n\n'
+    f'<b>{lang("eval_result")}</b>\n'
+    "{}\n"
+    f"<b>{lang('eval_time')}</b>"
+)
 
 
 @listener(
@@ -28,18 +37,24 @@ async def sh(message: Message):
         await message.edit(lang("arg_error"))
         return
 
-    message = await message.edit(f"`{user}`@{hostname} ~" f"\n> `$` {command}")
+    message = await message.edit(f"`{user}`@{hostname} ~\n> `$` {command}")
 
     result = await execute(command)
 
     if result:
-        if len(result) > 4096:
+        final_result = None
+        if len(result) > 3072:
+            if Config.USE_PB:
+                url = await paste_pb(result)
+                if url:
+                    final_result = html.escape(f"{url}/bash")
+        else:
+            final_result = f"<code>{html.escape(result)}</code>"
+
+        if (len(result) > 3072 and not Config.USE_PB) or final_result is None:
             await attach_log(result, message.chat.id, "output.log", message.id)
             return
-
-        await message.edit(
-            f"`{user}`@{hostname} ~" f"\n> `#` {command}" f"\n`{result}`"
-        )
+        await message.edit(f"`{user}`@{hostname} ~\n> `#` {command}\n\n{final_result}")
     else:
         return
 
@@ -70,12 +85,29 @@ async def sh_eval(message: Message):
         cmd = message.text.split(" ", maxsplit=1)[1]
     except (IndexError, AssertionError):
         return await message.edit(lang("eval_need_dev"))
+    message = await message.edit_text(f"<b>{lang('eval_executing')}</b>")
+    start_time = perf_counter()
     final_output = await run_eval(cmd, message)
-    if len(final_output) > 4096:
-        message = await message.edit(f"**>>>** `{cmd}`", parse_mode=ParseMode.MARKDOWN)
-        await attach_log(final_output, message.chat.id, "output.log", message.id)
+    stop_time = perf_counter()
+
+    result = None
+    if len(final_output) > 3072:
+        if Config.USE_PB:
+            url = await paste_pb(final_output)
+            if url:
+                result = html.escape(f"{url}/python")
     else:
-        await message.edit(final_output)
+        result = f"<code>{html.escape(final_output)}</code>"
+    text = code_result.format(
+        "python",
+        html.escape(cmd),
+        result if result else "...",
+        round(stop_time - start_time, 5),
+    )
+
+    await message.edit(text)
+    if (len(final_output) > 3072 and not Config.USE_PB) or result is None:
+        await attach_log(final_output, message.chat.id, "output.log", message.id)
 
 
 @listener(

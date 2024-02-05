@@ -59,7 +59,9 @@ class Mixpanel:
             await self._request.post(request_url, data=params, timeout=10.0)
         logs.debug(f"Mixpanel request took {self._now() - start} seconds")
 
-    async def people_set(self, distinct_id: str, properties: dict, force_update: bool = False):
+    async def people_set(
+        self, distinct_id: str, properties: dict, force_update: bool = False
+    ):
         if self.is_people_set and (not force_update):
             return
         message = {

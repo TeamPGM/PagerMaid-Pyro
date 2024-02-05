@@ -32,6 +32,7 @@ from pagermaid.utils import (
     alias_command,
     get_permission_name,
     process_exit,
+    format_exc as format_exc_text,
 )
 from pagermaid.hook import Hook
 from pagermaid.web import web
@@ -212,11 +213,13 @@ def listener(**args):
                 await process_exit(start=False, _client=client, message=message)
                 await Hook.shutdown()
                 web.stop()
-            except BaseException:
+            except BaseException as exc:
                 exc_info = sys.exc_info()[1]
                 exc_format = format_exc()
                 with contextlib.suppress(BaseException):
-                    await message.edit(lang("run_error"), no_reply=True)  # noqa
+                    exc_text = format_exc_text(exc)
+                    text = f'{lang("run_error")}\n\n{exc_text}'
+                    await message.edit(text, no_reply=True)  # noqa
                 if not diagnostics:
                     return
                 report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
@@ -229,9 +232,7 @@ def listener(**args):
                         None,
                         "PGP Error report generated.",
                     )
-                await Hook.process_error_exec(
-                    message, command, exc_info, exc_format
-                )
+                await Hook.process_error_exec(message, command, exc_info, exc_format)
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
             if block_process:

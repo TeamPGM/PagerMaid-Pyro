@@ -37,7 +37,7 @@ async def run_cmd(token: Optional[str] = Header(...), cmd: str = ""):
         return "非法请求"
 
     async def run_cmd_func():
-        result = (await run_eval(cmd, only_result=True)).split("\n")
+        result = (await run_eval(cmd)).split("\n")
         for i in result:
             yield i + "\n"
             await asyncio.sleep(0.02)

@@ -503,6 +503,10 @@ eval_parameters: <command>
 eval_channel: Something went wrong ~ The current Maid-Pyro configuration prohibits the execution of Python commands in the channel.
 eval_success: execute Python commands remotey
 eval_need_dev: '**Please note: This command can directly operate your account** This command is only for developers. If you know what you are doing, and please manually configure the `dev` item in the Redis database to any value or create the `dev` file in the `data` folder。'
+eval_executing: '🔃 実行中...'
+eval_code: '💻 コード:'
+eval_result: '✨ 結果:'
+eval_time: '{}2番 で完了しました。'
 ## send_log
 send_log_des: 指定したユーザーにログ ファイルを送信します。
 send_log_not_found: ログファイルが存在しません。

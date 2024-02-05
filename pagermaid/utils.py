@@ -11,6 +11,8 @@ from asyncio import create_subprocess_shell, sleep
 from asyncio.subprocess import PIPE
 
 from pyrogram import filters
+from pyrogram.errors import RPCError
+
 from pagermaid.config import Config
 from pagermaid import bot
 from pagermaid.group_manager import enforce_permission
@@ -53,7 +55,9 @@ async def attach_log(plaintext, chat_id, file_name, reply_id=None, caption=None)
     remove(file_name)
 
 
-async def upload_attachment(file_path, chat_id, reply_id, message_thread_id=None, caption=None, thumb=None):
+async def upload_attachment(
+    file_path, chat_id, reply_id, message_thread_id=None, caption=None, thumb=None
+):
     """Uploads a local attachment file."""
     if not exists(file_path):
         return False
@@ -205,6 +209,12 @@ async def process_exit(start: int, _client, message=None):
         del sqlite["exit_msg"]
     if message:
         sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
+
+
+def format_exc(e: BaseException) -> str:
+    if isinstance(e, RPCError):
+        return f"<code>API [{e.CODE} {e.ID or e.NAME}] — {e.MESSAGE.format(value=e.value)}</code>"
+    return f"<code>{e.__class__.__name__}: {e}</code>"
 
 
 """ Init httpx client """

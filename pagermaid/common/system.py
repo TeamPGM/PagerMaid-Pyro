@@ -1,11 +1,13 @@
 import io
 import sys
 import traceback
+from typing import Optional
 
 from pagermaid import bot
+from pagermaid.services import client as httpx_client
 
 
-async def run_eval(cmd: str, message=None, only_result: bool = False) -> str:
+async def run_eval(cmd: str, message=None) -> str:
     old_stderr = sys.stderr
     old_stdout = sys.stdout
     redirected_output = sys.stdout = io.StringIO()
@@ -27,7 +29,7 @@ async def run_eval(cmd: str, message=None, only_result: bool = False) -> str:
         evaluation = stdout
     else:
         evaluation = "Success"
-    return evaluation if only_result else f"**>>>** `{cmd}` \n`{evaluation}`"
+    return evaluation
 
 
 async def aexec(code, event, client):
@@ -43,3 +45,19 @@ async def aexec(code, event, client):
     )
 
     return await locals()["__aexec"](event, client)
+
+
+async def paste_pb(
+    content: str, private: bool = True, sunset: int = 3600
+) -> Optional[str]:
+    data = {
+        "c": content,
+    }
+    if private:
+        data["p"] = "1"
+    if sunset:
+        data["sunset"] = sunset
+    result = await httpx_client.post("https://fars.ee", data=data)
+    if result.is_error:
+        return None
+    return result.headers.get("location")
