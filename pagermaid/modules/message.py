@@ -36,6 +36,12 @@ async def userid(message: Message):
         text += f"protected: `{str(msg_from.has_protected_content)}" + "`\n"
     if reply:
         text += "\n" + lang("id_hint") + "\nMessage ID: `" + str(reply.id) + "`"
+        if reply.photo and reply.photo.file_id:
+            text += "\nphoto_id: `" + str(reply.photo.file_id) + "`"
+        if reply.video and reply.video.file_id:
+            text += "\nvideo_id: `" + str(reply.video.file_id) + "`"
+        if reply.document and reply.document.file_id:
+            text += "\ndocument_id: `" + str(reply.document.file_id) + "`"
         try:
             text += "\n\n**User**\nid: `" + str(reply.from_user.id) + "`"
             if reply.from_user.is_bot:
