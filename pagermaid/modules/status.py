@@ -142,7 +142,7 @@ def wmic(command: str):
     except FileNotFoundError:
         return r"WMIC.exe was not found... Make sure 'C:\Windows\System32\wbem' is added to PATH."
 
-    stdout, stderror = p.communicate()
+    stdout, _ = p.communicate()
 
     output = stdout.decode("gbk", "ignore")
     lines = output.split("\r\r")
@@ -205,7 +205,7 @@ def partitions():
 
     for g in parts:
         try:
-            total, used, free = disk_usage(g.device)
+            total, used, _ = disk_usage(g.device)
             percent_used = round(used / total * 100, 2)
             listparts.append(
                 f"      {g.device[:2]} {readable(used)} / {readable(total)} ({percent_used}%)"

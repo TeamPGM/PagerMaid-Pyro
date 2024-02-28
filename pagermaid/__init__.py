@@ -22,8 +22,8 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.4.9"
-pgm_version_code = 1409
+pgm_version = "1.4.10"
+pgm_version_code = 1410
 CMD_LIST = {}
 module_dir = __path__[0]
 working_dir = getcwd()

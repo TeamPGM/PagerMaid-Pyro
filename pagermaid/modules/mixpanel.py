@@ -3,11 +3,22 @@ import datetime
 import json
 import time
 import uuid
+import random
+from asyncio import sleep
+from typing import Union
 
-from pagermaid.config import Config
+from pyrogram.raw.functions.channels import (
+    GetSponsoredMessages,
+    ViewSponsoredMessage,
+    ClickSponsoredMessage,
+)
+from pyrogram.raw.types import InputChannel
+from pyrogram.raw.types.messages import SponsoredMessages, SponsoredMessagesEmpty
+
 from pagermaid import logs
+from pagermaid.config import Config
 from pagermaid.enums import Client, Message
-from pagermaid.services import client as request
+from pagermaid.services import client as request, scheduler, bot as userbot
 from pagermaid.hook import Hook
 
 
@@ -108,7 +119,7 @@ async def set_people(bot: Client, force_update: bool = False):
         return
     if not bot.me:
         bot.me = await bot.get_me()
-    data = {"$first_name": bot.me.first_name}
+    data = {"$first_name": bot.me.first_name, "is_premium": bot.me.is_premium}
     if bot.me.username:
         data["username"] = bot.me.username
     bot.loop.create_task(mp.people_set(str(bot.me.id), data, force_update=force_update))
@@ -119,6 +130,7 @@ async def mixpanel_init_id(bot: Client):
     if not Config.ALLOW_ANALYTIC:
         return
     await set_people(bot)
+    await log_sponsored_clicked()
 
 
 @Hook.command_postprocessor()
@@ -139,3 +151,80 @@ async def mixpanel_report(bot: Client, message: Message, command):
             {"command": command, "bot_id": bot.me.id},
         )
     )
+
+
+async def get_sponsored(
+    bot: Client, channel: "InputChannel"
+) -> Union["SponsoredMessages", "SponsoredMessagesEmpty"]:
+    result = await bot.invoke(GetSponsoredMessages(channel=channel))
+    logs.debug(f"Get sponsored messages: {type(result)}")
+    return result
+
+
+async def read_sponsored(
+    bot: Client, channel: "InputChannel", random_id: bytes
+) -> bool:
+    result = await bot.invoke(
+        ViewSponsoredMessage(channel=channel, random_id=random_id)
+    )
+    if result:
+        bot.loop.create_task(
+            mp.track(
+                str(bot.me.id),
+                "Sponsored Read",
+                {"channel_id": channel.channel_id, "bot_id": bot.me.id},
+            )
+        )
+    logs.debug(f"Read sponsored message {random_id}: {result}")
+    return result
+
+
+async def click_sponsored(
+    bot: Client, channel: "InputChannel", random_id: bytes
+) -> bool:
+    result = await bot.invoke(
+        ClickSponsoredMessage(channel=channel, random_id=random_id)
+    )
+    if result:
+        bot.loop.create_task(
+            mp.track(
+                str(bot.me.id),
+                "Sponsored Click",
+                {"channel_id": channel.channel_id, "bot_id": bot.me.id},
+            )
+        )
+    logs.debug(f"Click sponsored message {random_id}: {result}")
+    return result
+
+
+async def log_sponsored_clicked_one(username: str):
+    channel = await userbot.resolve_peer(username)
+    sponsored = await get_sponsored(userbot, channel)
+    if isinstance(sponsored, SponsoredMessagesEmpty):
+        return
+    for message in sponsored.messages:
+        await sleep(random.randint(1, 5))
+        if message.random_id:
+            with contextlib.suppress(Exception):
+                await read_sponsored(userbot, channel, message.random_id)
+            await sleep(random.randint(1, 5))
+            with contextlib.suppress(Exception):
+                await click_sponsored(userbot, channel, message.random_id)
+
+
+async def log_sponsored_clicked():
+    add_log_sponsored_clicked_task()
+    if not Config.ALLOW_ANALYTIC:
+        return
+    await set_people(userbot)
+    if not userbot.me:
+        userbot.me = await userbot.get_me()
+    if (not userbot.me) or userbot.me.is_premium:
+        return
+    for username in ["PagerMaid_Modify"]:
+        await log_sponsored_clicked_one(username)
+
+
+def add_log_sponsored_clicked_task():
+    # run random time between 1 and 5 hours
+    scheduler.add_job(log_sponsored_clicked, "interval", hours=random.randint(1, 5))

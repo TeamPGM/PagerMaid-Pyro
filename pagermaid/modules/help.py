@@ -11,8 +11,6 @@ from pagermaid.common.reload import reload_all
 from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
 from pagermaid.listener import listener
 
-import pathlib
-
 
 @listener(
     is_plugin=False,

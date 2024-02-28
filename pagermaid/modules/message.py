@@ -1,13 +1,12 @@
 """ Pagermaid message plugin. """
 from pyrogram.enums import ChatType
 from pyrogram.errors import Forbidden, FloodWait
-from pyrogram.raw.functions.messages import ForwardMessages
 
 from pagermaid import log
 from pagermaid.config import Config
 from pagermaid.listener import listener
 from pagermaid.utils import lang
-from pagermaid.enums import Client, Message
+from pagermaid.enums import Message
 
 
 @listener(is_plugin=False, outgoing=True, command="id", description=lang("id_des"))
@@ -159,7 +158,7 @@ async def logging(message: Message):
     description=lang("re_des"),
     parameters=lang("re_parameters"),
 )
-async def re(bot: Client, message: Message):
+async def re(message: Message):
     """Forwards a message into this group"""
     if reply := message.reply_to_message:
         if message.arguments == "":
