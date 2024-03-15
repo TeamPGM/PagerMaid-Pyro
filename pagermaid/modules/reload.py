@@ -47,6 +47,7 @@ async def ping_task():
         ping_watchdog_event.set()
         try:
             await bot.restart()
+            await reload_all()
         finally:
             ping_watchdog_event.clear()
     logs.debug("Ping task ok")
