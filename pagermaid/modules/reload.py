@@ -28,7 +28,8 @@ async def clear_read_context_cron():
 
 @scheduler.scheduled_job("interval", seconds=10, id="reload.ping_watchdog")
 async def ping_task():
-    if not bot.is_initialized:
+    if not bot.session.is_started.is_set():
+        logs.debug("Ping task bot not started, skip")
         return
     if ping_watchdog_event.is_set():
         logs.debug("Ping task watchdog event set, skip")
@@ -46,8 +47,7 @@ async def ping_task():
         logs.debug("Ping task raise OSError, try restart")
         ping_watchdog_event.set()
         try:
-            await bot.restart()
-            await reload_all()
+            await bot.session.restart()
         finally:
             ping_watchdog_event.clear()
     logs.debug("Ping task ok")
