@@ -60,15 +60,26 @@ async def backup(message: Message):
             os.remove(f"data{os.sep}{i}")
 
     # run backup function
-    make_tar_gz(pgm_backup_zip_name, ["data", "plugins"])
-    if Config.LOG:
-        try:
-            await upload_attachment(pgm_backup_zip_name, Config.LOG_ID, None)
-            await message.edit(lang("backup_success_channel"))
-        except Exception:
-            await message.edit(lang("backup_success"))
-    else:
+    # 新版人性备份中含有session文件会导致恢复时人性重启失败，建议移除
+def make_tar_gz(output_filename, source_dirs):
+    with tarfile.open(output_filename, "w:gz") as tar:
+        for source_dir in source_dirs:
+            for root, dirs, files in os.walk(source_dir):
+                for file in files:
+                    if "session" not in file:
+                        tar.add(os.path.join(root, file))
+
+
+make_tar_gz(pgm_backup_zip_name, ["data", "plugins"])
+
+if Config.LOG:
+    try:
+        await upload_attachment(pgm_backup_zip_name, Config.LOG_ID, None)
+        await message.edit(lang("backup_success_channel"))
+    except Exception:
         await message.edit(lang("backup_success"))
+else:
+    await message.edit(lang("backup_success"))
 
 
 @listener(
