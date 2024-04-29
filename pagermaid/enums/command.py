@@ -21,6 +21,9 @@ class CommandHandler:
     def func(self) -> CommandHandlerFunc:
         return self._pgp_func__
 
+    def __call__(self, *args, **kwargs):
+        return self.func()(*args, **kwargs)
+
     def set_handler(self, handler):
         self._pgp_raw_handler = handler
 
