@@ -6,10 +6,10 @@ from typing import Optional, List, Tuple, Dict
 
 from pydantic import BaseModel, ValidationError
 
+import pagermaid.modules
 from pagermaid import Config, logs
 from pagermaid.enums import Message
 from pagermaid.common.cache import cache
-from pagermaid.modules import plugin_list as active_plugins
 from pagermaid.utils import client
 from pagermaid.services import sqlite
 
@@ -33,6 +33,7 @@ class LocalPlugin(BaseModel):
     @property
     def load_status(self) -> bool:
         """插件加载状态"""
+        active_plugins = pagermaid.modules.plugin_list
         return self.name in active_plugins
 
     def remove(self):
@@ -307,6 +308,7 @@ class PluginManager:
     ) -> Tuple[List[str], List[LocalPlugin], List[LocalPlugin]]:
         """Get plugins status"""
         all_local_plugins = self.plugins
+        active_plugins = pagermaid.modules.plugin_list
         disabled_plugins = []
         inactive_plugins = []
         for plugin in all_local_plugins:

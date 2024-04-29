@@ -103,12 +103,14 @@ class Hook:
                 logs.info(f"[shutdown]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def command_pre(message: Message, command):
+    async def command_pre(message: Message, command, sub_command):
         cors = []
         try:
             for pre in hook_functions["command_pre"]:
                 try:
-                    data = inject(message, pre, command=command)
+                    data = inject(
+                        message, pre, command=command, sub_command=sub_command
+                    )
                 except Exception as exception:
                     logs.info(f"[process_error]: {type(exception)}: {exception}")
                     continue
@@ -124,12 +126,14 @@ class Hook:
             logs.info(f"[command_pre]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def command_post(message: Message, command):
+    async def command_post(message: Message, command, sub_command):
         cors = []
         try:
             for post in hook_functions["command_post"]:
                 try:
-                    data = inject(message, post, command=command)
+                    data = inject(
+                        message, post, command=command, sub_command=sub_command
+                    )
                 except Exception as exception:
                     logs.info(f"[process_error]: {type(exception)}: {exception}")
                     continue

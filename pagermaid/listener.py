@@ -17,8 +17,8 @@ from pyrogram.handlers import MessageHandler, EditedMessageHandler
 
 from pagermaid import help_messages, logs, Config, bot, read_context, all_permissions
 from pagermaid.common.ignore import ignore_groups_manager
+from pagermaid.enums.command import CommandHandler, CommandHandlerDecorator
 from pagermaid.group_manager import Permission
-from pagermaid.inject import inject
 from pagermaid.single_utils import (
     Message,
     AlreadyInConversationError,
@@ -41,9 +41,11 @@ from pyromod.utils import mod_filters
 _lock = asyncio.Lock()
 
 
-def listener(**args):
+def listener(**args) -> CommandHandlerDecorator:
     """Register an event listener."""
+    parent_command = args.get("__parent_command")
     command = args.get("command")
+    allow_parent = args.get("allow_parent", False)
     disallow_alias = args.get("disallow_alias", False)
     need_admin = args.get("need_admin", False)
     description = args.get("description")
@@ -70,15 +72,20 @@ def listener(**args):
         priority = 0
 
     if command is not None:
-        if command in help_messages:
+        if parent_command is None and command in help_messages:
             if help_messages[alias_command(command)]["priority"] <= priority:
                 raise ValueError(
                     f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}"
                 )
             else:
                 block_process = True
-        pattern = rf"^(,|，){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
-        sudo_pattern = rf"^(/){alias_command(command, disallow_alias)}(?: |$)([\s\S]*)"
+        real_command = (
+            alias_command(command, disallow_alias)
+            if parent_command is None
+            else f"{parent_command} {command}"
+        )
+        pattern = rf"^(,|，){real_command}(?: |$)([\s\S]*)"
+        sudo_pattern = rf"^(/){real_command}(?: |$)([\s\S]*)"
     if pattern is not None and not pattern.startswith("(?i)"):
         args["pattern"] = f"(?i){pattern}"
     else:
@@ -137,7 +144,14 @@ def listener(**args):
     if "block_process" in args:
         del args["block_process"]
 
-    def decorator(function):
+    def decorator(function) -> CommandHandler:
+        func = CommandHandler(
+            function,
+            alias_command(command, disallow_alias)
+            if command and parent_command is None
+            else None,
+        )
+
         async def handler(client: Client, message: Message):
             try:
                 # ignore
@@ -149,11 +163,15 @@ def listener(**args):
                 except BaseException:
                     pass
                 try:
-                    parameter = message.matches[0].group(2).split(" ")
+                    arguments = message.matches[0].group(2)
+                    parameter = arguments.split(" ")
                     if parameter == [""]:
                         parameter = []
+                    if parent_command is not None and command is not None:
+                        parameter.insert(0, command)
+                        arguments = f"{command} {arguments}".strip()
                     message.parameter = parameter
-                    message.arguments = message.matches[0].group(2)
+                    message.arguments = arguments
                 except BaseException:
                     message.parameter = None
                     message.arguments = None
@@ -164,18 +182,18 @@ def listener(**args):
                     read_context[(message.chat.id, message.id)] = True
 
                 if command:
-                    await Hook.command_pre(message, command)
-                if data := inject(message, function):
-                    await function(**data)
-                else:
-                    if function.__code__.co_argcount == 0:
-                        await function()
-                    if function.__code__.co_argcount == 1:
-                        await function(message)
-                    elif function.__code__.co_argcount == 2:
-                        await function(client, message)
+                    await Hook.command_pre(
+                        message,
+                        parent_command or command,
+                        command if parent_command else None,
+                    )
+                await func.handler(client, message)
                 if command:
-                    await Hook.command_post(message, command)
+                    await Hook.command_post(
+                        message,
+                        parent_command or command,
+                        command if parent_command else None,
+                    )
             except StopPropagation as e:
                 raise StopPropagation from e
             except KeyboardInterrupt as e:
@@ -235,30 +253,38 @@ def listener(**args):
                 await Hook.process_error_exec(message, command, exc_info, exc_format)
             if (message.chat.id, message.id) in read_context:
                 del read_context[(message.chat.id, message.id)]
-            if block_process:
+            if block_process or (parent_command and not allow_parent):
                 message.stop_propagation()
             message.continue_propagation()
 
-        bot.add_handler(
-            MessageHandler(handler, filters=base_filters), group=0 + priority
+        bot.dispatcher.add_handler(
+            MessageHandler(handler, filters=base_filters),
+            group=0 + priority,
+            first=parent_command and not allow_parent,
         )
         if command:
-            bot.add_handler(
-                MessageHandler(handler, filters=sudo_filters), group=50 + priority
+            bot.dispatcher.add_handler(
+                MessageHandler(handler, filters=sudo_filters),
+                group=50 + priority,
+                first=parent_command and not allow_parent,
             )
         if not ignore_edited:
-            bot.add_handler(
-                EditedMessageHandler(handler, filters=base_filters), group=1 + priority
+            bot.dispatcher.add_handler(
+                EditedMessageHandler(handler, filters=base_filters),
+                group=1 + priority,
+                first=parent_command and not allow_parent,
             )
             if command:
-                bot.add_handler(
+                bot.dispatcher.add_handler(
                     EditedMessageHandler(handler, filters=sudo_filters),
                     group=51 + priority,
+                    first=parent_command and not allow_parent,
                 )
 
-        return handler
+        func.set_handler(handler)
+        return func
 
-    if description is not None and command is not None:
+    if description is not None and command is not None and parent_command is None:
         if parameters is None:
             parameters = ""
         help_messages.update(

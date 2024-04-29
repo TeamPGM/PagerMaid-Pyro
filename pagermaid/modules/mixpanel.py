@@ -134,7 +134,7 @@ async def mixpanel_init_id(bot: Client):
 
 
 @Hook.command_postprocessor()
-async def mixpanel_report(bot: Client, message: Message, command):
+async def mixpanel_report(bot: Client, message: Message, command, sub_command):
     if not Config.ALLOW_ANALYTIC:
         return
     await set_people(bot)
@@ -144,11 +144,14 @@ async def mixpanel_report(bot: Client, message: Message, command):
     sender_id = message.sender_chat.id if message.sender_chat else sender_id
     if sender_id < 0 and message.outgoing:
         sender_id = bot.me.id
+    properties = {"command": command, "bot_id": bot.me.id}
+    if sub_command:
+        properties["sub_command"] = sub_command
     bot.loop.create_task(
         mp.track(
             str(sender_id),
             f"Function {command}",
-            {"command": command, "bot_id": bot.me.id},
+            properties,
         )
     )
 

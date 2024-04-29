@@ -21,6 +21,7 @@ along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 import asyncio
 import contextlib
 import functools
+from collections import OrderedDict
 from datetime import datetime
 from typing import Optional, List, Union
 
@@ -423,5 +424,26 @@ class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
 
             for lock in self.locks_list:
                 lock.release()
+
+        self.loop.create_task(fn())
+
+    @patchable
+    def add_handler(self, handler, group: int, first: bool):
+        if not first:
+            return self.oldadd_handler(handler, group)
+
+        async def fn():
+            for lock in self.locks_list:
+                await lock.acquire()
+
+            try:
+                if group not in self.groups:
+                    self.groups[group] = []
+                    self.groups = OrderedDict(sorted(self.groups.items()))
+
+                self.groups[group].insert(0, handler)
+            finally:
+                for lock in self.locks_list:
+                    lock.release()
 
         self.loop.create_task(fn())
