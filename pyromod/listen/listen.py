@@ -283,6 +283,7 @@ class Message(pyrogram.types.Message):
         parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
         entities: List["pyrogram.types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
+        show_above_text: bool = None,
         reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
         no_reply: bool = None,
     ) -> "Message":
@@ -304,6 +305,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview,
+                        show_above_text=show_above_text,
                         quote=True,
                     )
                 elif is_self:
@@ -314,6 +316,7 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         disable_web_page_preview=disable_web_page_preview,
+                        show_above_text=show_above_text,
                         reply_markup=reply_markup,
                     )
                 elif not no_reply:
@@ -321,6 +324,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview,
+                        show_above_text=show_above_text,
                         quote=True,
                     )
             else:
@@ -332,6 +336,7 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         disable_web_page_preview=disable_web_page_preview,
+                        show_above_text=show_above_text,
                         reply_markup=reply_markup,
                     )
                 except (
@@ -343,6 +348,7 @@ class Message(pyrogram.types.Message):
                             parse_mode=parse_mode,
                             entities=entities,
                             disable_web_page_preview=disable_web_page_preview,
+                            show_above_text=show_above_text,
                             reply_markup=reply_markup,
                             quote=True,
                         )
@@ -367,11 +373,14 @@ class Message(pyrogram.types.Message):
         message: pyrogram.raw.base.Message,
         users: dict,
         chats: dict,
+        topics: dict = None,
         is_scheduled: bool = False,
         replies: int = 1,
+        business_connection_id: str = None,
+        reply_to_message: "pyrogram.raw.base.Message" = None
     ):
         parsed = await pyrogram.types.Message.old_parse(
-            client, message, users, chats, is_scheduled, replies
+            client, message, users, chats, topics, is_scheduled, replies, business_connection_id, reply_to_message
         )  # noqa
         # make message.text as message.caption
         parsed.text = parsed.text or parsed.caption
@@ -385,30 +394,40 @@ class Message(pyrogram.types.Message):
         parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
         caption_entities: List["pyrogram.types.MessageEntity"] = None,
         disable_notification: bool = None,
+        message_thread_id: int = None,
+        reply_to_chat_id: Union[int, str] = None,
         reply_to_message_id: int = None,
+        quote_text: str = None,
+        quote_entities: List["pyrogram.types.MessageEntity"] = None,
         schedule_date: datetime = None,
         protect_content: bool = None,
+        has_spoiler: bool = None,
+        business_connection_id: str = None,
         reply_markup: Union[
             "pyrogram.types.InlineKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardRemove",
-            "pyrogram.types.ForceReply",
-        ] = object,
-        **kwargs
+            "pyrogram.types.ForceReply"
+        ] = object
     ) -> Union["pyrogram.types.Message", List["pyrogram.types.Message"]]:
         if self.media:
             self.text = None
         return await self.oldcopy(
-            chat_id=chat_id,
-            caption=caption,
-            parse_mode=parse_mode,
-            caption_entities=caption_entities,
-            disable_notification=disable_notification,
-            reply_to_message_id=reply_to_message_id,
-            schedule_date=schedule_date,
-            protect_content=protect_content,
-            reply_markup=reply_markup,
-            **kwargs
+            chat_id,
+            caption,
+            parse_mode,
+            caption_entities,
+            disable_notification,
+            message_thread_id,
+            reply_to_chat_id,
+            reply_to_message_id,
+            quote_text,
+            quote_entities,
+            schedule_date,
+            protect_content,
+            has_spoiler,
+            business_connection_id,
+            reply_markup,
         )  # noqa
 
 
