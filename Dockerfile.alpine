@@ -1,0 +1,17 @@
+FROM python:alpine
+
+ENV PAGERMAID_DIR=/pagermaid
+ENV TZ=Asia/Shanghai
+ENV SHELL=/bin/bash
+
+WORKDIR /pagermaid/workdir
+
+COPY ./ /pagermaid/workdir
+
+RUN apk add --no-cache git bash imagemagick libmagic curl tzdata neofetch libzbar figlet fortune openssl tini \
+    && apk add --no-cache --update --virtual .build-deps gcc python3-dev musl-dev linux-headers \
+    && git config --global pull.ff only \
+    && pip install -r requirements.txt \
+    && apk del .build-deps
+
+ENTRYPOINT ["tini","--","bash","utils/docker-config.sh"]
