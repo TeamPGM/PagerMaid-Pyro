@@ -10,8 +10,8 @@ COPY ./ /pagermaid/workdir
 
 RUN apk add --no-cache git bash imagemagick libmagic curl tzdata neofetch libzbar figlet fortune openssl tini \
     && apk add --no-cache --update --virtual .build-deps gcc python3-dev musl-dev linux-headers \
+    && git config --global pull.ff only \
     && pip install -r requirements.txt \
-    && apk del .build-deps \
-    && git config --global --add safe.directory /pagermaid/workdir
+    && apk del .build-deps
 
 ENTRYPOINT ["tini","--","bash","utils/docker-config.sh"]
