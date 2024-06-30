@@ -12,6 +12,7 @@ RUN apk add --no-cache git bash imagemagick libmagic curl tzdata neofetch libzba
     && apk add --no-cache --update --virtual .build-deps gcc python3-dev musl-dev linux-headers \
     && git config --global pull.ff only \
     && pip install -r requirements.txt \
+    && pip cache purge \
     && apk del .build-deps
 
 ENTRYPOINT ["tini","--","bash","utils/docker-config.sh"]
