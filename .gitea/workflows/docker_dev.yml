@@ -1,21 +1,16 @@
-name: "Docker Build"
+name: "Docker Dev Build"
 
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   workflow_dispatch: ~
   push:
-    branches: [ master ]
+    branches: [ development ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     name: docker build and publish
-    env:
-      DOCKER_BUILDKIT: 1
-      DOCKER_CLI_EXPERIMENTAL: enabled
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKERHUB_REPOSITORY: ${{ secrets.DOCKER_REPO }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,27 +28,14 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Buildx cache
-        uses: actions/cache@v4
-        id: buildx-cache
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx
-
-      - name: Get version
-        run: |
-          RAW_PGM_VERSION=$(python .github/get_version.py)
-          echo "PGM_VERSION=${RAW_PGM_VERSION}" >> "$GITHUB_ENV"
-
       - name: Build
         run: |
+          PGM_VERSION=$(python .github/get_version.py)
           docker buildx build \
-            --cache-from "type=local,src=/tmp/.buildx-cache" \
             --cache-to "type=local,dest=/tmp/.buildx-cache" \
             --output "type=image,push=true" \
             --platform "linux/amd64,linux/arm64/v8" \
             --build-arg "S6_ARCH=amd64" \
-            --tag "${DOCKERHUB_REPOSITORY}:latest" \
-            --tag "${DOCKERHUB_REPOSITORY}:${PGM_VERSION} \
-            -f Dockerfile \
+            --tag "${{ secrets.DOCKER_REPO }}:${PGM_VERSION}-dev" \
+            -f Dockerfile.alpine \
             .

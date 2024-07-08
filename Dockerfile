@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:jammy
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
@@ -47,7 +47,6 @@ RUN source ~/.bashrc \
         libffi-dev \
         zlib1g-dev \
         tcl8.6-dev \
-        tk8.6-dev \
         libimagequant-dev \
         libraqm-dev \
         libjpeg-dev \
@@ -56,7 +55,6 @@ RUN source ~/.bashrc \
         libfreetype6-dev \
         liblcms2-dev \
         libwebp-dev \
-        python3-tk \
         libharfbuzz-dev \
         libfribidi-dev \
         libxcb1-dev \
@@ -89,7 +87,6 @@ RUN source ~/.bashrc \
         libffi-dev \
         zlib1g-dev \
         tcl8.6-dev \
-        tk8.6-dev \
         libimagequant-dev \
         libraqm-dev \
         libjpeg-dev \
@@ -98,7 +95,6 @@ RUN source ~/.bashrc \
         libfreetype6-dev \
         liblcms2-dev \
         libwebp-dev \
-        python3-tk \
         libharfbuzz-dev \
         libfribidi-dev \
         libxcb1-dev \
