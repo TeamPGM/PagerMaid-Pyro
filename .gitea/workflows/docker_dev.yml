@@ -36,6 +36,7 @@ jobs:
             --output "type=image,push=true" \
             --platform "linux/amd64,linux/arm64/v8" \
             --build-arg "S6_ARCH=amd64" \
+            --tag "${{ secrets.DOCKER_REPO }}:dev" \
             --tag "${{ secrets.DOCKER_REPO }}:${PGM_VERSION}-dev" \
             -f Dockerfile.alpine \
             .
