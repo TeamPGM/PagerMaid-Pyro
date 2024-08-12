@@ -11,7 +11,7 @@ TOKEN_EXPIRE_MINUTES = 30
 
 
 def authentication():
-    def inner(token: Optional[str] = Header(...)):
+    def inner(token: Optional[str] = Header(None)):
         if Config.WEB_SECRET_KEY:
             if token == Config.WEB_SECRET_KEY:
                 return
