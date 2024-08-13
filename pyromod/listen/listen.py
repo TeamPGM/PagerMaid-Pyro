@@ -38,6 +38,8 @@ from ..utils.conversation import Conversation
 from ..utils.errors import TimeoutConversationError, ListenerCanceled
 
 pyrogram.errors.ListenerCanceled = ListenerCanceled  # noqa
+LOCK = asyncio.Lock()
+DONE = []
 
 
 @patch(pyrogram.client.Client)
@@ -108,34 +110,50 @@ class Client:
 
 
 @patch(pyrogram.handlers.message_handler.MessageHandler)
-class MessageHandler:
+class MessageHandler(pyrogram.handlers.message_handler.MessageHandler):
     @patchable
     def __init__(self, callback: callable, filters=None):
         self.user_callback = callback
         self.old__init__(self.resolve_listener, filters)
 
-    @patchable
-    async def resolve_listener(self, client, message, *args):
-        listener = client.listening.get(message.chat.id)
-        if listener and not listener["future"].done():
-            listener["future"].set_result(message)
-        else:
+    @staticmethod
+    async def resolve_listener_(self, client, message, *args):
+        global LOCK, DONE
+        async with LOCK:
+            listener = client.listening.get(message.chat.id)
+            if listener:
+                with contextlib.suppress(ValueError):
+                    DONE.remove(listener)
+            if listener and not listener["future"].done():
+                listener["future"].set_result(message)
+                return
             if listener and listener["future"].done():
                 client.clear_listener(message.chat.id, listener["future"])
-            await self.user_callback(client, message, *args)
+        await self.user_callback(client, message, *args)
+
+    @patchable
+    async def resolve_listener(self, client, message, *args):
+        await MessageHandler.resolve_listener_(self, client, message, *args)
+
+    @staticmethod
+    async def check_(self, client, update):
+        global LOCK, DONE
+        async with LOCK:
+            listener = client.listening.get(update.chat.id)
+            if listener and (listener not in DONE) and (not listener["future"].done()):
+                if callable(listener["filters"]):
+                    result = await listener["filters"](client, update)
+                    if result:
+                        DONE.append(listener)
+                    return result
+                else:
+                    DONE.append(listener)
+                    return True
+        return await self.filters(client, update) if callable(self.filters) else True
 
     @patchable
     async def check(self, client, update):
-        listener = client.listening.get(update.chat.id)
-
-        if listener and not listener["future"].done():
-            return (
-                await listener["filters"](client, update)
-                if callable(listener["filters"])
-                else True
-            )
-
-        return await self.filters(client, update) if callable(self.filters) else True
+        return await MessageHandler.check_(self, client, update)
 
 
 @patch(pyrogram.handlers.edited_message_handler.EditedMessageHandler)
@@ -147,26 +165,11 @@ class EditedMessageHandler:
 
     @patchable
     async def resolve_listener(self, client, message, *args):
-        listener = client.listening.get(message.chat.id)
-        if listener and not listener["future"].done():
-            listener["future"].set_result(message)
-        else:
-            if listener and listener["future"].done():
-                client.clear_listener(message.chat.id, listener["future"])
-            await self.user_callback(client, message, *args)
+        await MessageHandler.resolve_listener_(self, client, message, *args)
 
     @patchable
     async def check(self, client, update):
-        listener = client.listening.get(update.chat.id)
-
-        if listener and not listener["future"].done():
-            return (
-                await listener["filters"](client, update)
-                if callable(listener["filters"])
-                else True
-            )
-
-        return await self.filters(client, update) if callable(self.filters) else True
+        return await MessageHandler.check_(self, client, update)
 
 
 @patch(pyrogram.types.user_and_chats.chat.Chat)
