@@ -18,7 +18,9 @@ def authentication():
             try:
                 jwt.decode(token, Config.WEB_SECRET_KEY, algorithms=ALGORITHM)
             except (jwt.JWTError, jwt.ExpiredSignatureError, AttributeError):
-                raise HTTPException(status_code=400, detail="登录验证失败或已失效，请重新登录")
+                raise HTTPException(
+                    status_code=400, detail="登录验证失败或已失效，请重新登录"
+                )
 
     return Depends(inner)
 

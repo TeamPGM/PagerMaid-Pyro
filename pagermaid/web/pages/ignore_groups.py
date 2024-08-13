@@ -74,6 +74,8 @@ page = PageSchema(
     icon="fa fa-ban",
     label="忽略群组",
     schema=Page(
-        title="忽略群组", subTitle="忽略后，Bot 不再响应指定群组的消息（群组列表将会缓存一小时）", body=cards_curd
+        title="忽略群组",
+        subTitle="忽略后，Bot 不再响应指定群组的消息（群组列表将会缓存一小时）",
+        body=cards_curd,
     ),
 )

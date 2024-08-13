@@ -377,10 +377,18 @@ class Message(pyrogram.types.Message):
         is_scheduled: bool = False,
         replies: int = 1,
         business_connection_id: str = None,
-        reply_to_message: "pyrogram.raw.base.Message" = None
+        reply_to_message: "pyrogram.raw.base.Message" = None,
     ):
         parsed = await pyrogram.types.Message.old_parse(
-            client, message, users, chats, topics, is_scheduled, replies, business_connection_id, reply_to_message
+            client,
+            message,
+            users,
+            chats,
+            topics,
+            is_scheduled,
+            replies,
+            business_connection_id,
+            reply_to_message,
         )  # noqa
         # make message.text as message.caption
         parsed.text = parsed.text or parsed.caption
@@ -407,8 +415,8 @@ class Message(pyrogram.types.Message):
             "pyrogram.types.InlineKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardRemove",
-            "pyrogram.types.ForceReply"
-        ] = object
+            "pyrogram.types.ForceReply",
+        ] = object,
     ) -> Union["pyrogram.types.Message", List["pyrogram.types.Message"]]:
         if self.media:
             self.text = None

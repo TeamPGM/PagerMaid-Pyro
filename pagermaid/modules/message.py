@@ -1,4 +1,5 @@
 """ Pagermaid message plugin. """
+
 from pyrogram.enums import ChatType
 from pyrogram.errors import Forbidden, FloodWait
 

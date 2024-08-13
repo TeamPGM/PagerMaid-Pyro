@@ -147,9 +147,11 @@ def listener(**args) -> CommandHandlerDecorator:
     def decorator(function) -> CommandHandler:
         func = CommandHandler(
             function,
-            alias_command(command, disallow_alias)
-            if command and parent_command is None
-            else None,
+            (
+                alias_command(command, disallow_alias)
+                if command and parent_command is None
+                else None
+            ),
         )
 
         async def handler(client: Client, message: Message):

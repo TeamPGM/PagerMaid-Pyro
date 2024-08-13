@@ -106,7 +106,8 @@ async def ping_dc(message: Message):
                 data.append("0")
         else:
             result = await execute(
-                f"ping -c 1 {DCs[dc]} | awk -F 'time=' " + "'/time=/ {print $2}' | awk '{print $1}'"
+                f"ping -c 1 {DCs[dc]} | awk -F 'time=' "
+                + "'/time=/ {print $2}' | awk '{print $1}'"
             )
             try:
                 data.append(str(float(result)))
