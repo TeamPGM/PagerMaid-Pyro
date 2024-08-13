@@ -10,7 +10,8 @@ def inject(message: enums.Message, function, **data) -> Optional[Dict]:
     except Exception:
         return None
     for parameter_name, parameter in signature.parameters.items():
-        class_name = parameter.annotation.__name__
+        an = parameter.annotation
+        class_name = an.__name__ if hasattr(an, "__name__") else an
         param = message if class_name == "Message" else services.get(class_name)
         if not param:
             if parameter_name == "message":
