@@ -6,7 +6,7 @@ from pyrogram.errors import Forbidden, FloodWait
 from pagermaid import log
 from pagermaid.config import Config
 from pagermaid.listener import listener
-from pagermaid.utils import lang
+from pagermaid.utils import lang, auto_delete
 from pagermaid.enums import Message
 
 
@@ -106,6 +106,7 @@ async def userid(message: Message):
                 + "`"
             )
     await message.edit(text)
+    await auto_delete(message)
 
 
 @listener(

@@ -11,7 +11,7 @@ from pagermaid.common.plugin import plugin_remote_manager, plugin_manager
 from pagermaid.common.reload import reload_all
 from pagermaid.enums import Message
 from pagermaid.listener import listener
-from pagermaid.utils import upload_attachment, lang
+from pagermaid.utils import upload_attachment, lang, auto_delete
 
 
 def remove_plugin(name):
@@ -41,6 +41,7 @@ def move_plugin(file_path):
 async def plugin(message: Message):
     if len(message.parameter) == 0:
         await message.edit(lang("arg_error"))
+        await auto_delete(message, time=10)
         return
     reply = message.reply_to_message
     plugin_directory = f"{working_dir}{sep}plugins{sep}"
@@ -49,6 +50,7 @@ async def plugin(message: Message):
             file_path = await plugin_manager.download_from_message(message)
             if file_path is None:
                 await message.edit(lang("apt_no_py"))
+                await auto_delete(message, time=10)
                 return
             plugin_name = path.basename(file_path)[:-3]
             plugin_manager.remove_plugin(plugin_name)
@@ -196,6 +198,7 @@ async def plugin(message: Message):
     elif message.parameter[0] == "update":
         if not exists(f"{plugin_directory}version.json"):
             await message.edit(lang("apt_why_not_install_a_plugin"))
+            await auto_delete(message, time=10)
             return
         await plugin_manager.load_remote_plugins()
         updated_plugins = [
@@ -264,6 +267,7 @@ async def plugin(message: Message):
     elif message.parameter[0] == "export":
         if not exists(f"{plugin_directory}version.json"):
             await message.edit(lang("apt_why_not_install_a_plugin"))
+            await auto_delete(message, time=10)
             return
         message = await message.edit(lang("stats_loading"))
         list_plugin = []
@@ -277,6 +281,7 @@ async def plugin(message: Message):
             await message.edit(",apt install " + " ".join(list_plugin))
     else:
         await message.edit(lang("arg_error"))
+    await auto_delete(message)
 
 
 @listener(
@@ -292,6 +297,7 @@ async def apt_source(message: Message):
         remotes = plugin_remote_manager.get_remotes()
         if len(remotes) == 0:
             await message.edit(lang("apt_source_not_found"))
+            await auto_delete(message, time=10)
             return
         await message.edit(
             f"{lang('apt_source_header')}\n\n" + "\n".join([i.text for i in remotes]),
@@ -324,3 +330,4 @@ async def apt_source(message: Message):
             await message.edit(lang("arg_error"))
     else:
         await message.edit(lang("arg_error"))
+    await auto_delete(message, time=10)

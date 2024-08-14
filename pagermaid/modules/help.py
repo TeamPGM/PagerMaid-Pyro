@@ -9,7 +9,7 @@ from pagermaid.common.alias import AliasManager
 from pagermaid.config import CONFIG_PATH
 from pagermaid.group_manager import enforce_permission
 from pagermaid.common.reload import reload_all
-from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
+from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid, auto_delete
 from pagermaid.listener import listener
 
 
@@ -118,6 +118,7 @@ async def help_command(message: Message):
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
+    await auto_delete(message)
 
 
 @listener(
@@ -151,6 +152,7 @@ async def help_raw_command(message: Message):
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
+    await auto_delete(message)
 
 
 @listener(
@@ -177,6 +179,7 @@ async def lang_change(message: Message):
             f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n'
             f'{lang("lang_all_lang")}{"，".join(dir__)}'
         )
+    await auto_delete(message, time=10)
 
 
 @listener(
@@ -207,13 +210,16 @@ async def alias_commands(message: Message):
             await reload_all()
         except KeyError:
             await message.edit(lang("alias_no_exist"))
+            await auto_delete(message, time=10)
             return
     elif len(message.parameter) == 3:
         source_command = message.parameter[1]
         to_command = message.parameter[2]
         if to_command in help_messages:
             await message.edit(lang("alias_exist"))
+            await auto_delete(message, time=10)
             return
         alias_manager.add_alias(source_command, to_command)
         await message.edit(lang("alias_success"))
         await reload_all()
+    await auto_delete(message)

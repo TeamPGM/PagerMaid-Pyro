@@ -22,7 +22,7 @@ from pagermaid import Config, pgm_version
 from pagermaid.common.status import get_bot_uptime
 from pagermaid.enums import Client, Message
 from pagermaid.listener import listener
-from pagermaid.utils import lang, execute
+from pagermaid.utils import lang, execute, auto_delete
 
 DCs = {
     1: "149.154.175.50",
@@ -42,6 +42,7 @@ async def sysinfo(message: Message):
         return await message.edit(neofetch_win(), parse_mode=ParseMode.HTML)
     result = await execute("neofetch --config none --stdout")
     await message.edit(f"`{result}`")
+    await auto_delete(message)
 
 
 @listener(is_plugin=False, command="status", description=lang("status_des"))
@@ -61,6 +62,7 @@ async def status(message: Message):
         f"{lang('status_uptime')}: `{uptime}`"
     )
     await message.edit(text)
+    await auto_delete(message)
 
 
 @listener(is_plugin=False, command="stats", description=lang("stats_des"))
@@ -90,6 +92,7 @@ async def stats(client: Client, message: Message):
         f"{lang('stats_bot')}: `{b}`"
     )
     await msg.edit(text)
+    await auto_delete(message)
 
 
 @listener(is_plugin=False, command="pingdc", description=lang("pingdc_des"))
@@ -120,6 +123,7 @@ async def ping_dc(message: Message):
         f"{lang('pingdc_4')}: `{data[3]}ms`\n"
         f"{lang('pingdc_5')}: `{data[4]}ms`"
     )
+    await auto_delete(message)
 
 
 @listener(is_plugin=False, command="ping", description=lang("ping_des"))
@@ -134,6 +138,7 @@ async def ping(client: Client, message: Message):
     end = datetime.now()
     msg_duration = (end - start).microseconds / 1000
     await message.edit(f"Pong!| PING: {ping_duration} | MSG: {msg_duration}")
+    await auto_delete(message)
 
 
 def wmic(command: str):

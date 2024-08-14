@@ -29,6 +29,11 @@ def alias_command(command: str, disallow_alias: bool = False) -> str:
     return command if disallow_alias else Config.alias_dict.get(command, command)
 
 
+async def auto_delete(message: Message, time: int = 120):
+    await sleep(time)
+    await message.safe_delete()
+
+
 async def attach_report(plaintext, file_name, reply_id=None, caption=None):
     """Attach plaintext as logs."""
     with open(file_name, "w+") as file:
@@ -206,6 +211,7 @@ async def process_exit(start: int, _client, message=None):
                     )
                     + f'\n\n> {lang("restart_complete")}'
                 )
+                await auto_delete(msg, time=10)
         del sqlite["exit_msg"]
     if message:
         sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
