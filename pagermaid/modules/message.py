@@ -28,6 +28,9 @@ async def userid(message: Message):
             text += f"username: @{msg_from.username}" + "\n"
     if msg_from.type in [ChatType.SUPERGROUP, ChatType.CHANNEL]:
         text += f"title: `{msg_from.title}" + "`\n"
+        if message.topic:
+            text += f"topic title: `{message.topic.title}`\n"
+            text += f"topic ID: `{message.topic.id}`\n"
         try:
             if msg_from.username:
                 text += f"username: @{msg_from.username}" + "\n"
