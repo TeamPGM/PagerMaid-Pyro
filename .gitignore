@@ -153,3 +153,5 @@ dmypy.json
 
 # docker
 install.lock
+
+.pdm-python

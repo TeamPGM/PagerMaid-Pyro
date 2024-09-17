@@ -380,7 +380,7 @@ class Message(pyrogram.types.Message):
         is_scheduled: bool = False,
         replies: int = 1,
         business_connection_id: str = None,
-        reply_to_message: "pyrogram.raw.base.Message" = None,
+        raw_reply_to_message: "pyrogram.raw.base.Message" = None,
     ):
         parsed = await pyrogram.types.Message.old_parse(
             client,
@@ -391,7 +391,7 @@ class Message(pyrogram.types.Message):
             is_scheduled,
             replies,
             business_connection_id,
-            reply_to_message,
+            raw_reply_to_message,
         )  # noqa
         # make message.text as message.caption
         parsed.text = parsed.text or parsed.caption

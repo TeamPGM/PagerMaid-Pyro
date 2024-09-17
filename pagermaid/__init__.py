@@ -22,7 +22,7 @@ from pagermaid.scheduler import scheduler
 import pyromod.listen
 from pyrogram import Client
 
-pgm_version = "1.4.13"
+pgm_version = "1.4.14"
 pgm_version_code = 1413
 CMD_LIST = {}
 module_dir = __path__[0]
