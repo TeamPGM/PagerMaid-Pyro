@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
     "pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.4.14",
-    "PyroTgCrypto==1.2.6a0",
+    "PyroTgCrypto>=1.2.7",
     "Pillow>=9.0.0",
     "pytz>=2024.2",
     "PyYAML>=6.0.2",

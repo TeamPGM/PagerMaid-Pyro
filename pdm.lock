@@ -5,7 +5,7 @@
 groups = ["default"]
 strategy = ["inherit_metadata"]
 lock_version = "4.5.0"
-content_hash = "sha256:280a4a00b1189656af817ac79d1a4bb726602439964fc03c998d752f4db80c76"
+content_hash = "sha256:d04b4d542922445bf3fedb4d9d94c59a8809af50156f8016baab7cbb16138bc9"
 
 [[metadata.targets]]
 requires_python = ">=3.9.0"
@@ -27,7 +27,7 @@ files = [
 
 [[package]]
 name = "anyio"
-version = "4.4.0"
+version = "4.5.0"
 requires_python = ">=3.8"
 summary = "High level compatibility layer for multiple asynchronous event loop implementations"
 groups = ["default"]
@@ -38,8 +38,8 @@ dependencies = [
     "typing-extensions>=4.1; python_version < \"3.11\"",
 ]
 files = [
-    {file = "anyio-4.4.0-py3-none-any.whl", hash = "sha256:c1b2d8f46a8a812513012e1107cb0e68c17159a7a594208005a57dc776e1bdc7"},
-    {file = "anyio-4.4.0.tar.gz", hash = "sha256:5aadc6a1bbb7cdb0bede386cac5e2940f5e2ff3aa20277e991cf028e0585ce94"},
+    {file = "anyio-4.5.0-py3-none-any.whl", hash = "sha256:fdeb095b7cc5a5563175eedd926ec4ae55413bb4be5770c424af0ba46ccb4a78"},
+    {file = "anyio-4.5.0.tar.gz", hash = "sha256:c5a275fe5ca0afd788001f58fca1e69e29ce706d746e317d660e21f70c530ef9"},
 ]
 
 [[package]]
@@ -485,14 +485,14 @@ files = [
 
 [[package]]
 name = "pyreadline3"
-version = "3.5.2"
+version = "3.5.4"
 requires_python = ">=3.8"
 summary = "A python implementation of GNU readline."
 groups = ["default"]
 marker = "sys_platform == \"win32\" and python_version >= \"3.8\""
 files = [
-    {file = "pyreadline3-3.5.2-py3-none-any.whl", hash = "sha256:a87d56791e2965b2b187e2ea33dcf664600842c997c0623c95cf8ef07db83de9"},
-    {file = "pyreadline3-3.5.2.tar.gz", hash = "sha256:ba82292e52c5a3bb256b291af0c40b457c1e8699cac9a873abbcaac8aef3a1bb"},
+    {file = "pyreadline3-3.5.4-py3-none-any.whl", hash = "sha256:eaf8e6cc3c49bcccf145fc6067ba8643d1df34d604a1ec0eccbf7a18e6d3fae6"},
+    {file = "pyreadline3-3.5.4.tar.gz", hash = "sha256:8d57d53039a1c75adba8e50dd3d992b28143480816187ea5efbd5c78e6c885b7"},
 ]
 
 [[package]]
@@ -511,55 +511,78 @@ dependencies = [
 
 [[package]]
 name = "pyrotgcrypto"
-version = "1.2.6a0"
+version = "1.2.7"
 requires_python = "~=3.7"
 summary = "Fast and Portable Cryptography Extension Library for Pyrogram"
 groups = ["default"]
 files = [
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:4ae0a998d4e8091aed0216da26160c2ebea7df586b884fba011b098816553502"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:c89d1d494ccfe53ca58f602a1e7cf1f251d0465d3bb30dc006e0c340c255121b"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:1c9fe9e00d7d2907003c7b55d9afbb08c3e56bf2abddab26e5f5340129133973"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5cfa9e1adc8b149b8b4234de8c0da62c740ffde3b5f7dadaaf680aacdb6242f1"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:5abfcd04a1ad1bb49a3198b9441fbd826413de4fcb8d9f28d28ad5ec690ee7b2"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:ab4adfc0729d454f0dfdfd9bf2efe627b28f38a18b41015b88501951906a3d00"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:05483ad2d71cf325f20f80a34af9ace8c963f3072ca118dde5f0fcc26cee346b"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-win32.whl", hash = "sha256:3a387a015975530887c5977cc88034f1eea4b59d529130a63eac992e937a2072"},
-    {file = "PyroTgCrypto-1.2.6a0-cp310-cp310-win_amd64.whl", hash = "sha256:81c1ff4e880c3d5ce46e60496a43344c321ec9571ba39f7c1e0000e0c7f5e64f"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:7e88843ca3ce343b74b41fcb7ef431523fe429b90b157ace0f82e050fc7ad6d8"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:6345ea36e9a701f1cdf7cbdb0c99859110e2e64f5ff5dd749908625ca810198f"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:4c5ea66ba9466e474fa9ebd2e8dd78534fce8d19a090ca37a3a1aa916468eaf3"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:431db09e21ad8be6b506fe2de4daab38bd860de5d099a139fbf2a5551682ba97"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:9bbf0128dbf765f1bb5e55e0001b1f85176299293ca6d72563cfb4e45db3d6fb"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:55e0ac0808c7cfc998ba814edc1f434ae7eccee53b94cf400a469d6201bb620c"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:5dd5897ec17be7bf76805183d135cb67e94de73484265868513aeb6dd2092344"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-win32.whl", hash = "sha256:460e8baa4c6f4f48a86d423d6a70c529e7a3e42b75f3cef1c984667a59b85c27"},
-    {file = "PyroTgCrypto-1.2.6a0-cp311-cp311-win_amd64.whl", hash = "sha256:ea151257340203682f931913940a614ee8c32ac68d789fabedf3ecdede82a869"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-macosx_10_9_universal2.whl", hash = "sha256:f8c576237cf518e90adaaf2c6a0bc34a134ef6c3d93905db9b0a977721b23fdc"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:2966995d79917efc65f75f4e8df715290858224ac0c811cc231914eb5aec1575"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:69009d20d2abc34831fed912d680dde4d2dd9895f9cdabb8530e835b85785437"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ceace424a600a4aff1ea475bd49ec2a9b09ba98d25a88188227bba7740971a4b"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:eb8633e1121ce2a7042cdb454b5b2cee3932910fcba7955316a50607db8d2de3"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-musllinux_1_1_i686.whl", hash = "sha256:7f85e4c0d5ed56780fe73f1448ed5299255e586bf8251ceaca2ed1e3776c7190"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:8131428d01682b1078df4d248262c68168641e977ceb460d50b4067350e8c300"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-win32.whl", hash = "sha256:646940fb31fe5a3c32b779466bf57db563d3c45ac6c2953ee60201b4549a083e"},
-    {file = "PyroTgCrypto-1.2.6a0-cp312-cp312-win_amd64.whl", hash = "sha256:a6283c0e299f7ae39019205c4bcd30f041d62f51804b0c6a26c8a7c3b275fb5f"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:f0373fe44e913c69a20d71e3c8ffb7904d6643c5883bf95bc7050b370c7e5548"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:4fd36a33999b5e3ddac5b44fc8ee75c89fcba65f9638528d25bcbf229dd45791"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:3d9d59f99b06c988077d15f431b9da6351c51a19cea52309faac006158dfab54"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:434d4807bb93614b8a84efda140fed3e80711b3540c6aeb7cb7cd8a8e0492046"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:d882a7aaf6daba4c6e34c0626df22acd39459ca8297720b4861fbaaba2adad31"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:7072b4232703b1ef0bd534f6b4e3c39cd15e549e612836b7e7e70239f68cbb49"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:93b9c222690e4dd0241223dc4a2ca99aff94395d2c1cee7b6c79be8a026bb1b8"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-win32.whl", hash = "sha256:1f67cec94c5c589543614038108cc67e4716e3032f9a3ddc8d72a42a489295d4"},
-    {file = "PyroTgCrypto-1.2.6a0-cp39-cp39-win_amd64.whl", hash = "sha256:0c56581e650e441b460c4dbc8556718ad50d816ea240b409b1a18ad0807c1961"},
-    {file = "PyroTgCrypto-1.2.6a0-pp310-pypy310_pp73-macosx_10_9_x86_64.whl", hash = "sha256:3ad513403d77e9adecef8884ceb7afe39925c534fc401b404ca8f2217657a9b3"},
-    {file = "PyroTgCrypto-1.2.6a0-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ed6cce60198375215e327c05799e6c6e27c56cfa79d2ac590ca02023512ad2ed"},
-    {file = "PyroTgCrypto-1.2.6a0-pp310-pypy310_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:93064df79eced3134cd97d4c2e5f1d9896d807e69c0d529cfa071b26f8bc7059"},
-    {file = "PyroTgCrypto-1.2.6a0-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:a33edb8c55bbeec0d607e426d0f7e1f41664f8150f433fdc588372143e5660b0"},
-    {file = "PyroTgCrypto-1.2.6a0-pp39-pypy39_pp73-macosx_10_9_x86_64.whl", hash = "sha256:de8ff82d47631910e1506cceb9bb9b1d05cb72dd2823e1115026c8f34d57a982"},
-    {file = "PyroTgCrypto-1.2.6a0-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:31509aa6860af69799b817e93e701eb6283604f1acb6b34ab236cc54a06932ce"},
-    {file = "PyroTgCrypto-1.2.6a0-pp39-pypy39_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:212b7c0aa229a8d391980d9d6e0810470ce7cfe4a6efb97db14e44aaa2f351b0"},
-    {file = "PyroTgCrypto-1.2.6a0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:f812820b32cfaee339faf4b5df21d56f7433579ba67c10c67c3c10c1a49870d7"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:35b2b5e5162ecea4f754412614243933536466d93c3cf3c857526d861d8c661d"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:991323f7c2d8c2780bd1e5342693bda6d6300205a48732b57ca865a962750fa2"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:38202a4672951b350afc209700b88c93f9b75d80c948dc5802f9fe80803a12db"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:21f2ff6398036990d51a424ad630b253c455d5e57ce15a24fce1af99af4d9e1f"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:29741048e5a54ca13094e0649d867c609feffa264f4ae76964142484f07b800f"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:677fc0517d6c3a94c7d90944bc77827c801af6f75a1a4a20206ceaf1db856ef2"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:64a89f1a251d9cfbbecd5255097c561f1693be54eef455c67ab43f7f5477c851"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-musllinux_1_2_i686.whl", hash = "sha256:9ddf241cfdde91b1f9dc242cddcf95d5b1ead0b446f056f650d029a38410c9da"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:8b9e02dfa4ceb28a33d6d32b68d8547463713dd848f75304e06aeb9c82f9c446"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-win32.whl", hash = "sha256:61b7a1d70572795100c22129d7d848386e1890c93504dbfb54599474627cf657"},
+    {file = "PyroTgCrypto-1.2.7-cp310-cp310-win_amd64.whl", hash = "sha256:dc1413f54e5f05eaa4f86525d87c78d765cbbb5f20389db46458fa4e7b429019"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:8cd81935567e792a57768b3242c268cb8ccc538504c82b4d2ac2cc2e64a23a95"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:fd965133558d9995635b77d461eb4c12a90b2387b9a2f4d3be0329a0cc03c66d"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:d4d423d9bf1e15a1527bcfe3a3ff7aa625c7112db97635a3c2f7e9da86f19112"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e364743e762fed1006b6675f2cda117968450205a98f83c8e87b3f337d7fbf3e"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5acda6512167e2a8fdb431ec5919f1bd33b67c3a6802d69f0e7ab6b535968f9f"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:72ccd78d50c3480717690f01b8e0533e591017946f02da89a954c863a9da230d"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:9b6418477eb7d8d2878a873ff4352947b7c5ff8256bc8f4f714b2636f707f5f1"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:b0dd9b0e560a1f575bf86ab649757a7ceafd03f858d1a686398b216c5929c936"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:48542a8de389a3a5258df70708b5fdce8c63cf8a068e8cb580cd3a01689f6261"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-win32.whl", hash = "sha256:85a57a10cafafc0f95a8dd7988754f4194b281ac07e6c3e2c7c6065097f0dba9"},
+    {file = "PyroTgCrypto-1.2.7-cp311-cp311-win_amd64.whl", hash = "sha256:6b58710373939a9c2c520c00666631cd782adbb14434a179d22c5eeae3f0727f"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:75dac820a0ead43bbc8f134f741472d889318d32b4f587e13342a4f412b6e6c8"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:3af1a29b6c7392abb060b53dcbdbfc213253b8f891d37dc2890151356ef8ece4"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:5a09deeb201de18a7e3ed2b5fca2db421ad5c610d7b6db4a9b29d63df5dae6db"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1306b9f0fbc77be8add4a6f3c68a9d1d005d1bdd970965b6936ca7419820afba"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bd99a80f8c104104e30a94a25e7e8c4f190891d3aceaa9f81983358b568c2438"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ca1568499a7699c399a92b84775061ce5c617ad87c1e6e1180e01caf60f47c4d"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:8a7f7c20bb1136afeea3e760e7e07f352787c6f9a681cdeec1b8aad18805443a"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:fc384fc568f1fcdcfa3ae5b556898c9caa48f61a91ca39767cd52b420b7f1a44"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:222a5c4a243d379db075105aed4f071a377b7dad7e8c02b4055b680033a4a57b"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-win32.whl", hash = "sha256:1eda8e08a39eead928285560029957a2cf4877da3e3cb233649da073a47dc9e8"},
+    {file = "PyroTgCrypto-1.2.7-cp312-cp312-win_amd64.whl", hash = "sha256:8eff5b2f18fc03b2ddcfd702d9363cb064ee56b470816a5eb2421ee7881b67f4"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:15ade101da138e520f48574e49ea7a44bab13275d019eb21feb5e9d718b6d65c"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:8418ecb1a51d484de79502da4b1d7587a32599cd18ef3834f228e04370b1be3e"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:a75a8c9177bcd186d37b82ce9964009c8dcf0996626cb40d743f2fa32fc61bf8"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5df7e330f0dfddbb2dae6bc9c8d0ac8acb8842383efe35590801ef247f25485c"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ad37d19118656d6e6e0e7e4ff4b6f31247e892924ff1e4170c52d1db1fd22a96"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ce2b5ecfdd5e1609789e0ae479154661756d60c8c61beb7ed7660139f4fec1e4"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:74446fa32f9a4da4bd95903ce73553d6c9e790d480bf4a99624e56279cbeb2dc"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:96814fc33194e5c9114110197690f81b8f60bb65eb0f492d81ba3f048f7d5d9f"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:c8775ebefcc3c25fa68f67126ceab6d8c38490e14249d4f80463faed2ae86612"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-win32.whl", hash = "sha256:ddcdb4ce089fe691bdca571d0a6661f6df8c1f5dbb6470e66ae43097457fcdb2"},
+    {file = "PyroTgCrypto-1.2.7-cp313-cp313-win_amd64.whl", hash = "sha256:bba87c07da6f76fd70ce894abc9d5321c2339aebf7968877e3726f9710f98458"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:20214318a9646a8c48cbb3bceb72c71ca29893cd7e57e76ff857e77c7971006c"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:f67921d3f8edf891b0033eaa77a193eeade35ee3d7b78ab0f7c0386ebc994f72"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:a54ca61600ed6f23a71778f5fcb625a1de712a0ed95554c214a0deb23902f92d"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7bd37157ced7d178755d928afa11f43e6534f37da58294aa70a540bc2eab23a6"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:3c7befe1bfbf755eda833ef1bf9fe3361e447450264fd274dd49abe9ce8301e2"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:67deb4628a4ac24bba758f3adc5bc3541239b4907b25482f28877505887f5316"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-musllinux_1_2_aarch64.whl", hash = "sha256:038fa2acae77690d16393b27e5c0bfc889ad4ccc653f280d51f377149ce9ffa5"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-musllinux_1_2_i686.whl", hash = "sha256:b1f24f6eae30ab6e623183ef8e7d4e3f4af1e5cf1ce5cf78a5ccb197dc4f1f6d"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:4ce023e7f71ee7df0d94063ad74e229f42b8ca0a32de1c8870efdfa9a6f7a0b1"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-win32.whl", hash = "sha256:61a0929d6d6758ba5d2970ae8a2edd0bb43bda89f64efc85f05a7ffb773987d5"},
+    {file = "PyroTgCrypto-1.2.7-cp39-cp39-win_amd64.whl", hash = "sha256:058378fed9049a85e8cb8483bd79b91ee29298632fbde26328ec650bfcf15835"},
+    {file = "PyroTgCrypto-1.2.7-pp310-pypy310_pp73-macosx_10_15_x86_64.whl", hash = "sha256:021d1f1be6d49c6ff8fd351785c02bcd5e525d9e9bef6a4d3f06ce8e9e1a13eb"},
+    {file = "PyroTgCrypto-1.2.7-pp310-pypy310_pp73-macosx_11_0_arm64.whl", hash = "sha256:f75d252d6544c88eda9f6273798d5b8d5e41fe5131b5d9accf4770e449bba59b"},
+    {file = "PyroTgCrypto-1.2.7-pp310-pypy310_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:4d8211806db398ca0432824669755e547b56735eb82e26806ae60e59ebe2661c"},
+    {file = "PyroTgCrypto-1.2.7-pp310-pypy310_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:64572319f81e64d52acad145851d03aba74dbe82a32db80e8202bc938ebb395e"},
+    {file = "PyroTgCrypto-1.2.7-pp310-pypy310_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ddce8ab3709fb3cb074295187d7b8baade3bf0cf77c26683bfc9631ffcf28740"},
+    {file = "PyroTgCrypto-1.2.7-pp310-pypy310_pp73-win_amd64.whl", hash = "sha256:c83f6f0a8f6c7edba2961a62dc5ffa5bcf24cd69a7f0848c287800c673797fc7"},
+    {file = "PyroTgCrypto-1.2.7-pp39-pypy39_pp73-macosx_10_15_x86_64.whl", hash = "sha256:851db6e05cd7bb879d7f0aea8512b0385d7df413e9221255448152acee18a06e"},
+    {file = "PyroTgCrypto-1.2.7-pp39-pypy39_pp73-macosx_11_0_arm64.whl", hash = "sha256:ffb7e2b1b89a1eebf2284f39c29db7856dba1a9a9403b7222777c6ed81adfeca"},
+    {file = "PyroTgCrypto-1.2.7-pp39-pypy39_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:48f3be89f94edaf40c54cdd5a988498192f1bcdb0c516540528ab872e5a6cb5b"},
+    {file = "PyroTgCrypto-1.2.7-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8f86617c2162ec03869336287ae4ad88e3761f331319b05fad0e015ea6287044"},
+    {file = "PyroTgCrypto-1.2.7-pp39-pypy39_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:1364818fcf63c44c5486a3efd72a5c14932a2d0b7b111be6ed19bcbfb92a7f5d"},
+    {file = "PyroTgCrypto-1.2.7-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:32991019ad8e5a29192311e3a331c1a5b22056dfcb25300b0b1c9f72a45826c4"},
 ]
 
 [[package]]
