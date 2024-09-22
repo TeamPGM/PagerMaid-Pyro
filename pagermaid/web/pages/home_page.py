@@ -43,7 +43,6 @@ log_page = Log(
     source={
         "method": "get",
         "url": "/pagermaid/api/log?num=${log_num | raw}",
-        "headers": {"token": Config.WEB_SECRET_KEY},
     },
 )
 
@@ -69,7 +68,6 @@ cmd_input = Form(
                         source={
                             "method": "get",
                             "url": "/pagermaid/api/run_sh?cmd=${command | raw}",
-                            "headers": {"token": Config.WEB_SECRET_KEY},
                         },
                     ),
                 ),
@@ -99,7 +97,6 @@ eval_input = Form(
                         source={
                             "method": "get",
                             "url": "/pagermaid/api/run_eval?cmd=${command | raw}",
-                            "headers": {"token": Config.WEB_SECRET_KEY},
                         },
                     ),
                 ),

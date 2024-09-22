@@ -1,22 +1,19 @@
 import asyncio
-from typing import Union, Optional
+from typing import Union
 
-from fastapi import APIRouter, Header
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from pagermaid.common.status import get_status
 from pagermaid.common.system import run_eval
-from pagermaid.config import Config
 from pagermaid.utils import execute
 from pagermaid.web.api.utils import authentication
 
 route = APIRouter()
 
 
-@route.get("/log")
-async def get_log(token: Optional[str] = Header(...), num: Union[int, str] = 100):
-    if token != Config.WEB_SECRET_KEY:
-        return "非法请求"
+@route.get("/log", dependencies=[authentication()])
+async def get_log(num: Union[int, str] = 100):
     try:
         num = int(num)
     except ValueError:
@@ -31,11 +28,8 @@ async def get_log(token: Optional[str] = Header(...), num: Union[int, str] = 100
     return StreamingResponse(streaming_logs())
 
 
-@route.get("/run_eval")
-async def run_cmd(token: Optional[str] = Header(...), cmd: str = ""):
-    if token != Config.WEB_SECRET_KEY:
-        return "非法请求"
-
+@route.get("/run_eval", dependencies=[authentication()])
+async def run_cmd(cmd: str = ""):
     async def run_cmd_func():
         result = (await run_eval(cmd)).split("\n")
         for i in result:
@@ -45,11 +39,8 @@ async def run_cmd(token: Optional[str] = Header(...), cmd: str = ""):
     return StreamingResponse(run_cmd_func()) if cmd else "无效命令"
 
 
-@route.get("/run_sh")
-async def run_sh(token: Optional[str] = Header(...), cmd: str = ""):
-    if token != Config.WEB_SECRET_KEY:
-        return "非法请求"
-
+@route.get("/run_sh", dependencies=[authentication()])
+async def run_sh(cmd: str = ""):
     async def run_sh_func():
         result = (await execute(cmd)).split("\n")
         for i in result:
