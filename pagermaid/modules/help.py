@@ -4,13 +4,15 @@ from os import listdir
 
 from pyrogram.enums import ParseMode
 
-from pagermaid import help_messages, Config
 from pagermaid.common.alias import AliasManager
-from pagermaid.config import CONFIG_PATH
-from pagermaid.group_manager import enforce_permission
 from pagermaid.common.reload import reload_all
-from pagermaid.utils import lang, Message, from_self, from_msg_get_sudo_uid
+from pagermaid.config import CONFIG_PATH, Config
+from pagermaid.enums import Message
+from pagermaid.group_manager import enforce_permission
 from pagermaid.listener import listener
+from pagermaid.static import help_messages
+from pagermaid.utils import lang
+from pagermaid.utils.listener import from_self, from_msg_get_sudo_uid
 
 
 @listener(

@@ -4,23 +4,23 @@ import os
 
 import pagermaid.config
 import pagermaid.modules
-from pagermaid import (
+from pagermaid.common.plugin import plugin_manager
+from pagermaid.dependence import scheduler
+from pagermaid.hook import Hook
+from pagermaid.services import bot
+from pagermaid.static import (
     read_context,
-    bot,
     help_messages,
     all_permissions,
     hook_functions,
-    logs,
 )
-from pagermaid.common.plugin import plugin_manager
-from pagermaid.hook import Hook
-from pagermaid.utils import lang
+from pagermaid.utils import lang, logs
 
 
 async def reload_all():
     read_context.clear()
     bot.dispatcher.remove_all_handlers()
-    bot.job.remove_all_jobs()
+    scheduler.remove_all_jobs()
     with contextlib.suppress(RuntimeError):
         bot.cancel_all_listener()
     loaded_plugins = list(pagermaid.modules.plugin_list)

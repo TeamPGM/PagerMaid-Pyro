@@ -1,16 +1,15 @@
-import sentry_sdk
-
-from subprocess import run, PIPE
 import sys
+from subprocess import run, PIPE
 from time import time
 
+import sentry_sdk
 from pyrogram.errors import Unauthorized, UsernameInvalid
 from sentry_sdk.integrations.httpx import HttpxIntegration
 
-from pagermaid import Config
+from pagermaid.config import Config
 from pagermaid.enums import Client, Message
 from pagermaid.hook import Hook
-from pagermaid.single_utils import safe_remove
+from pagermaid.utils import safe_remove
 
 
 def sentry_before_send(event, hint):

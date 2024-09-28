@@ -1,8 +1,9 @@
 from sys import exit
 
 from pagermaid.common.update import update as update_function
+from pagermaid.enums import Message
 from pagermaid.listener import listener
-from pagermaid.utils import lang, Message, alias_command
+from pagermaid.utils import lang, alias_command
 
 
 @listener(

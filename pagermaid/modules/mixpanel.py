@@ -1,9 +1,9 @@
 import contextlib
 import datetime
 import json
+import random
 import time
 import uuid
-import random
 from asyncio import sleep
 from typing import Union
 
@@ -15,11 +15,11 @@ from pyrogram.raw.functions.channels import (
 from pyrogram.raw.types import InputChannel
 from pyrogram.raw.types.messages import SponsoredMessages, SponsoredMessagesEmpty
 
-from pagermaid import logs
 from pagermaid.config import Config
 from pagermaid.enums import Client, Message
-from pagermaid.services import client as request, scheduler, bot as userbot
 from pagermaid.hook import Hook
+from pagermaid.services import client as request, scheduler, bot as userbot
+from pagermaid.utils import logs
 
 
 class DatetimeSerializer(json.JSONEncoder):

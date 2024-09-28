@@ -5,11 +5,12 @@ from os.path import exists, sep
 from platform import node
 from time import perf_counter
 
-from pagermaid import Config
 from pagermaid.common.system import run_eval, paste_pb
+from pagermaid.config import Config
 from pagermaid.enums import Message
 from pagermaid.listener import listener
-from pagermaid.utils import attach_log, execute, lang, upload_attachment
+from pagermaid.utils import execute, lang
+from pagermaid.utils.bot_utils import attach_log, upload_attachment
 
 code_result = (
     f"<b>{lang('eval_code')}</b>\n"

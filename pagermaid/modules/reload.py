@@ -1,8 +1,8 @@
-from pagermaid import read_context
 from pagermaid.common.reload import reload_all
 from pagermaid.enums import Message
 from pagermaid.listener import listener
 from pagermaid.services import scheduler
+from pagermaid.static import read_context
 from pagermaid.utils import lang
 
 

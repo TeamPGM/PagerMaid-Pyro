@@ -7,11 +7,12 @@ from typing import Optional, List, Tuple, Dict
 from pydantic import BaseModel, ValidationError
 
 import pagermaid.modules
-from pagermaid import Config, logs
-from pagermaid.enums import Message
 from pagermaid.common.cache import cache
-from pagermaid.utils import client
+from pagermaid.config import Config
+from pagermaid.dependence import client
+from pagermaid.enums import Message
 from pagermaid.services import sqlite
+from pagermaid.utils import logs
 
 plugins_path = Path("plugins")
 

@@ -3,7 +3,10 @@ from datetime import datetime, timezone
 
 import psutil
 from pydantic import BaseModel
-from pagermaid import start_time, Config, pgm_version
+
+from pagermaid.config import Config
+from pagermaid.static import start_time
+from pagermaid.version import pgm_version
 
 
 class Status(BaseModel):

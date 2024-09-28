@@ -1,11 +1,14 @@
-import casbin
 from logging import CRITICAL
-from shutil import copyfile
 from os import path as os_path
-from re import findall
 from os import sep
+from re import findall
+from shutil import copyfile
 from typing import List
-from pagermaid import all_permissions, module_dir
+
+import casbin
+
+from pagermaid import module_dir
+from pagermaid.static import all_permissions
 
 # init permissions
 if not os_path.exists(f"data{os_path.sep}gm_policy.csv"):

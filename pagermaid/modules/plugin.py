@@ -6,12 +6,13 @@ from os.path import exists
 from re import search, I
 from shutil import copyfile, move
 
-from pagermaid import log, working_dir
 from pagermaid.common.plugin import plugin_remote_manager, plugin_manager
 from pagermaid.common.reload import reload_all
 from pagermaid.enums import Message
 from pagermaid.listener import listener
-from pagermaid.utils import upload_attachment, lang
+from pagermaid.static import working_dir
+from pagermaid.utils import lang
+from pagermaid.utils.bot_utils import log, upload_attachment
 
 
 def remove_plugin(name):

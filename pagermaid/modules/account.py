@@ -1,14 +1,13 @@
+import contextlib
 from os import remove
 
 from pyrogram.errors import UsernameNotOccupied, PeerIdInvalid
 from pyrogram.types import User
 
-from pagermaid import Config
-from pagermaid.listener import listener
+from pagermaid.config import Config
 from pagermaid.enums import Message, Client
+from pagermaid.listener import listener
 from pagermaid.utils import lang
-
-import contextlib
 
 
 @listener(

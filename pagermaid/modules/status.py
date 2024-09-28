@@ -1,28 +1,27 @@
 """ PagerMaid module that contains utilities related to system status. """
 
 import re
-
 from datetime import datetime
+from getpass import getuser
 from platform import uname, python_version
+from shutil import disk_usage
+from socket import gethostname
+from subprocess import Popen, PIPE
 from sys import platform
+from time import time
 
+from psutil import boot_time, virtual_memory, disk_partitions
 from pyrogram import __version__
 from pyrogram.enums import ChatType
-from pyrogram.raw.functions import Ping
 from pyrogram.enums.parse_mode import ParseMode
+from pyrogram.raw.functions import Ping
 
-from getpass import getuser
-from socket import gethostname
-from time import time
-from psutil import boot_time, virtual_memory, disk_partitions
-from shutil import disk_usage
-from subprocess import Popen, PIPE
-
-from pagermaid import Config, pgm_version
 from pagermaid.common.status import get_bot_uptime
+from pagermaid.config import Config
 from pagermaid.enums import Client, Message
 from pagermaid.listener import listener
 from pagermaid.utils import lang, execute
+from pagermaid.version import pgm_version
 
 DCs = {
     1: "149.154.175.50",

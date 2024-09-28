@@ -6,8 +6,10 @@ import tarfile
 from traceback import format_exc
 
 from pagermaid.config import Config
+from pagermaid.enums import Message
 from pagermaid.listener import listener
-from pagermaid.utils import upload_attachment, lang, Message
+from pagermaid.utils import lang
+from pagermaid.utils.bot_utils import upload_attachment
 
 pgm_backup_zip_name = "pagermaid_backup.tar.gz"
 

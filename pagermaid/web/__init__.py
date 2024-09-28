@@ -5,8 +5,8 @@ from fastapi.responses import HTMLResponse
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from pagermaid import logs
 from pagermaid.config import Config
+from pagermaid.utils import logs
 from pagermaid.web.api import base_api_router, base_html_router
 from pagermaid.web.pages import admin_app, login_page
 

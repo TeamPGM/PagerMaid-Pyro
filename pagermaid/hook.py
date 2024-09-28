@@ -1,11 +1,15 @@
 import asyncio
 import sys
+from typing import TYPE_CHECKING
 
 from pyrogram import StopPropagation
 
-from pagermaid import hook_functions, logs
 from pagermaid.inject import inject
-from pagermaid.single_utils import Message
+from pagermaid.static import hook_functions
+from pagermaid.utils import logs
+
+if TYPE_CHECKING:
+    from pagermaid.enums import Message
 
 
 class Hook:
@@ -103,7 +107,7 @@ class Hook:
                 logs.info(f"[shutdown]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def command_pre(message: Message, command, sub_command):
+    async def command_pre(message: "Message", command, sub_command):
         cors = []
         try:
             for pre in hook_functions["command_pre"]:
@@ -126,7 +130,7 @@ class Hook:
             logs.info(f"[command_pre]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def command_post(message: Message, command, sub_command):
+    async def command_post(message: "Message", command, sub_command):
         cors = []
         try:
             for post in hook_functions["command_post"]:
@@ -150,7 +154,7 @@ class Hook:
 
     @staticmethod
     async def process_error_exec(
-        message: Message, command, exc_info: BaseException, exc_format: str
+        message: "Message", command, exc_info: BaseException, exc_format: str
     ):
         cors = []
         try:

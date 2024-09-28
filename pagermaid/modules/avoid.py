@@ -1,11 +1,11 @@
 """ PagerMaid module for different ways to avoid users. """
 
-from pagermaid import log
-from pagermaid.enums.command import CommandHandler
-from pagermaid.single_utils import sqlite
-from pagermaid.utils import lang
+from pagermaid.dependence import sqlite
 from pagermaid.enums import Client, Message
+from pagermaid.enums.command import CommandHandler
 from pagermaid.listener import listener
+from pagermaid.utils import lang
+from pagermaid.utils.bot_utils import log
 
 
 @listener(

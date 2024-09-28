@@ -1,13 +1,12 @@
 """ Module to automate message deletion. """
 
+import contextlib
 from asyncio import sleep
 
-from pagermaid import log
-from pagermaid.listener import listener
 from pagermaid.enums import Client, Message
+from pagermaid.listener import listener
 from pagermaid.utils import lang
-
-import contextlib
+from pagermaid.utils.bot_utils import log
 
 
 @listener(

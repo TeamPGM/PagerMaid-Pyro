@@ -1,3 +1,5 @@
+import sys
+
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -6,14 +8,14 @@ from pyrogram.raw.functions.account import InitTakeoutSession
 from pyrogram.raw.functions.updates import GetState
 from starlette.responses import HTMLResponse
 
-from pagermaid import bot, logs
 from pagermaid.common.reload import load_all
-from pagermaid.utils import lang, process_exit
+from pagermaid.services import bot
+from pagermaid.utils import lang, logs
+from pagermaid.utils.listener import process_exit
 from pagermaid.web.api import authentication
 from pagermaid.web.html import get_web_login_html
 from pyromod.methods.sign_in_qrcode import authorize_by_qrcode_web
 from pyromod.utils.errors import QRCodeWebCodeError, QRCodeWebNeedPWDError
-import sys
 
 
 class UserModel(BaseModel):

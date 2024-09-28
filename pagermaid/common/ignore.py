@@ -2,8 +2,8 @@ import json
 
 from pyrogram.enums import ChatType
 
-from pagermaid import bot
-from pagermaid.sub_utils import Sub
+from pagermaid.services import bot
+from pagermaid.utils import Sub
 
 ignore_groups_manager = Sub("ignore_groups")
 

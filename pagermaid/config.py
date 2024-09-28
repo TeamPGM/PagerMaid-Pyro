@@ -149,3 +149,7 @@ class Config:
     except ValueError as e:
         print(e)
         sys.exit(1)
+
+
+DATA_PATH = Path("data")
+DATA_PATH.mkdir(exist_ok=True)

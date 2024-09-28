@@ -3,8 +3,7 @@ import sys
 import traceback
 from typing import Optional
 
-from pagermaid import bot
-from pagermaid.services import client as httpx_client
+from pagermaid.services import client as httpx_client, bot
 
 
 async def run_eval(cmd: str, message=None) -> str:

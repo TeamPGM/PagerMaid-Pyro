@@ -5,10 +5,12 @@ from sys import path, platform, exit
 
 from pyrogram.errors import AuthKeyUnregistered
 
-from pagermaid import bot, logs, working_dir, Config
 from pagermaid.common.reload import load_all
-from pagermaid.single_utils import safe_remove
-from pagermaid.utils import lang, process_exit
+from pagermaid.config import Config
+from pagermaid.services import bot
+from pagermaid.static import working_dir
+from pagermaid.utils import lang, safe_remove, logs
+from pagermaid.utils.listener import process_exit
 from pagermaid.web import web
 from pagermaid.web.api.web_login import web_login
 from pyromod.methods.sign_in_qrcode import start_client

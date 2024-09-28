@@ -9,7 +9,7 @@ from pyrogram.errors import SessionPasswordNeeded, BadRequest
 from pyrogram.session import Auth, Session
 from pyrogram.utils import ainput
 
-from pagermaid import Config
+from pagermaid.config import Config
 from pyromod.utils.errors import QRCodeWebNeedPWDError, QRCodeWebCodeError
 
 

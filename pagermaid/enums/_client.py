@@ -1,6 +1,3 @@
-import contextlib
-from os import sep, remove, mkdir
-from os.path import exists
 from typing import List, Optional, Union
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -8,40 +5,6 @@ from pyrogram import Client as OldClient
 from pyrogram.types import Chat as OldChat, Message as OldMessage, Dialog
 
 from pyromod.utils.conversation import Conversation
-from pyromod.utils.errors import (
-    AlreadyInConversationError,
-    TimeoutConversationError,
-    ListenerCanceled,
-)
-from sqlitedict import SqliteDict
-
-__all__ = [
-    "AlreadyInConversationError",
-    "TimeoutConversationError",
-    "ListenerCanceled",
-    "get_sudo_list",
-    "_status_sudo",
-    "Message",
-    "sqlite",
-    "safe_remove",
-]
-# init folders
-if not exists("data"):
-    mkdir("data")
-sqlite = SqliteDict(f"data{sep}data.sqlite", autocommit=True)
-
-
-def get_sudo_list():
-    return sqlite.get("sudo_list", [])
-
-
-def _status_sudo():
-    return sqlite.get("sudo_enable", False)
-
-
-def safe_remove(name: str) -> None:
-    with contextlib.suppress(FileNotFoundError):
-        remove(name)
 
 
 class Message(OldMessage):
@@ -56,7 +19,7 @@ class Message(OldMessage):
     def obtain_user(self) -> Optional[int]:
         """Obtains a user from either the reply message or command arguments."""
 
-    async def delay_delete(self, delete_seconds: int = 60) -> Optional[bool]:
+    async def delay_delete(self, delay: int = 60) -> Optional[bool]:
         """Deletes the message after a specified amount of seconds."""
 
     async def safe_delete(self, revoke: bool = True) -> None:

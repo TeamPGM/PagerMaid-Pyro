@@ -3,11 +3,11 @@
 from pyrogram.enums import ChatType
 from pyrogram.errors import Forbidden, FloodWait
 
-from pagermaid import log
 from pagermaid.config import Config
+from pagermaid.enums import Message
 from pagermaid.listener import listener
 from pagermaid.utils import lang
-from pagermaid.enums import Message
+from pagermaid.utils.bot_utils import log
 
 
 @listener(is_plugin=False, outgoing=True, command="id", description=lang("id_des"))

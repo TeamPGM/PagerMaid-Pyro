@@ -4,9 +4,9 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from pagermaid import pgm_version_code
-from pagermaid.web.api.utils import create_token
 from pagermaid.config import Config
+from pagermaid.version import pgm_version_code
+from pagermaid.web.api.utils import create_token
 
 
 class UserModel(BaseModel):
