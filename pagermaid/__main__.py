@@ -7,6 +7,7 @@ from pyrogram.errors import AuthKeyUnregistered
 
 from pagermaid.common.reload import load_all
 from pagermaid.config import Config
+from pagermaid.dependence import scheduler
 from pagermaid.services import bot
 from pagermaid.static import working_dir
 from pagermaid.utils import lang, safe_remove, logs
@@ -70,6 +71,8 @@ async def web_bot():
 
 async def main():
     logs.info(lang("platform") + platform + lang("platform_load"))
+    if not scheduler.running:
+        scheduler.start()
     await web.start()
     if not (Config.WEB_ENABLE and Config.WEB_LOGIN):
         await console_bot()
@@ -80,6 +83,8 @@ async def main():
     try:
         await idle()
     finally:
+        if scheduler.running:
+            scheduler.shutdown()
         try:
             await bot.stop()
         except ConnectionError:
