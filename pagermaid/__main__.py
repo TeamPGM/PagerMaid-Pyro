@@ -1,5 +1,6 @@
 import asyncio
 from os import sep
+from pathlib import Path
 from signal import signal as signal_fn, SIGINT, SIGTERM, SIGABRT
 from sys import path, platform, exit
 
@@ -16,6 +17,7 @@ from pagermaid.web import web
 from pagermaid.web.api.web_login import web_login
 from pyromod.methods.sign_in_qrcode import start_client
 
+bot.PARENT_DIR = Path(working_dir)
 path.insert(1, f"{working_dir}{sep}plugins")
 
 
