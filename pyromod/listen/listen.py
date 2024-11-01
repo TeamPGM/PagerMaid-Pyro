@@ -285,7 +285,7 @@ class Message(pyrogram.types.Message):
         parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
         entities: List["pyrogram.types.MessageEntity"] = None,
         disable_web_page_preview: bool = None,
-        show_above_text: bool = None,
+        show_caption_above_media: bool = None,
         reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
         no_reply: bool = None,
     ) -> "Message":
@@ -307,7 +307,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview,
-                        show_above_text=show_above_text,
+                        show_caption_above_media=show_caption_above_media,
                         quote=True,
                     )
                 elif is_self:
@@ -318,7 +318,7 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         disable_web_page_preview=disable_web_page_preview,
-                        show_above_text=show_above_text,
+                        show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
                     )
                 elif not no_reply:
@@ -326,7 +326,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         disable_web_page_preview=disable_web_page_preview,
-                        show_above_text=show_above_text,
+                        show_caption_above_media=show_caption_above_media,
                         quote=True,
                     )
             else:
@@ -338,7 +338,7 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         disable_web_page_preview=disable_web_page_preview,
-                        show_above_text=show_above_text,
+                        show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
                     )
                 except (
@@ -350,7 +350,7 @@ class Message(pyrogram.types.Message):
                             parse_mode=parse_mode,
                             entities=entities,
                             disable_web_page_preview=disable_web_page_preview,
-                            show_above_text=show_above_text,
+                            show_caption_above_media=show_caption_above_media,
                             reply_markup=reply_markup,
                             quote=True,
                         )

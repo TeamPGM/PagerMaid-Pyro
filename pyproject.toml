@@ -1,12 +1,12 @@
 [project]
 name = "PagerMaid-Pyro"
-version = "1.4.14"
+version = "1.5.1"
 description = "Default template for PDM package"
 authors = [
     {name = "xtaodada", email = "xtao@xtaolink.cn"},
 ]
 dependencies = [
-    "pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.4.14",
+    "pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.5.1",
     "PyroTgCrypto>=1.2.7",
     "Pillow>=9.0.0",
     "pytz>=2024.2",

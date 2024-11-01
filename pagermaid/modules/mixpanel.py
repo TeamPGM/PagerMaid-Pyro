@@ -7,12 +7,12 @@ import uuid
 from asyncio import sleep
 from typing import Union
 
-from pyrogram.raw.functions.channels import (
+from pyrogram.raw.functions.messages import (
     GetSponsoredMessages,
     ViewSponsoredMessage,
     ClickSponsoredMessage,
 )
-from pyrogram.raw.types import InputChannel
+from pyrogram.raw.types import InputPeerChannel
 from pyrogram.raw.types.messages import SponsoredMessages, SponsoredMessagesEmpty
 
 from pagermaid.config import Config
@@ -157,18 +157,18 @@ async def mixpanel_report(bot: Client, message: Message, command, sub_command):
 
 
 async def get_sponsored(
-    bot: Client, channel: "InputChannel"
+    bot: Client, channel: "InputPeerChannel"
 ) -> Union["SponsoredMessages", "SponsoredMessagesEmpty"]:
-    result = await bot.invoke(GetSponsoredMessages(channel=channel))
+    result = await bot.invoke(GetSponsoredMessages(peer=channel))
     logs.debug(f"Get sponsored messages: {type(result)}")
     return result
 
 
 async def read_sponsored(
-    bot: Client, channel: "InputChannel", random_id: bytes
+    bot: Client, channel: "InputPeerChannel", random_id: bytes
 ) -> bool:
     result = await bot.invoke(
-        ViewSponsoredMessage(channel=channel, random_id=random_id)
+        ViewSponsoredMessage(peer=channel, random_id=random_id)
     )
     if result:
         bot.loop.create_task(
@@ -183,10 +183,10 @@ async def read_sponsored(
 
 
 async def click_sponsored(
-    bot: Client, channel: "InputChannel", random_id: bytes
+    bot: Client, channel: "InputPeerChannel", random_id: bytes
 ) -> bool:
     result = await bot.invoke(
-        ClickSponsoredMessage(channel=channel, random_id=random_id)
+        ClickSponsoredMessage(peer=channel, random_id=random_id)
     )
     if result:
         bot.loop.create_task(
