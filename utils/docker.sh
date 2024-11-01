@@ -125,7 +125,7 @@ data_persistence () {
     read -r persistence <&1
     case $persistence in
         [yY][eE][sS] | [yY])
-            printf "请输入将数据保留在宿主机哪个路径（绝对路径），同时请确保该路径下没有名为 workdir 的文件夹 ："
+            printf "请输入将数据保留在宿主机哪个路径（绝对路径），同时请确保该路径下没有名为 data 和 plugins 的文件夹 ："
             read -r data_path <&1
             if [ -d "$data_path" ]; then
                 if [[ -z $container_name ]]; then
@@ -133,15 +133,16 @@ data_persistence () {
                     read -r container_name <&1
                 fi
                 if docker inspect "$container_name" &>/dev/null; then
-                    docker cp "$container_name":/pagermaid/workdir "$data_path"
+                    docker cp "$container_name":/pagermaid/workdir/data "$data_path"
+                    docker cp "$container_name":/pagermaid/workdir/plugins "$data_path"
                     docker stop "$container_name" &>/dev/null
                     docker rm "$container_name" &>/dev/null
                     case $PGM_WEB in
                         true)
-                            docker run -dit -v "$data_path"/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
+                            docker run -dit -v "$data_path"/data:/pagermaid/workdir/data -v "$data_path"/plugins:/pagermaid/workdir/plugins --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
                             ;;
                         *)
-                            docker run -dit -v "$data_path"/workdir:/pagermaid/workdir --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+                            docker run -dit -v "$data_path"/data:/pagermaid/workdir/data -v "$data_path"/plugins:/pagermaid/workdir/plugins --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
                             ;;
                     esac
                     echo
@@ -260,7 +261,7 @@ shon_online () {
     echo "  6) Docker 重装 PagerMaid"
     echo "  7) 退出脚本"
     echo
-    echo "     Version：2.2.0"
+    echo "     Version：2.3.0"
     echo
     echo -n "请输入编号: "
     read -r N <&1

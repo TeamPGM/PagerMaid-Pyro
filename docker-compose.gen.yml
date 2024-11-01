@@ -1,7 +1,7 @@
 version: "2.0"
 services:
   pagermaid:
-    image: teampgm/pagermaid_pyro
+    image: teampgm/pagermaid_pyro:latest
     restart: always
     container_name: pagermaid
     hostname: pagermaid
@@ -9,6 +9,7 @@ services:
 #      - "3333:3333"
     volumes:
       - ./data:/pagermaid/workdir/data
+      - ./plugins:/pagermaid/workdir/plugins
     environment:
 #      - WEB_ENABLE=true
 #      - WEB_SECRET_KEY=控制台密码
