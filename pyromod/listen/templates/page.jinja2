@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>{{ site_title }}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <link href="{{ site_icon }}" rel="shortcut icon" type="image/x-icon"/>
+        <link href="{{ cdn }}/amis@{{ version }}/sdk/{{ theme_css }}" rel="stylesheet" title="default"/>
+        <link href="{{ cdn }}/amis@{{ version }}/sdk/helper.css" rel="stylesheet"/>
+        <link href="{{ cdn }}/amis@{{ version }}/sdk/iconfont.css" rel="stylesheet"/>
+        <script src="{{ cdn }}/amis@{{ version }}/sdk/sdk.js"></script>
+        <script src="{{ cdn }}/vue@2/dist/vue.js"></script>
+        <script src="{{ cdn }}/history@{{ version }}"></script>
+        <style>
+            html, body,
+            .app-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="root" class="app-wrapper"></div>
+        <script type="text/javascript">
+            (function () {
+                let amis = amisRequire('amis/embed');
+                let amisJson = {{ AmisSchemaJson }};
+                let amisScoped = amis.embed('#root', amisJson, {locale: "{{ locale }}"}, {
+                    {{ requestAdaptor }}
+                    {{ responseAdaptor }}
+                    theme: '{{ theme_name }}'
+                });
+            })();
+        </script>
+    </body>
+</html>
