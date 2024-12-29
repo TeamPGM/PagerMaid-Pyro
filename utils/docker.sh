@@ -244,6 +244,21 @@ reinstall_pager () {
     data_persistence
 }
 
+redata_persistence () {
+    printf "请输入 PagerMaid 容器的名称："
+    read -r container_name <&1
+    if [ -z "$container_name" ]; then
+        echo "错误：容器名称不能为空"
+        exit 1
+    fi
+    if docker inspect "$container_name" &>/dev/null; then
+        data_persistence
+    else
+        echo "不存在名为 $container_name 的容器，退出。"
+        exit 1
+    fi
+}
+
 shon_online () {
     echo "一键脚本出现任何问题请转手动搭建！ xtaolabs.com"
     echo "一键脚本出现任何问题请转手动搭建！ xtaolabs.com"
@@ -259,7 +274,8 @@ shon_online () {
     echo "  4) Docker 启动 PagerMaid"
     echo "  5) Docker 重启 PagerMaid"
     echo "  6) Docker 重装 PagerMaid"
-    echo "  7) 退出脚本"
+    echo "  7) PagerMaid 数据持久化"
+    echo "  8) 退出脚本"
     echo
     echo "     Version：2.3.0"
     echo
@@ -284,7 +300,10 @@ shon_online () {
         6)
             reinstall_pager
             ;;
-        7)
+        7)  
+            redata_persistence
+            ;;
+        8)
             exit 0
             ;;
         *)
