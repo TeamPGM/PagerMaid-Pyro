@@ -259,7 +259,8 @@ shon_online () {
     echo "  4) Docker 启动 PagerMaid"
     echo "  5) Docker 重启 PagerMaid"
     echo "  6) Docker 重装 PagerMaid"
-    echo "  7) 退出脚本"
+    echo "  7) Docker PagerMaid 数据持久化"
+    echo "  8) 退出脚本"
     echo
     echo "     Version：2.3.0"
     echo
@@ -284,7 +285,17 @@ shon_online () {
         6)
             reinstall_pager
             ;;
-        7)
+        7)  
+            printf "请输入 PagerMaid 容器的名称："
+            read -r container_name <&1
+            if docker inspect "$container_name" &>/dev/null; then
+                data_persistence
+            else
+                echo "不存在名为 $container_name 的容器，退出。"
+                exit 1
+            fi
+            ;;
+        8)
             exit 0
             ;;
         *)
