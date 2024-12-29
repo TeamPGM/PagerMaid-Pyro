@@ -288,6 +288,10 @@ shon_online () {
         7)  
             printf "请输入 PagerMaid 容器的名称："
             read -r container_name <&1
+            if [ -z "$container_name" ]; then
+                echo "错误：容器名称不能为空"
+                exit 1
+            fi
             if docker inspect "$container_name" &>/dev/null; then
                 data_persistence
             else
