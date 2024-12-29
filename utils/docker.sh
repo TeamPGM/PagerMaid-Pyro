@@ -259,7 +259,7 @@ shon_online () {
     echo "  4) Docker 启动 PagerMaid"
     echo "  5) Docker 重启 PagerMaid"
     echo "  6) Docker 重装 PagerMaid"
-    echo "  7) Docker PagerMaid 数据持久化"
+    echo "  7) PagerMaid 数据持久化"
     echo "  8) 退出脚本"
     echo
     echo "     Version：2.3.0"
