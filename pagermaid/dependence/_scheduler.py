@@ -9,7 +9,7 @@ from pagermaid.config import Config
 if TYPE_CHECKING:
     from pagermaid.enums import Message
 
-scheduler = AsyncIOScheduler(timezone=Config.TIME_ZONE)
+scheduler = AsyncIOScheduler(timezone=pytz.timezone(Config.TIME_ZONE))
 
 
 async def delete_message(message: "Message") -> bool:
