@@ -39,6 +39,7 @@ from ..utils.errors import TimeoutConversationError, ListenerCanceled
 pyrogram.errors.ListenerCanceled = ListenerCanceled  # noqa
 LOCK = asyncio.Lock()
 DONE = []
+DONE_MAP = {}
 
 
 @patch(pyrogram.client.Client)
@@ -120,14 +121,15 @@ class MessageHandler(pyrogram.handlers.message_handler.MessageHandler):
         global LOCK, DONE
         async with LOCK:
             listener = client.listening.get(message.chat.id)
-            if listener:
+            if listener and DONE_MAP.get(id(self)) == id(listener):
                 with contextlib.suppress(ValueError):
                     DONE.remove(listener)
-            if listener and not listener["future"].done():
-                listener["future"].set_result(message)
-                return
-            if listener and listener["future"].done():
-                client.clear_listener(message.chat.id, listener["future"])
+                    del DONE_MAP[id(self)]
+                if not listener["future"].done():
+                    listener["future"].set_result(message)
+                    return
+                if listener["future"].done():
+                    client.clear_listener(message.chat.id, listener["future"])
         await self.user_callback(client, message, *args)
 
     @patchable
@@ -135,7 +137,7 @@ class MessageHandler(pyrogram.handlers.message_handler.MessageHandler):
         await MessageHandler.resolve_listener_(self, client, message, *args)
 
     @staticmethod
-    async def check_(self, client, update):
+    async def check_(self, client: "Client", update: "Message"):
         global LOCK, DONE
         async with LOCK:
             listener = client.listening.get(update.chat.id)
@@ -144,14 +146,16 @@ class MessageHandler(pyrogram.handlers.message_handler.MessageHandler):
                     result = await listener["filters"](client, update)
                     if result:
                         DONE.append(listener)
-                    return result
+                        DONE_MAP[id(self)] = id(listener)
+                        return True
                 else:
                     DONE.append(listener)
+                    DONE_MAP[id(self)] = id(listener)
                     return True
         return await self.filters(client, update) if callable(self.filters) else True
 
     @patchable
-    async def check(self, client, update):
+    async def check(self, client: "Client", update: "Message"):
         return await MessageHandler.check_(self, client, update)
 
 
@@ -412,7 +416,9 @@ class Message(pyrogram.types.Message):
         schedule_date: datetime = None,
         protect_content: bool = None,
         has_spoiler: bool = None,
+        show_caption_above_media: bool = None,
         business_connection_id: str = None,
+        allow_paid_broadcast: bool = None,
         reply_markup: Union[
             "pyrogram.types.InlineKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardMarkup",
@@ -436,7 +442,9 @@ class Message(pyrogram.types.Message):
             schedule_date,
             protect_content,
             has_spoiler,
+            show_caption_above_media,
             business_connection_id,
+            allow_paid_broadcast,
             reply_markup,
         )  # noqa
 
@@ -457,7 +465,7 @@ class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
         self.loop.create_task(fn())
 
     @patchable
-    def add_handler(self, handler, group: int, first: bool):
+    def add_handler(self, handler, group: int, first: bool = False):
         if not first:
             return self.oldadd_handler(handler, group)
 
