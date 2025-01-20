@@ -23,10 +23,10 @@ dependencies = [
     "PyPng",
     "fastapi>=0.115.5",
     "amis-python==1.0.8.post2",
-    "python-jose>=3.3.0",
     "uvicorn>=0.32.0",
     "pydantic<2.0.0",
     "starlette>=0.41.2",
+    "pyjwt>=2.9.0",
 ]
 requires-python = ">=3.8.0"
 readme = "README.md"
