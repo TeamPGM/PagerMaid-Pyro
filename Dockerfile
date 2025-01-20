@@ -34,6 +34,7 @@ RUN source ~/.bashrc \
         libmagic1 \
         libzbar0 \
         iputils-ping \
+        tzdata \
     ## 安装编译依赖
     && apt-get update \
     && apt-get install --no-install-recommends -y \
