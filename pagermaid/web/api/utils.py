@@ -1,8 +1,8 @@
 import datetime
+import jwt
 from typing import Optional
 
 from fastapi import Header, HTTPException, Depends, Cookie
-from jose import jwt
 
 from pagermaid.config import Config
 
@@ -18,7 +18,7 @@ def authentication():
                 return
             try:
                 jwt.decode(_token, Config.WEB_SECRET_KEY, algorithms=ALGORITHM)
-            except (jwt.JWTError, jwt.ExpiredSignatureError, AttributeError):
+            except (jwt.PyJWTError, jwt.ExpiredSignatureError, AttributeError):
                 raise HTTPException(
                     status_code=400, detail="登录验证失败或已失效，请重新登录"
                 )
