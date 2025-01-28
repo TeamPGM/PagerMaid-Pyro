@@ -146,18 +146,18 @@ data_persistence () {
             echo "请选择持久化模式:"
             echo "模式1：将整个 PagerMaid 目录保存在宿主机路径中（适合修改自带插件用户）。"
             echo "模式2：仅保存 PagerMaid 下的 data 和 plugins 目录（适合只备份数据和插件）。"
-            echo "- 1 [默认]"
-            echo "- 2"
+            echo "- 1"
+            echo "- 2 [默认]"
             read -r mode <&1
 
             # 校验用户输入
-            if [[ -z "$mode" || "$mode" = "1" ]]; then
-                # 默认选择模式1
+            if [[ "$mode" = "1" ]]; then
+                # 选择模式1
                 echo "已选择模式1：持久化整个 PagerMaid 目录。"
                 docker cp "$container_name":/pagermaid/workdir "$data_path"
                 mount_args="-v $data_path/workdir:/pagermaid/workdir"
-            elif [[ "$mode" = "2" ]]; then
-                # 选择模式2
+            elif [[  -z "$mode" || "$mode" = "2" ]]; then
+                # 默认选择模式2
                 echo "已选择模式2：仅持久化 data 和 plugins 目录。"
                 docker cp "$container_name":/pagermaid/workdir/data "$data_path"
                 docker cp "$container_name":/pagermaid/workdir/plugins "$data_path"
