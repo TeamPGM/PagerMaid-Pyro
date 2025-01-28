@@ -125,41 +125,72 @@ data_persistence () {
     read -r persistence <&1
     case $persistence in
         [yY][eE][sS] | [yY])
-            printf "请输入将数据保留在宿主机哪个路径（绝对路径），同时请确保该路径下没有名为 data 和 plugins 的文件夹 ："
+            printf "请输入将数据保留在宿主机哪个路径（绝对路径），同时请确保该路径下没有名为 data、plugins、workdir 的文件夹 ："
             read -r data_path <&1
-            if [ -d "$data_path" ]; then
-                if [[ -z $container_name ]]; then
-                    printf "请输入 PagerMaid 容器的名称："
-                    read -r container_name <&1
-                fi
-                if docker inspect "$container_name" &>/dev/null; then
-                    docker cp "$container_name":/pagermaid/workdir/data "$data_path"
-                    docker cp "$container_name":/pagermaid/workdir/plugins "$data_path"
-                    docker stop "$container_name" &>/dev/null
-                    docker rm "$container_name" &>/dev/null
-                    case $PGM_WEB in
-                        true)
-                            docker run -dit -v "$data_path"/data:/pagermaid/workdir/data -v "$data_path"/plugins:/pagermaid/workdir/plugins --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
-                            ;;
-                        *)
-                            docker run -dit -v "$data_path"/data:/pagermaid/workdir/data -v "$data_path"/plugins:/pagermaid/workdir/plugins --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
-                            ;;
-                    esac
-                    echo
-                    echo "数据持久化操作完成。"
-                    echo
-                else
-                    echo "不存在名为 $container_name 的容器，退出。"
-                fi
-            else
+            if [ ! -d "$data_path" ]; then
                 echo "路径 $data_path 不存在，退出。"
+                return
             fi
+
+            if [[ -z $container_name ]]; then
+                printf "请输入 PagerMaid 容器的名称："
+                read -r container_name <&1
+            fi
+
+            if ! docker inspect "$container_name" &>/dev/null; then
+                echo "不存在名为 $container_name 的容器，退出。"
+                return
+            fi
+            echo
+            echo
+            echo "请选择持久化模式:"
+            echo "模式1：将整个 PagerMaid 目录保存在宿主机路径中（适合修改自带插件用户）。"
+            echo "模式2：仅保存 PagerMaid 下的 data 和 plugins 目录（适合只备份数据和插件）。"
+            echo "- 1 [默认]"
+            echo "- 2"
+            read -r mode <&1
+
+            # 校验用户输入
+            if [[ -z "$mode" || "$mode" = "1" ]]; then
+                # 默认选择模式1
+                echo "已选择模式1：持久化整个 PagerMaid 目录。"
+                docker cp "$container_name":/pagermaid/workdir "$data_path"
+                mount_args="-v $data_path/workdir:/pagermaid/workdir"
+            elif [[ "$mode" = "2" ]]; then
+                # 选择模式2
+                echo "已选择模式2：仅持久化 data 和 plugins 目录。"
+                docker cp "$container_name":/pagermaid/workdir/data "$data_path"
+                docker cp "$container_name":/pagermaid/workdir/plugins "$data_path"
+                mount_args="-v $data_path/data:/pagermaid/workdir/data -v $data_path/plugins:/pagermaid/workdir/plugins"
+            else
+                # 输入无效
+                echo "无效的选择，请重新运行并选择 1 或 2。"
+                exit 1
+            fi
+
+            # 停止并删除旧容器
+            docker stop "$container_name" &>/dev/null
+            docker rm "$container_name" &>/dev/null
+
+            # 启动新容器
+            case $PGM_WEB in
+                 true)
+                     docker run -dit $mount_args --restart=always --name="$container_name" --hostname="$container_name" -e WEB_ENABLE="$PGM_WEB" -e WEB_SECRET_KEY="$admin_password" -e WEB_HOST=0.0.0.0 -e WEB_PORT=3333 -p 3333:3333 teampgm/pagermaid_pyro <&1
+                     ;;
+                 *)
+                     docker run -dit $mount_args --restart=always --name="$container_name" --hostname="$container_name" teampgm/pagermaid_pyro <&1
+                     ;;
+            esac
+
+            echo
+            echo "数据持久化操作完成。"
+            echo
             ;;
         [nN][oO] | [nN])
             echo "结束。"
             ;;
         *)
-            echo "输入错误 . . ."
+            echo "输入错误，请重新运行并输入正确选项。"
             ;;
     esac
 }
