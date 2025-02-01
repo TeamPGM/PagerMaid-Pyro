@@ -25,9 +25,9 @@ async def prune(client: Client, message: Message):
     messages = []
     count = 0
     limit = message.id - message.reply_to_message.id + 1
-    if message.message_thread_id:
+    if message.topic is not None:
         func = client.get_discussion_replies(
-            input_chat, message.message_thread_id, limit=limit
+            input_chat, message.topic.id, limit=limit
         )
     else:
         func = client.get_chat_history(input_chat, limit=limit)
