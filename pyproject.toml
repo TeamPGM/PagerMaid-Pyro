@@ -1,12 +1,12 @@
 [project]
 name = "PagerMaid-Pyro"
 version = "1.5.2"
-description = "Default template for PDM package"
+description = "Advanced Multi-Featured Telegram UserBot by pyrogram."
 authors = [
-    {name = "xtaodada", email = "xtao@xtaolink.cn"},
+    {name = "xtaodada", email = "xtao@xtao.de"},
 ]
 dependencies = [
-    "pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.5.2",
+    "pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.5.3",
     "PyroTgCrypto>=1.2.7",
     "Pillow<11.0.0; python_version < '3.9'",
     "Pillow>=11.0.0; python_version >= '3.9'",

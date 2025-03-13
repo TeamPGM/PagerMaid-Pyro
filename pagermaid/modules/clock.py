@@ -1,4 +1,4 @@
-""" This module handles world clock related utility. """
+"""This module handles world clock related utility."""
 
 from datetime import datetime
 

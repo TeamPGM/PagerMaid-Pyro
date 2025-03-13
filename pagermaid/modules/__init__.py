@@ -1,4 +1,4 @@
-""" PagerMaid module and plugin init. """
+"""PagerMaid module and plugin init."""
 
 from glob import glob
 from os import getcwd, makedirs, sep

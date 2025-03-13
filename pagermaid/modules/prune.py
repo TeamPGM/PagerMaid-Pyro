@@ -1,4 +1,4 @@
-""" Module to automate message deletion. """
+"""Module to automate message deletion."""
 
 import contextlib
 from asyncio import sleep
@@ -67,12 +67,15 @@ async def self_prune(bot: Client, message: Message):
         if not message.reply_to_message:
             return await message.edit(lang("arg_error"))
         offset = message.reply_to_message.id
-    try:
-        count = int(message.parameter[0])
-        await message.delete()
-    except ValueError:
-        await message.edit(lang("arg_error"))
-        return
+    if message.parameter:
+        try:
+            count = int(message.parameter[0])
+            await message.delete()
+        except ValueError:
+            await message.edit(lang("arg_error"))
+            return
+    else:
+        count = message.id - offset
     async for msg in bot.get_chat_history(message.chat.id, limit=100):
         if count_buffer == count:
             break
@@ -82,8 +85,10 @@ async def self_prune(bot: Client, message: Message):
             if len(msgs) == 100:
                 await bot.delete_messages(message.chat.id, msgs)
                 msgs = []
+        if offset and msg.id == offset:
+            break
     async for msg in bot.search_messages(
-        message.chat.id, from_user="me", offset=offset
+        message.chat.id, from_user="me", min_id=offset
     ):
         if count_buffer == count:
             break
@@ -92,6 +97,8 @@ async def self_prune(bot: Client, message: Message):
         if len(msgs) == 100:
             await bot.delete_messages(message.chat.id, msgs)
             msgs = []
+        if offset and msg.id == offset:
+            break
     if msgs:
         await bot.delete_messages(message.chat.id, msgs)
     await log(

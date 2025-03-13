@@ -5,24 +5,24 @@ anyio==4.5.2 ; python_full_version < '3.9'
 anyio==4.8.0 ; python_full_version >= '3.9'
 apscheduler==3.11.0
 backports-zoneinfo==0.2.1 ; python_full_version < '3.9'
-casbin==1.38.0
-certifi==2024.12.14
+casbin==1.40.0
+certifi==2025.1.31
 click==8.1.8
 colorama==0.4.6 ; sys_platform == 'win32'
 coloredlogs==15.0.1
 exceptiongroup==1.2.2 ; python_full_version < '3.11'
-fastapi==0.115.6
+fastapi==0.115.11
 h11==0.14.0
 httpcore==1.0.7
 httpx==0.28.1
 humanfriendly==10.0
 idna==3.10
-jinja2==3.1.5
+jinja2==3.1.6
 markupsafe==2.1.5 ; python_full_version < '3.9'
 markupsafe==3.0.2 ; python_full_version >= '3.9'
 pillow==10.4.0 ; python_full_version < '3.9'
 pillow==11.1.0 ; python_full_version >= '3.9'
-psutil==6.1.1
+psutil==7.0.0
 pyaes==1.6.1
 pydantic==1.10.21
 pyjwt==2.9.0 ; python_full_version < '3.9'
@@ -30,20 +30,22 @@ pyjwt==2.10.1 ; python_full_version >= '3.9'
 pypng==0.20220715.0
 pyqrcode==1.2.1
 pyreadline3==3.5.4 ; sys_platform == 'win32'
-pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.5.2
+pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.5.3
 pyrotgcrypto==1.2.7
 pysocks==1.7.1
-pytz==2024.2
+pytz==2025.1
 pyyaml==6.0.2
-sentry-sdk==2.20.0
+sentry-sdk==2.22.0
 simpleeval==0.9.13 ; python_full_version < '3.9'
 simpleeval==1.0.3 ; python_full_version >= '3.9'
 sniffio==1.3.1
 sqlitedict==2.1.0
-starlette==0.41.3
+starlette==0.44.0 ; python_full_version < '3.9'
+starlette==0.46.1 ; python_full_version >= '3.9'
 typing-extensions==4.12.2
-tzdata==2024.2 ; sys_platform == 'win32'
-tzlocal==5.2
+tzdata==2025.1 ; sys_platform == 'win32'
+tzlocal==5.2 ; python_full_version < '3.9'
+tzlocal==5.3.1 ; python_full_version >= '3.9'
 urllib3==2.2.3 ; python_full_version < '3.9'
 urllib3==2.3.0 ; python_full_version >= '3.9'
 uvicorn==0.33.0 ; python_full_version < '3.9'

@@ -1,4 +1,4 @@
-""" PagerMaid module that contains utilities related to system status. """
+"""PagerMaid module that contains utilities related to system status."""
 
 import re
 from datetime import datetime

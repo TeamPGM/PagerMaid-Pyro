@@ -71,7 +71,7 @@ async def process_exit(start: int, _client, message=None):
                         if msg.from_user.is_self and (msg.text or msg.caption)
                         else ""
                     )
-                    + f'\n\n> {lang("restart_complete")}'
+                    + f"\n\n> {lang('restart_complete')}"
                 )
         del sqlite["exit_msg"]
     if message:

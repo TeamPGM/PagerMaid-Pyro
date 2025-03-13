@@ -1,4 +1,4 @@
-""" PagerMaid module for different ways to avoid users. """
+"""PagerMaid module for different ways to avoid users."""
 
 from pagermaid.dependence import sqlite
 from pagermaid.enums import Client, Message

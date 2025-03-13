@@ -43,7 +43,7 @@ DONE_MAP = {}
 
 
 @patch(pyrogram.client.Client)
-class Client:
+class Client(pyrogram.client.Client):
     @patchable
     def __init__(self, *args, **kwargs):
         self.listening = {}
@@ -160,7 +160,9 @@ class MessageHandler(pyrogram.handlers.message_handler.MessageHandler):
 
 
 @patch(pyrogram.handlers.edited_message_handler.EditedMessageHandler)
-class EditedMessageHandler:
+class EditedMessageHandler(
+    pyrogram.handlers.edited_message_handler.EditedMessageHandler
+):
     @patchable
     def __init__(self, callback: callable, filters=None):
         self.user_callback = callback
@@ -188,33 +190,6 @@ class Chat(pyrogram.types.Chat):
     @patchable
     def cancel_listener(self):
         return self._client.cancel_listener(self.id)  # noqa
-
-    @patchable
-    @staticmethod
-    def _parse_user_chat(client, user: pyrogram.raw.types.User) -> "Chat":
-        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_user_chat(
-            client, user
-        )  # noqa
-        chat.is_forum = None
-        return chat
-
-    @patchable
-    @staticmethod
-    def _parse_chat_chat(client, chat: pyrogram.raw.types.Chat) -> "Chat":
-        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_chat_chat(
-            client, chat
-        )  # noqa
-        chat.is_forum = None
-        return chat
-
-    @patchable
-    @staticmethod
-    def _parse_channel_chat(client, channel: pyrogram.raw.types.Channel) -> "Chat":
-        chat = pyrogram.types.user_and_chats.chat.Chat.old_parse_channel_chat(
-            client, channel
-        )  # noqa
-        chat.is_forum = getattr(channel, "forum", None)
-        return chat
 
 
 @patch(pyrogram.types.user_and_chats.user.User)
@@ -345,9 +320,7 @@ class Message(pyrogram.types.Message):
                         show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
                     )
-                except (
-                    pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired
-                ):  # noqa
+                except pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired:  # noqa
                     if not no_reply:
                         msg = await self.reply(
                             text=text,
@@ -419,6 +392,7 @@ class Message(pyrogram.types.Message):
         show_caption_above_media: bool = None,
         business_connection_id: str = None,
         allow_paid_broadcast: bool = None,
+        paid_message_star_count: int = None,
         reply_markup: Union[
             "pyrogram.types.InlineKeyboardMarkup",
             "pyrogram.types.ReplyKeyboardMarkup",
@@ -445,6 +419,7 @@ class Message(pyrogram.types.Message):
             show_caption_above_media,
             business_connection_id,
             allow_paid_broadcast,
+            paid_message_star_count,
             reply_markup,
         )  # noqa
 
@@ -462,7 +437,7 @@ class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
             for lock in self.locks_list:
                 lock.release()
 
-        self.loop.create_task(fn())
+        self.client.loop.create_task(fn())
 
     @patchable
     def add_handler(self, handler, group: int, first: bool = False):
@@ -483,4 +458,4 @@ class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
                 for lock in self.locks_list:
                     lock.release()
 
-        self.loop.create_task(fn())
+        self.client.loop.create_task(fn())

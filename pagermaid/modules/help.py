@@ -1,4 +1,4 @@
-""" The help module. """
+"""The help module."""
 
 from os import listdir
 
@@ -113,7 +113,7 @@ async def help_command(message: Message):
                     result += f"`{command}`, "
         await message.edit(
             result[:-2]
-            + f"\n**{lang('help_send')} \",help <{lang('command')}>\" {lang('help_see')}**\n"
+            + f'\n**{lang("help_send")} ",help <{lang("command")}>" {lang("help_see")}**\n'
             f"[{lang('help_source')}](https://t.me/PagerMaid_Modify) "
             f"[{lang('help_plugin')}](https://index.xtaolabs.com/) "
             f"[{lang('help_module')}](https://wiki.xtaolabs.com/)",
@@ -149,7 +149,7 @@ async def help_raw_command(message: Message):
             ):
                 result += f"`{command}`, "
         await message.edit(
-            f"""{result[:-2]}\n**{lang('help_send')} ",help <{lang('command')}>" {lang('help_see')}** [{lang('help_source')}](https://t.me/PagerMaid_Modify)""",
+            f"""{result[:-2]}\n**{lang("help_send")} ",help <{lang("command")}>" {lang("help_see")}** [{lang("help_source")}](https://t.me/PagerMaid_Modify)""",
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
@@ -176,8 +176,8 @@ async def lang_change(message: Message):
         await reload_all()
     else:
         await message.edit(
-            f'{lang("lang_current_lang")} {Config.LANGUAGE}\n\n'
-            f'{lang("lang_all_lang")}{"，".join(dir__)}'
+            f"{lang('lang_current_lang')} {Config.LANGUAGE}\n\n"
+            f"{lang('lang_all_lang')}{'，'.join(dir__)}"
         )
 
 

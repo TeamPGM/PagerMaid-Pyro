@@ -1,4 +1,4 @@
-""" Pagermaid backup and recovery plugin. """
+"""Pagermaid backup and recovery plugin."""
 
 import os
 import sys

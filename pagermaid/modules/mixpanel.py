@@ -130,6 +130,7 @@ async def mixpanel_init_id(bot: Client):
     if not Config.ALLOW_ANALYTIC:
         return
     await set_people(bot)
+    add_log_sponsored_clicked_task()
     await log_sponsored_clicked()
 
 
@@ -167,9 +168,7 @@ async def get_sponsored(
 async def read_sponsored(
     bot: Client, channel: "InputPeerChannel", random_id: bytes
 ) -> bool:
-    result = await bot.invoke(
-        ViewSponsoredMessage(peer=channel, random_id=random_id)
-    )
+    result = await bot.invoke(ViewSponsoredMessage(peer=channel, random_id=random_id))
     if result:
         bot.loop.create_task(
             mp.track(
@@ -185,9 +184,7 @@ async def read_sponsored(
 async def click_sponsored(
     bot: Client, channel: "InputPeerChannel", random_id: bytes
 ) -> bool:
-    result = await bot.invoke(
-        ClickSponsoredMessage(peer=channel, random_id=random_id)
-    )
+    result = await bot.invoke(ClickSponsoredMessage(peer=channel, random_id=random_id))
     if result:
         bot.loop.create_task(
             mp.track(
@@ -216,7 +213,6 @@ async def log_sponsored_clicked_one(username: str):
 
 
 async def log_sponsored_clicked():
-    add_log_sponsored_clicked_task()
     if not Config.ALLOW_ANALYTIC:
         return
     await set_people(userbot)

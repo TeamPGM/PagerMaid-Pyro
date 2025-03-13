@@ -1,4 +1,4 @@
-""" PagerMaid module to manage plugins. """
+"""PagerMaid module to manage plugins."""
 
 import contextlib
 from os import remove, path, sep
@@ -143,8 +143,7 @@ async def plugin(message: Message):
         if len(message.parameter) == 2:
             if plugin_manager.enable_plugin(message.parameter[1]):
                 await message.edit(
-                    f"{lang('apt_plugin')} {message.parameter[1]} "
-                    f"{lang('apt_enable')}"
+                    f"{lang('apt_plugin')} {message.parameter[1]} {lang('apt_enable')}"
                 )
                 await log(f"{lang('apt_enable')} {message.parameter[1]}.")
                 await reload_all()
@@ -156,8 +155,7 @@ async def plugin(message: Message):
         if len(message.parameter) == 2:
             if plugin_manager.disable_plugin(message.parameter[1]):
                 await message.edit(
-                    f"{lang('apt_plugin')} {message.parameter[1]} "
-                    f"{lang('apt_disable')}"
+                    f"{lang('apt_plugin')} {message.parameter[1]} {lang('apt_disable')}"
                 )
                 await log(f"{lang('apt_disable')} {message.parameter[1]}.")
                 await reload_all()

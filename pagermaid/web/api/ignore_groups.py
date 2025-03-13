@@ -35,7 +35,7 @@ async def set_ignore_group_status(data: dict):
         ignore_groups_manager.add_id(cid)
     else:
         ignore_groups_manager.del_id(cid)
-    return {"status": 0, "msg": f'成功{"忽略" if status else "取消忽略"} {cid}'}
+    return {"status": 0, "msg": f"成功{'忽略' if status else '取消忽略'} {cid}"}
 
 
 @route.post(

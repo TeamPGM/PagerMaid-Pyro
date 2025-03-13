@@ -15,7 +15,7 @@ from pagermaid.utils.bot_utils import attach_log, upload_attachment
 code_result = (
     f"<b>{lang('eval_code')}</b>\n"
     '<pre language="{}">{}</pre>\n\n'
-    f'<b>{lang("eval_result")}</b>\n'
+    f"<b>{lang('eval_result')}</b>\n"
     "{}\n"
     f"<b>{lang('eval_time')}</b>"
 )

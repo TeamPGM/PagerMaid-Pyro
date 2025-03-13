@@ -80,7 +80,7 @@ def listener(**args) -> CommandHandlerDecorator:
         if parent_command is None and command in help_messages:
             if help_messages[alias_command(command)]["priority"] <= priority:
                 raise ValueError(
-                    f"{lang('error_prefix')} {lang('command')} \"{command}\" {lang('has_reg')}"
+                    f'{lang("error_prefix")} {lang("command")} "{command}" {lang("has_reg")}'
                 )
             else:
                 block_process = True
@@ -243,11 +243,11 @@ def listener(**args) -> CommandHandlerDecorator:
                 exc_format = format_exc()
                 with contextlib.suppress(BaseException):
                     exc_text = format_exc_text(exc)
-                    text = f'{lang("run_error")}\n\n{exc_text}'
+                    text = f"{lang('run_error')}\n\n{exc_text}"
                     await message.edit(text, no_reply=True)  # noqa
                 if not diagnostics:
                     return
-                report = f"""# Generated: {strftime('%H:%M %d/%m/%Y', gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
+                report = f"""# Generated: {strftime("%H:%M %d/%m/%Y", gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 
                 logs.error(report)
                 if Config.ERROR_REPORT:
