@@ -22,7 +22,6 @@ import asyncio
 import contextlib
 import functools
 from collections import OrderedDict
-from datetime import datetime
 from typing import Optional, List, Union
 
 import pyrogram
@@ -263,9 +262,10 @@ class Message(pyrogram.types.Message):
         text: str,
         parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
         entities: List["pyrogram.types.MessageEntity"] = None,
-        disable_web_page_preview: bool = None,
+        link_preview_options: "pyrogram.types.LinkPreviewOptions" = None,
         show_caption_above_media: bool = None,
         reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
+        disable_web_page_preview: bool = None,
         no_reply: bool = None,
     ) -> "Message":
         msg = None
@@ -285,6 +285,7 @@ class Message(pyrogram.types.Message):
                     msg = await reply_to.reply(
                         text=text,
                         parse_mode=parse_mode,
+                        link_preview_options=link_preview_options,
                         disable_web_page_preview=disable_web_page_preview,
                         show_caption_above_media=show_caption_above_media,
                         quote=True,
@@ -296,6 +297,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         entities=entities,
+                        link_preview_options=link_preview_options,
                         disable_web_page_preview=disable_web_page_preview,
                         show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
@@ -304,6 +306,7 @@ class Message(pyrogram.types.Message):
                     msg = await self.reply(
                         text=text,
                         parse_mode=parse_mode,
+                        link_preview_options=link_preview_options,
                         disable_web_page_preview=disable_web_page_preview,
                         show_caption_above_media=show_caption_above_media,
                         quote=True,
@@ -316,6 +319,7 @@ class Message(pyrogram.types.Message):
                         text=text,
                         parse_mode=parse_mode,
                         entities=entities,
+                        link_preview_options=link_preview_options,
                         disable_web_page_preview=disable_web_page_preview,
                         show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
@@ -326,6 +330,7 @@ class Message(pyrogram.types.Message):
                             text=text,
                             parse_mode=parse_mode,
                             entities=entities,
+                            link_preview_options=link_preview_options,
                             disable_web_page_preview=disable_web_page_preview,
                             show_caption_above_media=show_caption_above_media,
                             reply_markup=reply_markup,
@@ -335,7 +340,9 @@ class Message(pyrogram.types.Message):
             with open("output.log", "w+") as file:
                 file.write(text)
             msg = await self._client.send_document(
-                chat_id=self.chat.id, document="output.log", reply_to_message_id=self.id
+                chat_id=self.chat.id,
+                document="output.log",
+                reply_parameters=pyrogram.types.ReplyParameters(message_id=self.id),
             )
         if not msg:
             return self
@@ -344,84 +351,6 @@ class Message(pyrogram.types.Message):
         return msg
 
     edit = edit_text
-
-    @patchable
-    @staticmethod
-    async def _parse(
-        client: "pyrogram.Client",
-        message: pyrogram.raw.base.Message,
-        users: dict,
-        chats: dict,
-        topics: dict = None,
-        is_scheduled: bool = False,
-        replies: int = 1,
-        business_connection_id: str = None,
-        raw_reply_to_message: "pyrogram.raw.base.Message" = None,
-    ):
-        parsed = await pyrogram.types.Message.old_parse(
-            client,
-            message,
-            users,
-            chats,
-            topics,
-            is_scheduled,
-            replies,
-            business_connection_id,
-            raw_reply_to_message,
-        )  # noqa
-        # make message.text as message.caption
-        parsed.text = parsed.text or parsed.caption
-        return parsed
-
-    @patchable
-    async def copy(
-        self,
-        chat_id: Union[int, str],
-        caption: str = None,
-        parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
-        caption_entities: List["pyrogram.types.MessageEntity"] = None,
-        disable_notification: bool = None,
-        message_thread_id: int = None,
-        reply_to_chat_id: Union[int, str] = None,
-        reply_to_message_id: int = None,
-        quote_text: str = None,
-        quote_entities: List["pyrogram.types.MessageEntity"] = None,
-        schedule_date: datetime = None,
-        protect_content: bool = None,
-        has_spoiler: bool = None,
-        show_caption_above_media: bool = None,
-        business_connection_id: str = None,
-        allow_paid_broadcast: bool = None,
-        paid_message_star_count: int = None,
-        reply_markup: Union[
-            "pyrogram.types.InlineKeyboardMarkup",
-            "pyrogram.types.ReplyKeyboardMarkup",
-            "pyrogram.types.ReplyKeyboardRemove",
-            "pyrogram.types.ForceReply",
-        ] = object,
-    ) -> Union["pyrogram.types.Message", List["pyrogram.types.Message"]]:
-        if self.media:
-            self.text = None
-        return await self.oldcopy(
-            chat_id,
-            caption,
-            parse_mode,
-            caption_entities,
-            disable_notification,
-            message_thread_id,
-            reply_to_chat_id,
-            reply_to_message_id,
-            quote_text,
-            quote_entities,
-            schedule_date,
-            protect_content,
-            has_spoiler,
-            show_caption_above_media,
-            business_connection_id,
-            allow_paid_broadcast,
-            paid_message_star_count,
-            reply_markup,
-        )  # noqa
 
 
 @patch(pyrogram.dispatcher.Dispatcher)  # noqa

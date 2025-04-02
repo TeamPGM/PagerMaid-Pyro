@@ -6,6 +6,8 @@ from os.path import exists
 from re import search, I
 from shutil import copyfile, move
 
+from pyrogram.types import LinkPreviewOptions
+
 from pagermaid.common.plugin import plugin_remote_manager, plugin_manager
 from pagermaid.common.reload import reload_all
 from pagermaid.enums import Message
@@ -294,7 +296,7 @@ async def apt_source(message: Message):
             return
         await message.edit(
             f"{lang('apt_source_header')}\n\n" + "\n".join([i.text for i in remotes]),
-            disable_web_page_preview=True,
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
     elif len(message.parameter) == 2:
         url = message.parameter[1]

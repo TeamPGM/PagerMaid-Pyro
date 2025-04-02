@@ -32,18 +32,21 @@ async def run_eval(cmd: str, message=None) -> str:
 
 
 async def aexec(code, event, client):
-    exec(
+    text = (
         (
-            (
-                ("async def __aexec(e, client): " + "\n msg = message = e")
-                + "\n reply = message.reply_to_message if message else None"
-            )
-            + "\n chat = e.chat if e else None"
+            ("async def __aexec(e, client): " + "\n msg = message = e")
+            + "\n reply = message.reply_to_message if message else None"
         )
-        + "".join(f"\n {x}" for x in code.split("\n"))
-    )
+        + "\n chat = e.chat if e else None"
+    ) + "".join(f"\n {x}" for x in code.split("\n"))
+    if sys.version_info >= (3, 13):
+        local = {}
+        exec(text, globals(), local)
+    else:
+        exec(text)
+        local = locals()
 
-    return await locals()["__aexec"](event, client)
+    return await local["__aexec"](event, client)
 
 
 async def paste_pb(

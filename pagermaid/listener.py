@@ -247,7 +247,7 @@ def listener(**args) -> CommandHandlerDecorator:
                     await message.edit(text, no_reply=True)  # noqa
                 if not diagnostics:
                     return
-                report = f"""# Generated: {strftime("%H:%M %d/%m/%Y", gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.text or message.caption}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
+                report = f"""# Generated: {strftime("%H:%M %d/%m/%Y", gmtime())}. \n# ChatID: {message.chat.id}. \n# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n# Message: \n-----BEGIN TARGET MESSAGE-----\n{message.content}\n-----END TARGET MESSAGE-----\n# Traceback: \n-----BEGIN TRACEBACK-----\n{str(exc_format)}\n-----END TRACEBACK-----\n# Error: "{str(exc_info)}". \n"""
 
                 logs.error(report)
                 if Config.ERROR_REPORT:
@@ -374,7 +374,7 @@ def raw_listener(filter_s):
                         f"# ChatID: {message.chat.id}. \n"
                         f"# UserID: {message.from_user.id if message.from_user else message.sender_chat.id}. \n"
                         f"# Message: \n-----BEGIN TARGET MESSAGE-----\n"
-                        f"{message.text}\n-----END TARGET MESSAGE-----\n"
+                        f"{message.content}\n-----END TARGET MESSAGE-----\n"
                         f"# Traceback: \n-----BEGIN TRACEBACK-----\n"
                         f"{str(exc_format)}\n-----END TRACEBACK-----\n"
                         f'# Error: "{str(exc_info)}". \n'

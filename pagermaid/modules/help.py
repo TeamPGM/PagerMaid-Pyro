@@ -3,6 +3,7 @@
 from os import listdir
 
 from pyrogram.enums import ParseMode
+from pyrogram.types import LinkPreviewOptions
 
 from pagermaid.common.alias import AliasManager
 from pagermaid.common.reload import reload_all
@@ -118,7 +119,7 @@ async def help_command(message: Message):
             f"[{lang('help_plugin')}](https://index.xtaolabs.com/) "
             f"[{lang('help_module')}](https://wiki.xtaolabs.com/)",
             parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
 
 
@@ -151,7 +152,7 @@ async def help_raw_command(message: Message):
         await message.edit(
             f"""{result[:-2]}\n**{lang("help_send")} ",help <{lang("command")}>" {lang("help_see")}** [{lang("help_source")}](https://t.me/PagerMaid_Modify)""",
             parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=True,
+            link_preview_options=LinkPreviewOptions(is_disabled=True),
         )
 
 

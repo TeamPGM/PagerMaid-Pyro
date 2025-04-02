@@ -168,7 +168,7 @@ async def get_sponsored(
 async def read_sponsored(
     bot: Client, channel: "InputPeerChannel", random_id: bytes
 ) -> bool:
-    result = await bot.invoke(ViewSponsoredMessage(peer=channel, random_id=random_id))
+    result = await bot.invoke(ViewSponsoredMessage(random_id=random_id))
     if result:
         bot.loop.create_task(
             mp.track(
@@ -184,7 +184,7 @@ async def read_sponsored(
 async def click_sponsored(
     bot: Client, channel: "InputPeerChannel", random_id: bytes
 ) -> bool:
-    result = await bot.invoke(ClickSponsoredMessage(peer=channel, random_id=random_id))
+    result = await bot.invoke(ClickSponsoredMessage(random_id=random_id))
     if result:
         bot.loop.create_task(
             mp.track(
