@@ -101,3 +101,16 @@ def remove_permission_for_user(user: str, permission: Permission):
     for i in data:
         permissions.delete_permission_for_user(user, i.name, permission.act, "allow")
     permissions.save_policy()
+
+
+def rename_group(old_group: str, new_group: str):
+    users = permissions.get_users_for_role(old_group)
+    for user in users:
+        permissions.add_role_for_user(user, new_group)
+        permissions.delete_role_for_user(user, old_group)
+
+    old_policies = permissions.get_filtered_policy(0, old_group)
+    for policy in old_policies:
+        permissions.add_policy(new_group, policy[1], policy[2], policy[3])
+        permissions.remove_policy(old_group, policy[1], policy[2], policy[3])
+    permissions.save_policy()

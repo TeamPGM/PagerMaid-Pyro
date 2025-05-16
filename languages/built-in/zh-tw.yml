@@ -453,6 +453,7 @@ sudo_group_add_user: 添加此用戶到此權限組成功
 sudo_group_del_user: 從此權限組刪除此用戶成功
 sudo_group_add_per: 從此權限組中添加此權限成功
 sudo_group_del_per: 從此權限組中移除此權限成功
+sudo_group_rename_per: 重命名此權限組成功
 sudo_user_add_per: 從此用戶中添加此權限成功
 sudo_user_del_per: 從此用戶中移除此權限成功
 sudo_list: 'Sudo 管理員列表：'

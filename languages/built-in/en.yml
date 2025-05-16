@@ -453,6 +453,7 @@ sudo_group_add_user: Add this user to this permission group successfully.
 sudo_group_del_user: Successfully removed this user from this permission group.
 sudo_group_add_per: Successfully added this permission to this permission group.
 sudo_group_del_per: Successfully removed this permission from this permission group.
+sudo_group_rename_per: Successfully renamed this permission group.
 sudo_user_add_per: This permission was added to this user.
 sudo_user_del_per: Successfully removed this permission from this user.
 sudo_list: 'Sudo Administrator List:'
