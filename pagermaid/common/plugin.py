@@ -1,5 +1,6 @@
 import contextlib
 import json
+import math
 import os
 from pathlib import Path
 from typing import Optional, List, Tuple, Dict
@@ -259,7 +260,7 @@ class PluginManager:
 
     def plugin_need_update(self, name: str) -> bool:
         if local_version := self.get_local_version(name):
-            if local_version == 0.0:
+            if math.isclose(local_version, 0.0):
                 return False
             if remote_version := self.remote_version_map.get(name):
                 return local_version < remote_version

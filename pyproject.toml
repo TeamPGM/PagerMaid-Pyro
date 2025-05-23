@@ -1,6 +1,6 @@
 [project]
 name = "PagerMaid-Pyro"
-version = "1.5.4"
+version = "1.5.5"
 description = "Advanced Multi-Featured Telegram UserBot by pyrogram."
 authors = [
     {name = "xtaodada", email = "xtao@xtao.de"},

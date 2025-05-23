@@ -1,2 +1,2 @@
-pgm_version = "1.5.4"
-pgm_version_code = 1504
+pgm_version = "1.5.5"
+pgm_version_code = 1505

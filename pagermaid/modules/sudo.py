@@ -233,7 +233,7 @@ async def sudo_udelp(message: Message):
     command="gaddp",
     need_admin=True,
 )
-@check_parameter_length(3, False)
+@check_parameter_length(3, True)
 async def sudo_gaddp(message: Message):
     add_permission_for_group(message.parameter[1], Permission(message.parameter[2]))
     return await message.edit(lang("sudo_group_add_per"))
@@ -244,7 +244,7 @@ async def sudo_gaddp(message: Message):
     command="gdelp",
     need_admin=True,
 )
-@check_parameter_length(3, False)
+@check_parameter_length(3, True)
 async def sudo_gdelp(message: Message):
     remove_permission_for_group(message.parameter[1], Permission(message.parameter[2]))
     return await message.edit(lang("sudo_group_del_per"))
@@ -255,7 +255,7 @@ async def sudo_gdelp(message: Message):
     command="grename",
     need_admin=True,
 )
-@check_parameter_length(3, False)
+@check_parameter_length(3, True)
 async def sudo_grename(message: Message):
     old_name = message.parameter[1]
     new_name = message.parameter[2]
