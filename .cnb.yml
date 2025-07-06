@@ -1,0 +1,143 @@
+.make-image-envs: &make-image-envs
+  - name: set NAMESPACE
+    script: echo -n "teampgm"
+    exports:
+      info: NAMESPACE
+  - name: set IMAGE_NAME
+    script: echo -n "pagermaid_pyro"
+    exports:
+      info: IMAGE_NAME
+  - name: set IMAGE_VERSION
+    script: grep -E 'pgm_version = "(.*?)"' pagermaid/version.py | sed -E 's/pgm_version = "(.*)"/\1/'
+    exports:
+      info: IMAGE_VERSION
+  - name: set IMAGE_VERSION development
+    if: |
+      [ "$CNB_BRANCH" = "development" ]
+    script: echo -n "${IMAGE_VERSION}-dev"
+    exports:
+      info: IMAGE_VERSION
+  - name: set IMAGE_TAG
+    script: echo -n "${NAMESPACE}/${IMAGE_NAME}:${IMAGE_VERSION}"
+    exports:
+      info: IMAGE_TAG
+  - name: set IMAGE_LATEST_TAG
+    script: echo -n "${NAMESPACE}/${IMAGE_NAME}:latest"
+    exports:
+      info: IMAGE_LATEST_TAG
+
+.build-by-arch: &build-by-arch
+  - name: docker login for index.docker.io
+    script: docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
+    imports: https://cnb.cool/Xtao-Labs/secrets/-/blob/main/docker.yml
+  - name: set DOCKERFILE_DIR
+    if: |
+      [ "$CNB_BRANCH" = "master" ]
+    script: echo -n "Dockerfile"
+    exports:
+      info: DOCKERFILE_DIR
+  - name: set DOCKERFILE_DIR development
+    if: |
+      [ "$CNB_BRANCH" = "development" ]
+    script: echo -n "Dockerfile.alpine"
+    exports:
+      info: DOCKERFILE_DIR
+  - name: docker build & push
+    if: |
+      [ -f $DOCKERFILE_DIR ]
+    script:
+      - docker build -f $DOCKERFILE_DIR -t $IMAGE_TAG-linux-$BUILD_ARCH .
+      - docker push $IMAGE_TAG-linux-$BUILD_ARCH
+  - name: docker push for latest
+    if: |
+      [ "$CNB_BRANCH" = "master" ]
+    script:
+      - docker tag $IMAGE_TAG-linux-$BUILD_ARCH $IMAGE_LATEST_TAG-linux-$BUILD_ARCH
+      - docker push $IMAGE_LATEST_TAG-linux-$BUILD_ARCH
+  - name: resolve 
+    type: cnb:resolve
+    options:
+      key: build-$BUILD_ARCH
+
+.amd64-arch-build: &amd64-arch-build
+  name: build-amd64
+  runner:
+    tags: cnb:arch:amd64
+  services:
+    - docker
+  env:
+    BUILD_ARCH: amd64
+  stages:
+    - *make-image-envs
+    - *build-by-arch
+
+.arm64-arch-build: &arm64-arch-build
+  name: build-arm64
+  runner:
+    tags: cnb:arch:arm64:v8
+  env:
+    BUILD_ARCH: arm64
+  services:
+    - docker
+  stages:
+    - *make-image-envs
+    - *build-by-arch
+
+.multi-arch-push: &multi-arch-push
+  - name: await the amd64
+    type: cnb:await
+    options:
+      key: build-amd64
+  - name: await the arm64
+    type: cnb:await
+    options:
+      key: build-arm64
+  - name: manifest
+    image: cnbcool/manifest
+    settings:
+      username: $DOCKER_USER
+      password: $DOCKER_PWD
+      target: $IMAGE_TAG
+      template: ${IMAGE_TAG}-OS-ARCH
+      # ignore_missing: true
+      platforms:
+        - linux/amd64
+        - linux/arm64
+  - name: manifest latest
+    if: |
+      [ "$CNB_BRANCH" = "master" ]
+    image: cnbcool/manifest
+    settings:
+      username: $DOCKER_USER
+      password: $DOCKER_PWD
+      target: $IMAGE_LATEST_TAG
+      template: ${IMAGE_LATEST_TAG}-OS-ARCH
+      # ignore_missing: true
+      platforms:
+        - linux/amd64
+        - linux/arm64
+  - name: clear
+    image: lumir/remove-dockerhub-tag
+    args:
+      - --user
+      - $DOCKER_USER
+      - --password
+      - $DOCKER_PWD
+      - ${IMAGE_TAG}-linux-amd64
+      - ${IMAGE_TAG}-linux-arm64
+      - ${IMAGE_LATEST_TAG}-linux-amd64
+      - ${IMAGE_LATEST_TAG}-linux-arm64
+
+"(master|development)":
+  push:
+    - *amd64-arch-build
+    - *arm64-arch-build
+    - name: conbine-arch
+      runner:
+        cpus: 1
+      imports: https://cnb.cool/Xtao-Labs/secrets/-/blob/main/docker.yml
+      services:
+        - docker    
+      stages:
+        - *make-image-envs
+        - *multi-arch-push
