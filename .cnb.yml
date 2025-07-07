@@ -25,21 +25,24 @@
     script: echo -n "${NAMESPACE}/${IMAGE_NAME}:latest"
     exports:
       info: IMAGE_LATEST_TAG
+  - name: set IMAGE_LATEST_TAG development
+    if: |
+      [ "$CNB_BRANCH" = "development" ]
+    script: echo -n "${NAMESPACE}/${IMAGE_NAME}:dev"
+    exports:
+      info: IMAGE_LATEST_TAG
 
 .build-by-arch: &build-by-arch
   - name: docker login for index.docker.io
     script: docker login -u "$DOCKER_USER" -p "$DOCKER_PWD"
     imports: https://cnb.cool/Xtao-Labs/secrets/-/blob/main/docker.yml
   - name: set DOCKERFILE_DIR
-    if: |
-      [ "$CNB_BRANCH" = "master" ]
-    script: echo -n "Dockerfile"
-    exports:
-      info: DOCKERFILE_DIR
-  - name: set DOCKERFILE_DIR development
-    if: |
-      [ "$CNB_BRANCH" = "development" ]
-    script: echo -n "Dockerfile.alpine"
+    script: |
+      if [ "$CNB_BRANCH" = "master" ]; then
+        echo -n "Dockerfile"
+      else
+        echo -n "Dockerfile.alpine"
+      fi
     exports:
       info: DOCKERFILE_DIR
   - name: docker build & push
@@ -49,8 +52,6 @@
       - docker build -f $DOCKERFILE_DIR -t $IMAGE_TAG-linux-$BUILD_ARCH .
       - docker push $IMAGE_TAG-linux-$BUILD_ARCH
   - name: docker push for latest
-    if: |
-      [ "$CNB_BRANCH" = "master" ]
     script:
       - docker tag $IMAGE_TAG-linux-$BUILD_ARCH $IMAGE_LATEST_TAG-linux-$BUILD_ARCH
       - docker push $IMAGE_LATEST_TAG-linux-$BUILD_ARCH
@@ -104,8 +105,6 @@
         - linux/amd64
         - linux/arm64
   - name: manifest latest
-    if: |
-      [ "$CNB_BRANCH" = "master" ]
     image: cnbcool/manifest
     settings:
       username: $DOCKER_USER
