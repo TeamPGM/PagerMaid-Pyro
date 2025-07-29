@@ -36,8 +36,7 @@ async def reload_all():
     for module_name in pagermaid.modules.module_list:
         try:
             module = importlib.import_module(f"pagermaid.modules.{module_name}")
-            if module_name in loaded_plugins:
-                importlib.reload(module)
+            importlib.reload(module)
         except BaseException as exception:
             logs.info(
                 f"{lang('module')} {module_name} {lang('error')}: {type(exception)}: {exception}"
@@ -45,7 +44,7 @@ async def reload_all():
     for plugin_name in pagermaid.modules.plugin_list.copy():
         try:
             plugin = importlib.import_module(f"plugins.{plugin_name}")
-            if plugin_name in loaded_plugins and os.path.exists(plugin.__file__):
+            if os.path.exists(plugin.__file__):
                 importlib.reload(plugin)
         except BaseException as exception:
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")

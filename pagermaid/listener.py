@@ -258,8 +258,9 @@ def listener(**args) -> CommandHandlerDecorator:
                         "PGP Error report generated.",
                     )
                 await Hook.process_error_exec(message, command, exc_info, exc_format)
-            if (message.chat.id, message.id) in read_context:
-                del read_context[(message.chat.id, message.id)]
+            finally:
+                if (message.chat.id, message.id) in read_context:
+                    del read_context[(message.chat.id, message.id)]
             if block_process or (parent_command and not allow_parent):
                 message.stop_propagation()
             message.continue_propagation()
