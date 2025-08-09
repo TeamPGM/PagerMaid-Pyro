@@ -6,7 +6,7 @@ anyio==4.5.2 ; python_full_version < '3.9'
     # via
     #   httpx
     #   starlette
-anyio==4.9.0 ; python_full_version >= '3.9'
+anyio==4.10.0 ; python_full_version >= '3.9'
     # via
     #   httpx
     #   starlette
@@ -18,7 +18,7 @@ backports-zoneinfo==0.2.1 ; python_full_version < '3.9'
     #   tzlocal
 casbin==1.43.0
     # via pagermaid-pyro
-certifi==2025.7.14
+certifi==2025.8.3
     # via
     #   httpcore
     #   httpx
@@ -88,7 +88,8 @@ pytz==2025.2
     # via pagermaid-pyro
 pyyaml==6.0.2
     # via pagermaid-pyro
-sentry-sdk==2.33.2
+ruff==0.12.8
+sentry-sdk==2.34.1
     # via pagermaid-pyro
 simpleeval==0.9.13 ; python_full_version < '3.9'
     # via casbin

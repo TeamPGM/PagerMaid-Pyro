@@ -119,9 +119,10 @@ config.yml
 *.session
 *.session-journal
 *.pagermaid
+pagermaid*.tar.gz
 docker-compose.yml
 plugins*/
-data/*
+data/
 pagermaid.egg-info/
 dump.rdb
 keyword.list

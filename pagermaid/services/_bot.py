@@ -2,10 +2,11 @@ import pyromod.listen
 from pyrogram import Client
 
 from pagermaid.config import Config
+from pagermaid.utils import SessionFileManager
 from pagermaid.version import pgm_version
 
 bot = Client(
-    "pagermaid",
+    SessionFileManager.get_session_file_stem(),
     session_string=Config.STRING_SESSION,
     api_id=Config.API_ID,
     api_hash=Config.API_HASH,
