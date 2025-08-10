@@ -18,7 +18,6 @@ You should have received a copy of the GNU General Public License
 along with pyromod.  If not, see <https://www.gnu.org/licenses/>.
 """
 
-from .amis import Page
 from .listen import Client, MessageHandler, Chat, User
 
-__all__ = ["Page", "Client", "MessageHandler", "Chat", "User"]
+__all__ = ["Client", "MessageHandler", "Chat", "User"]

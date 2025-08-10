@@ -22,9 +22,8 @@ dependencies = [
     "PyQRCode>=1.2.1",
     "PyPng",
     "fastapi>=0.115.5",
-    "amis-python==1.0.8.post2",
+    "amis-python @ git+https://github.com/TeamPGM/amis-python",
     "uvicorn>=0.32.0",
-    "pydantic<2.0.0",
     "starlette>=0.41.2",
     "pyjwt>=2.9.0",
 ]
