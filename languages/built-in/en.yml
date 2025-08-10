@@ -399,6 +399,11 @@ status_telethon: Telethon version
 status_pyrogram: Pyrogram version
 status_pgm: PagerMaid version
 status_uptime: Uptime
+status_cpu: "System CPU Usage"
+status_ram: "System RAM Usage"
+status_swap: "SWAP Usage"
+status_process_cpu: "PagerMaid CPU Usage"
+status_process_ram: "PagerMaid RAM Usage"
 ## stats
 stats_des: View conversation statistics.
 stats_loading: Loading...

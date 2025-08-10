@@ -398,7 +398,12 @@ status_python: Python version
 status_telethon: Telethon version
 status_pyrogram: Pyrogram version
 status_pgm: PagerMaid version
-status_uptime: Utime
+status_uptime: Uptime
+status_cpu: "システム CPU 使用率"
+status_ram: "システム RAM 使用率"
+status_swap: "SWAP 使用率"
+status_process_cpu: "PagerMaid CPU 使用率"
+status_process_ram: "PagerMaid RAM 使用率"
 ## stats
 stats_des: Viewconversation statistics.
 stats_loading: ロードリング...
