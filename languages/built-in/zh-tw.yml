@@ -373,8 +373,9 @@ del_BadRequestError: Error！沒有權限。
 spn_deleted: 刪除了
 #status
 ## sysinfo
-sysinfo_des: 透過neofetch檢索系統資訊。
+sysinfo_des: 透過 fastfetch（若無則使用 neofetch）檢索系統資訊。
 sysinfo_loading: 正在載入系統資訊…
+sysinfo_not_found: 未找到 fastfetch 或 neofetch, 請安裝其中一個。
 ## fortune
 fortune_des: 讀取 Fortune Cookies資訊。
 fortune_not_exist: Error！系統沒有Fortune Cookies

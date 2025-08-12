@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 from getpass import getuser
 from platform import uname, python_version
-from shutil import disk_usage
+from shutil import disk_usage, which
 from socket import gethostname
 from subprocess import Popen, PIPE
 from sys import platform
@@ -34,12 +34,19 @@ DCs = {
 
 @listener(is_plugin=False, command="sysinfo", description=lang("sysinfo_des"))
 async def sysinfo(message: Message):
-    """Retrieve system information via neofetch."""
+    """Retrieve system information via fastfetch or neofetch."""
     if not Config.SILENT:
         message = await message.edit(lang("sysinfo_loading"))
-    if platform == "win32":
+    if which("fastfetch"):
+        result = await execute(
+            "fastfetch --config none --logo none --pipe --structure title:separator:os:kernel:uptime:loadavg:packages:initsystem:shell:locale:processes:memory:swap:disk:netio"
+        )
+    elif platform == "win32":
         return await message.edit(neofetch_win(), parse_mode=ParseMode.HTML)
-    result = await execute("neofetch --config none --stdout")
+    elif which("neofetch"):
+        result = await execute("neofetch --config none --stdout")
+    else:
+        result = lang("sysinfo_not_found")
     await message.edit(f"`{result}`")
 
 

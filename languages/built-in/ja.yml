@@ -375,6 +375,7 @@ spn_deleted: deleted
 ## sysinfo
 sysinfo_des: Retrieve system through neofetch.
 sysinfo_loading: Loading system information...
+sysinfo_not_found: fastfetch または neofetch が見つかりませんでした。いずれかをインストールしてください。
 ## fortune
 fortune_des: read fortune クッキーのフォーマットです。
 fortune_not_exist: Something went wrong, woo~ There are no fortune Cookieies on this system
