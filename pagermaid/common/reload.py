@@ -6,7 +6,7 @@ import pagermaid.config
 import pagermaid.modules
 from pagermaid.common.plugin import plugin_manager
 from pagermaid.dependence import scheduler
-from pagermaid.hook import Hook
+from pagermaid.hook import HookRunner
 from pagermaid.services import bot
 from pagermaid.static import (
     read_context,
@@ -18,6 +18,7 @@ from pagermaid.utils import lang, logs
 
 
 async def reload_all():
+    await HookRunner.reload_pre_exec()
     read_context.clear()
     bot.dispatcher.remove_all_handlers()
     scheduler.remove_all_jobs()
@@ -51,7 +52,7 @@ async def reload_all():
             pagermaid.modules.plugin_list.remove(plugin_name)
     plugin_manager.load_local_plugins()
     plugin_manager.save_local_version_map()
-    await Hook.load_success_exec()
+    await HookRunner.load_success_exec()
 
 
 async def load_all():
@@ -69,5 +70,5 @@ async def load_all():
             logs.info(f"{lang('module')} {plugin_name} {lang('error')}: {exception}")
             pagermaid.modules.plugin_list.remove(plugin_name)
     plugin_manager.load_local_plugins()
-    await Hook.load_success_exec()
-    await Hook.startup()
+    await HookRunner.load_success_exec()
+    await HookRunner.startup()

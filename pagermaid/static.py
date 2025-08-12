@@ -16,6 +16,7 @@ hook_functions: Dict[str, Set[Callable[[], Awaitable[None]]]] = {
     "command_post": set(),
     "process_error": set(),
     "load_plugins_finished": set(),
+    "reload_pre": set(),
 }
 all_permissions = []
 start_time = datetime.now(timezone.utc)

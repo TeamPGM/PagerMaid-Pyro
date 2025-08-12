@@ -86,9 +86,24 @@ class Hook:
         return decorator
 
     @staticmethod
+    def reload_preprocessor():
+        """
+        注册一个插件重载前处理钩子
+        """
+
+        def decorator(function):
+            hook_functions["reload_pre"].add(function)
+            return function
+
+        return decorator
+
+
+class HookRunner:
+    @staticmethod
     async def startup():
         if cors := [
-            startup(**inject(None, startup)) for startup in hook_functions["startup"]
+            startup(**inject(None, startup))  # noqa
+            for startup in hook_functions["startup"]
         ]:  # noqa
             try:
                 await asyncio.gather(*cors)
@@ -98,7 +113,7 @@ class Hook:
     @staticmethod
     async def shutdown():
         if cors := [
-            shutdown(**inject(None, shutdown))
+            shutdown(**inject(None, shutdown))  # noqa
             for shutdown in hook_functions["shutdown"]
         ]:  # noqa
             try:
@@ -122,7 +137,7 @@ class Hook:
             if cors:
                 await asyncio.gather(*cors)
         except SystemExit:
-            await Hook.shutdown()
+            await HookRunner.shutdown()
             sys.exit(0)
         except StopPropagation as e:
             raise StopPropagation from e
@@ -145,7 +160,7 @@ class Hook:
             if cors:
                 await asyncio.gather(*cors)
         except SystemExit:
-            await Hook.shutdown()
+            await HookRunner.shutdown()
             sys.exit(0)
         except StopPropagation as e:
             raise StopPropagation from e
@@ -174,7 +189,7 @@ class Hook:
             if cors:
                 await asyncio.gather(*cors)
         except SystemExit:
-            await Hook.shutdown()
+            await HookRunner.shutdown()
             sys.exit(0)
         except StopPropagation as e:
             raise StopPropagation from e
@@ -184,10 +199,21 @@ class Hook:
     @staticmethod
     async def load_success_exec():
         if cors := [
-            load(**inject(None, load))
+            load(**inject(None, load))  # noqa
             for load in hook_functions["load_plugins_finished"]
         ]:  # noqa
             try:
                 await asyncio.gather(*cors)
             except Exception as exception:
                 logs.info(f"[load_success_exec]: {type(exception)}: {exception}")
+
+    @staticmethod
+    async def reload_pre_exec():
+        if cors := [
+            reload(**inject(None, reload))  # noqa
+            for reload in hook_functions["reload_pre"]
+        ]:  # noqa
+            try:
+                await asyncio.gather(*cors)
+            except Exception as exception:
+                logs.info(f"[reload_pre_exec]: {type(exception)}: {exception}")

@@ -20,7 +20,7 @@ from pagermaid.config import Config
 from pagermaid.enums import Message
 from pagermaid.enums.command import CommandHandler, CommandHandlerDecorator
 from pagermaid.group_manager import Permission
-from pagermaid.hook import Hook
+from pagermaid.hook import HookRunner
 from pagermaid.services import bot
 from pagermaid.static import help_messages, read_context, all_permissions
 from pagermaid.utils import (
@@ -189,14 +189,14 @@ def listener(**args) -> CommandHandlerDecorator:
                     read_context[(message.chat.id, message.id)] = True
 
                 if command:
-                    await Hook.command_pre(
+                    await HookRunner.command_pre(
                         message,
                         parent_command or command,
                         command if parent_command else None,
                     )
                 await func.handler(client, message)
                 if command:
-                    await Hook.command_post(
+                    await HookRunner.command_post(
                         message,
                         parent_command or command,
                         command if parent_command else None,
@@ -236,7 +236,7 @@ def listener(**args) -> CommandHandlerDecorator:
                 raise ContinuePropagation from e
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
-                await Hook.shutdown()
+                await HookRunner.shutdown()
                 web.stop()
             except BaseException as exc:
                 exc_info = sys.exc_info()[1]
@@ -257,7 +257,9 @@ def listener(**args) -> CommandHandlerDecorator:
                         None,
                         "PGP Error report generated.",
                     )
-                await Hook.process_error_exec(message, command, exc_info, exc_format)
+                await HookRunner.process_error_exec(
+                    message, command, exc_info, exc_format
+                )
             finally:
                 if (message.chat.id, message.id) in read_context:
                     del read_context[(message.chat.id, message.id)]
@@ -354,7 +356,7 @@ def raw_listener(filter_s):
                     await message.edit(lang("reload_des"))
             except SystemExit:
                 await process_exit(start=False, _client=client, message=message)
-                await Hook.shutdown()
+                await HookRunner.shutdown()
                 sys.exit(0)
             except (
                 UserNotParticipant,
