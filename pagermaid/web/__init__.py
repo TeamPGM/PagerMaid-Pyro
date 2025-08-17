@@ -78,7 +78,9 @@ class Web:
 
         self.init_web()
         self.web_server = uvicorn.Server(
-            config=uvicorn.Config(self.app, host=Config.WEB_HOST, port=Config.WEB_PORT)
+            config=uvicorn.Config(
+                self.app, host=Config.WEB_HOST, port=Config.WEB_PORT, log_config=None
+            )
         )
         server_config = self.web_server.config
         server_config.setup_event_loop()
