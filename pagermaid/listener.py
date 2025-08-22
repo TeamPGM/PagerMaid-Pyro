@@ -32,7 +32,6 @@ from pagermaid.utils.bot_utils import attach_report
 from pagermaid.utils.listener import (
     sudo_filter,
     get_permission_name,
-    process_exit,
     format_exc as format_exc_text,
 )
 from pagermaid.web import web
@@ -235,8 +234,7 @@ def listener(**args) -> CommandHandlerDecorator:
                     raise StopPropagation from e
                 raise ContinuePropagation from e
             except SystemExit:
-                await process_exit(start=False, _client=client, message=message)
-                await HookRunner.shutdown()
+                await HookRunner.shutdown(message)
                 web.stop()
             except BaseException as exc:
                 exc_info = sys.exc_info()[1]
@@ -355,8 +353,7 @@ def raw_listener(filter_s):
                 with contextlib.suppress(BaseException):
                     await message.edit(lang("reload_des"))
             except SystemExit:
-                await process_exit(start=False, _client=client, message=message)
-                await HookRunner.shutdown()
+                await HookRunner.shutdown(message)
                 sys.exit(0)
             except (
                 UserNotParticipant,

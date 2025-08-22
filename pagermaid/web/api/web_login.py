@@ -11,7 +11,6 @@ from starlette.responses import HTMLResponse
 from pagermaid.common.reload import load_all
 from pagermaid.services import bot
 from pagermaid.utils import lang, logs
-from pagermaid.utils.listener import process_exit
 from pagermaid.web.api import authentication
 from pagermaid.web.html import get_web_login_html
 from pyromod.methods.sign_in_qrcode import authorize_by_qrcode_web
@@ -45,7 +44,6 @@ class WebLogin:
     async def init_bot():
         logs.info(f"{lang('save_id')} {bot.me.first_name}({bot.me.id})")
         await load_all()
-        await process_exit(start=True, _client=bot)
         logs.info(lang("start"))
 
     async def init(self):

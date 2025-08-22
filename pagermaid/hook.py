@@ -111,9 +111,9 @@ class HookRunner:
                 logs.info(f"[startup]: {type(exception)}: {exception}")
 
     @staticmethod
-    async def shutdown():
+    async def shutdown(message: "Message"):
         if cors := [
-            shutdown(**inject(None, shutdown))  # noqa
+            shutdown(**inject(message, shutdown))  # noqa
             for shutdown in hook_functions["shutdown"]
         ]:  # noqa
             try:
@@ -136,9 +136,8 @@ class HookRunner:
                 cors.append(pre(**data))  # noqa
             if cors:
                 await asyncio.gather(*cors)
-        except SystemExit:
-            await HookRunner.shutdown()
-            sys.exit(0)
+        except SystemExit as e:
+            raise e
         except StopPropagation as e:
             raise StopPropagation from e
         except Exception as exception:
@@ -159,9 +158,8 @@ class HookRunner:
                 cors.append(post(**data))  # noqa
             if cors:
                 await asyncio.gather(*cors)
-        except SystemExit:
-            await HookRunner.shutdown()
-            sys.exit(0)
+        except SystemExit as e:
+            raise e
         except StopPropagation as e:
             raise StopPropagation from e
         except Exception as exception:
@@ -189,7 +187,7 @@ class HookRunner:
             if cors:
                 await asyncio.gather(*cors)
         except SystemExit:
-            await HookRunner.shutdown()
+            await HookRunner.shutdown(message)
             sys.exit(0)
         except StopPropagation as e:
             raise StopPropagation from e

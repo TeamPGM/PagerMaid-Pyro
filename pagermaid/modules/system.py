@@ -4,13 +4,17 @@ from getpass import getuser
 from os.path import exists, sep
 from platform import node
 from time import perf_counter
+from typing import TYPE_CHECKING
 
-from pagermaid.common.system import run_eval, paste_pb
+from pagermaid.common.system import run_eval, paste_pb, process_exit
 from pagermaid.config import Config
-from pagermaid.enums import Message
+from pagermaid.hook import Hook
 from pagermaid.listener import listener
 from pagermaid.utils import execute, lang
 from pagermaid.utils.bot_utils import attach_log, upload_attachment
+
+if TYPE_CHECKING:
+    from pagermaid.enums import Client, Message
 
 code_result = (
     f"<b>{lang('eval_code')}</b>\n"
@@ -28,7 +32,7 @@ code_result = (
     description=lang("sh_des"),
     parameters=lang("sh_parameters"),
 )
-async def sh(message: Message):
+async def sh(message: "Message"):
     """Use the command-line from Telegram."""
     user = getuser()
     command = message.arguments
@@ -63,11 +67,21 @@ async def sh(message: Message):
 @listener(
     is_plugin=False, command="restart", need_admin=True, description=lang("restart_des")
 )
-async def restart(message: Message):
+async def restart(message: "Message"):
     """To re-execute PagerMaid."""
     if not message.text[0].isalpha():
         await message.edit(lang("restart_log"))
         sys.exit(0)
+
+
+@Hook.on_shutdown()
+async def restart_shutdown_hook(client: "Client", message: "Message"):
+    await process_exit(start=False, _client=client, message=message)
+
+
+@Hook.on_startup()
+async def restart_startup_hook(client: "Client"):
+    await process_exit(start=True, _client=client)
 
 
 @listener(
@@ -77,7 +91,7 @@ async def restart(message: Message):
     description=lang("eval_des"),
     parameters=lang("eval_parameters"),
 )
-async def sh_eval(message: Message):
+async def sh_eval(message: "Message"):
     """Run python commands from Telegram."""
     dev_mode = exists(f"data{sep}dev")
     try:
@@ -117,7 +131,7 @@ async def sh_eval(message: Message):
     need_admin=True,
     description=lang("send_log_des"),
 )
-async def send_log(message: Message):
+async def send_log(message: "Message"):
     """Send log to a chat."""
     if not exists("data/pagermaid.log.txt"):
         return await message.edit(lang("send_log_not_found"))

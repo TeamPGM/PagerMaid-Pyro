@@ -12,7 +12,6 @@ from pagermaid.dependence import scheduler
 from pagermaid.services import bot
 from pagermaid.static import working_dir
 from pagermaid.utils import lang, logs, SessionFileManager
-from pagermaid.utils.listener import process_exit
 from pagermaid.web import web
 from pagermaid.web.api.web_login import web_login
 from pyromod.methods.sign_in_qrcode import start_client
@@ -54,7 +53,6 @@ async def console_bot():
         exit()
     logs.info(f"{lang('save_id')} {me.first_name}({me.id})")
     await load_all()
-    await process_exit(start=True, _client=bot)
 
 
 async def web_bot():

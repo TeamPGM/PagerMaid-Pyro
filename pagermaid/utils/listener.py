@@ -1,12 +1,10 @@
-import contextlib
 from typing import TYPE_CHECKING
 
 from pyrogram import filters
 from pyrogram.errors import RPCError
 
-from pagermaid.dependence import status_sudo, get_sudo_list, sqlite
+from pagermaid.dependence import status_sudo, get_sudo_list
 from pagermaid.group_manager import enforce_permission
-from ._config_utils import lang
 
 if TYPE_CHECKING:
     from pagermaid.enums import Message
@@ -56,26 +54,6 @@ def check_manage_subs(message: "Message") -> bool:
     return from_self(message) or enforce_permission(
         from_msg_get_sudo_uid(message), "modules.manage_subs"
     )
-
-
-async def process_exit(start: int, _client, message=None):
-    data = sqlite.get("exit_msg", {})
-    cid, mid = data.get("cid", 0), data.get("mid", 0)
-    if start and data and cid and mid:
-        with contextlib.suppress(Exception):
-            msg: "Message" = await _client.get_messages(cid, mid)
-            if msg:
-                await msg.edit(
-                    (
-                        (msg.text or msg.caption)
-                        if msg.from_user.is_self and (msg.text or msg.caption)
-                        else ""
-                    )
-                    + f"\n\n> {lang('restart_complete')}"
-                )
-        del sqlite["exit_msg"]
-    if message:
-        sqlite["exit_msg"] = {"cid": message.chat.id, "mid": message.id}
 
 
 def format_exc(e: BaseException) -> str:
