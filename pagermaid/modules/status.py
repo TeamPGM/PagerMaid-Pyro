@@ -64,11 +64,9 @@ async def status(message: Message):
         f"{lang('status_python')}: `{python_version()}` \n"
         f"{lang('status_pyrogram')}: `{__version__}` \n"
         f"{lang('status_pgm')}: `{status_data.version}`\n"
-        f"{lang('status_cpu')}: `{status_data.cpu_percent}`\n"
-        f"{lang('status_ram')}: `{status_data.ram_percent}`\n"
+        f"{lang('status_cpu')}: `{status_data.process_cpu_percent}` / `{status_data.cpu_percent}`\n"
+        f"{lang('status_ram')}: `{status_data.process_ram_percent}` / `{status_data.ram_percent}`\n"
         f"{lang('status_swap')}: `{status_data.swap_percent}`\n"
-        f"{lang('status_process_cpu')}: `{status_data.process_cpu_percent}`\n"
-        f"{lang('status_process_ram')}: `{status_data.process_ram_percent}`\n"
         f"{lang('status_uptime')}: `{status_data.run_time}`"
     )
     await message.edit(text)

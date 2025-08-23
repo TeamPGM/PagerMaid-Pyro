@@ -400,11 +400,9 @@ status_telethon: Telethon 版本
 status_pyrogram: Pyrogram 版本
 status_pgm: PagerMaid 版本
 status_uptime: 運行時間
-status_cpu: "系統 CPU 使用率"
-status_ram: "系統記憶體使用率"
+status_cpu: "CPU 使用率"
+status_ram: "記憶體 使用率"
 status_swap: "SWAP 使用率"
-status_process_cpu: "PagerMaid CPU 使用率"
-status_process_ram: "PagerMaid 記憶體使用率"
 ## stats
 stats_des: 查看我的對話統計信息。
 stats_loading: 加載中 . . .
