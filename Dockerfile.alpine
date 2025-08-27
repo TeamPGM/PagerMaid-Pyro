@@ -8,7 +8,7 @@ WORKDIR /pagermaid/workdir
 
 COPY ./ /pagermaid/workdir
 
-RUN apk add --no-cache git bash imagemagick libmagic curl tzdata libzbar figlet fortune openssl tini fastfetch \
+RUN apk add --no-cache git bash libmagic curl tzdata libzbar figlet fortune openssl tini fastfetch \
     && apk add --no-cache --update --virtual .build-deps gcc python3-dev musl-dev linux-headers rust cargo \
     && git config --global pull.ff only \
     && pip install -r requirements.txt \
