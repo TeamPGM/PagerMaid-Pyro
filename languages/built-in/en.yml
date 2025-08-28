@@ -320,10 +320,12 @@ apt_not_exist: Something went wrong ~ The specified plug-in does not exist.
 apt_no_running_plugins: There are no running plugins.
 apt_no_load_failed_plugins: No failed plugins loaded
 apt_no_disabled_plugins: Plugins that are not disabled
-apt_plugin_list: plug-in list
+apt_plugin_list: Plug-in list
+apt_plugin_list_des: "Use `-apt list <page>` to view a specific page."
 apt_plugin_running: running
 apt_plugin_disabled: disabled
 apt_plugin_failed: failed to load
+apt_plugin_not_installed: not installed
 apt_enable: enabled
 apt_disable: disabled
 apt_uploading: uploading plugin...
