@@ -97,8 +97,8 @@ pytz==2025.2
     # via pagermaid-pyro
 pyyaml==6.0.2
     # via pagermaid-pyro
-ruff==0.12.8
-sentry-sdk==2.34.1
+ruff==0.12.12
+sentry-sdk==2.37.0
     # via pagermaid-pyro
 simpleeval==0.9.13 ; python_full_version < '3.9'
     # via casbin
@@ -114,7 +114,7 @@ starlette==0.44.0 ; python_full_version < '3.9'
     # via
     #   fastapi
     #   pagermaid-pyro
-starlette==0.47.2 ; python_full_version >= '3.9'
+starlette==0.47.3 ; python_full_version >= '3.9'
     # via
     #   fastapi
     #   pagermaid-pyro
@@ -128,7 +128,7 @@ typing-extensions==4.13.2 ; python_full_version < '3.9'
     #   pydantic-core
     #   starlette
     #   uvicorn
-typing-extensions==4.14.1 ; python_full_version >= '3.9'
+typing-extensions==4.15.0 ; python_full_version >= '3.9'
     # via
     #   anyio
     #   exceptiongroup
