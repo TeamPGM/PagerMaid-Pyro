@@ -17,10 +17,13 @@ class TDSession(BaseModel):
     date: int = Field(default=0)
     user_id: int = Field(default=0)
     is_bot: bool = Field(default=False)
+    server_address_str: str = Field(default="")
     port: int = Field(default=443)
 
     @property
     def server_address(self):
+        if self.server_address_str:
+            return self.server_address_str
         test = {
             1: "149.154.175.10",
             2: "149.154.167.40",
@@ -34,6 +37,7 @@ class TDSession(BaseModel):
             4: "149.154.167.91",
             5: "91.108.56.130",
             121: "95.213.217.195",
+            203: "91.105.192.100",
         }
         return ipaddress.ip_address(
             test[self.dc_id] if self.test_mode else prod[self.dc_id],
@@ -76,36 +80,33 @@ class SessionConvert:
         try:
             conn = sqlite3.connect(file, check_same_thread=False)
             version = conn.execute("SELECT number from version;").fetchone()[0]
-            selected_session: tuple = conn.execute("SELECT * from sessions;").fetchone()
-            conn.close()
+            selected_session: tuple = conn.execute(
+                "SELECT dc_id, test_mode, auth_key, date, user_id, is_bot from sessions;"
+            ).fetchone()
         except sqlite3.DatabaseError as err:
             raise ValueError("Invalid Pyrogram session file") from err
 
-        if version == 2:
-            session = TDSession(
-                dc_id=selected_session[0],
-                test_mode=selected_session[1],
-                auth_key=selected_session[2],
-                date=selected_session[3],
-                user_id=selected_session[4],
-                is_bot=selected_session[5],
-            )
-            return cls(session)
-
-        elif version in [3, 4, 5, 6]:
-            session = TDSession(
-                dc_id=selected_session[0],
-                api_id=selected_session[1],
-                test_mode=selected_session[2],
-                auth_key=selected_session[3],
-                date=selected_session[4],
-                user_id=selected_session[5],
-                is_bot=selected_session[6],
-            )
-            return cls(session)
-
-        else:
-            raise ValueError("Invalid version")
+        session = TDSession(
+            dc_id=selected_session[0],
+            test_mode=selected_session[1],
+            auth_key=selected_session[2],
+            date=selected_session[3],
+            user_id=selected_session[4],
+            is_bot=selected_session[5],
+        )
+        if version in (3, 4, 5, 6):
+            api_id = conn.execute("SELECT api_id from sessions;").fetchone()[0]
+            session.api_id = api_id
+        if version in (7,):
+            server_address, port = conn.execute(
+                "SELECT server_address, port from sessions;"
+            ).fetchone()
+            session.server_address_str = server_address
+            session.port = port
+        if version > 7:
+            raise ValueError("Invalid pyrogram version")
+        conn.close()
+        return cls(session)
 
     @classmethod
     def from_telethon_file(cls, file) -> "SessionConvert":
@@ -128,7 +129,7 @@ class SessionConvert:
             return cls_obj
 
         else:
-            raise ValueError("Invalid version")
+            raise ValueError("Invalid telethon version")
 
     def telethon_file(self, file):
         conn = sqlite3.connect(file, check_same_thread=False)
