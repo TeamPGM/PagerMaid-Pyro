@@ -1,4 +1,5 @@
 import logging
+from logging.handlers import RotatingFileHandler
 
 from coloredlogs import ColoredFormatter
 
@@ -10,8 +11,11 @@ logging_format = "%(levelname)s [%(asctime)s] [%(name)s] %(message)s"
 logging_handler = logging.StreamHandler()
 logging_handler.setFormatter(ColoredFormatter(logging_format))
 
-file_handler = logging.FileHandler(
-    filename="data/pagermaid.log.txt", mode="w", encoding="utf-8"
+file_handler = RotatingFileHandler(
+    filename="data/pagermaid.log.txt",
+    encoding="utf-8",
+    maxBytes=50 * 1024 * 1024, # 50MB
+    backupCount=1 # Only 1 backup to enable rotation
 )
 file_handler.setFormatter(logging.Formatter(logging_format))
 
