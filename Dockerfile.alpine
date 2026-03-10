@@ -13,6 +13,7 @@ RUN apk add --no-cache git bash libmagic curl tzdata libzbar figlet fortune open
     && git config --global pull.ff only \
     && pip install -r requirements.txt \
     && pip cache purge \
+    && rm -rf /root/.cargo \
     && apk del .build-deps
 
 ENTRYPOINT ["tini","--","bash","utils/docker-config.sh"]
