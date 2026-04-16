@@ -12,6 +12,8 @@ RUN source ~/.bashrc \
 #   && sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
 #   && sed -i 's/security.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
 #   && sed -i 's/ports.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
+    && cp /etc/apt/sources.list /etc/apt/sources.list.bak \
+    && sed -Ei "s@(security|ports|archive).ubuntu.com@mirrors.cloud.tencent.com@g" /etc/apt/sources.list \
     && apt-get update \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
@@ -105,5 +107,6 @@ RUN source ~/.bashrc \
         /tmp/* \
         /var/lib/apt/lists/* \
         /var/tmp/* \
-        ~/.cache
+        ~/.cache \
+    && cp -f /etc/apt/sources.list.bak /etc/apt/sources.list
 ENTRYPOINT ["sh","utils/docker-config.sh"]
