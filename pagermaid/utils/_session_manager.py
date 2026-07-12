@@ -46,7 +46,7 @@ class TDSession(BaseModel):
 
 class SessionConvert:
     PYROGRAM_VERSION = 3
-    TELETHON_VERSION = 8
+    TELETHON_VERSION = 7
 
     def __init__(self, session: TDSession):
         self.session = session
