@@ -259,14 +259,13 @@ class Message(pyrogram.types.Message):
     @patchable
     async def edit_text(
         self,
-        text: str,
-        parse_mode: Optional["pyrogram.enums.ParseMode"] = None,
-        entities: List["pyrogram.types.MessageEntity"] = None,
-        link_preview_options: "pyrogram.types.LinkPreviewOptions" = None,
-        show_caption_above_media: bool = None,
-        reply_markup: "pyrogram.types.InlineKeyboardMarkup" = None,
-        disable_web_page_preview: bool = None,
-        no_reply: bool = None,
+        text: str | None = None,
+        parse_mode: pyrogram.enums.ParseMode | None = None,
+        entities: list[pyrogram.types.MessageEntity] | None = None,
+        link_preview_options: pyrogram.types.LinkPreviewOptions | None = None,
+        reply_markup: pyrogram.types.InlineKeyboardMarkup | None = None,
+        rich_message: pyrogram.types.InputRichMessage | None = None,
+        no_reply: bool | None = None,
     ) -> "Message":
         msg = None
         sudo_users = get_sudo_list()
@@ -285,10 +284,9 @@ class Message(pyrogram.types.Message):
                     msg = await reply_to.reply(
                         text=text,
                         parse_mode=parse_mode,
+                        entities=entities,
                         link_preview_options=link_preview_options,
-                        disable_web_page_preview=disable_web_page_preview,
-                        show_caption_above_media=show_caption_above_media,
-                        quote=True,
+                        reply_markup=reply_markup,
                     )
                 elif is_self:
                     msg = await self._client.edit_message_text(
@@ -298,18 +296,16 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         link_preview_options=link_preview_options,
-                        disable_web_page_preview=disable_web_page_preview,
-                        show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
+                        rich_message=rich_message,
                     )
                 elif not no_reply:
                     msg = await self.reply(
                         text=text,
                         parse_mode=parse_mode,
+                        entities=entities,
                         link_preview_options=link_preview_options,
-                        disable_web_page_preview=disable_web_page_preview,
-                        show_caption_above_media=show_caption_above_media,
-                        quote=True,
+                        reply_markup=reply_markup,
                     )
             else:
                 try:
@@ -320,9 +316,8 @@ class Message(pyrogram.types.Message):
                         parse_mode=parse_mode,
                         entities=entities,
                         link_preview_options=link_preview_options,
-                        disable_web_page_preview=disable_web_page_preview,
-                        show_caption_above_media=show_caption_above_media,
                         reply_markup=reply_markup,
+                        rich_message=rich_message,
                     )
                 except pyrogram.errors.exceptions.forbidden_403.MessageAuthorRequired:  # noqa
                     if not no_reply:
@@ -331,10 +326,7 @@ class Message(pyrogram.types.Message):
                             parse_mode=parse_mode,
                             entities=entities,
                             link_preview_options=link_preview_options,
-                            disable_web_page_preview=disable_web_page_preview,
-                            show_caption_above_media=show_caption_above_media,
                             reply_markup=reply_markup,
-                            quote=True,
                         )
         else:
             with open("output.log", "w+") as file:
@@ -358,13 +350,8 @@ class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
     @patchable
     def remove_all_handlers(self):
         async def fn():
-            for lock in self.locks_list:
-                await lock.acquire()
-
-            self.groups.clear()
-
-            for lock in self.locks_list:
-                lock.release()
+            with self._groups_lock:
+                self.groups.clear()
 
         self.client.loop.create_task(fn())
 
@@ -374,17 +361,11 @@ class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
             return self.oldadd_handler(handler, group)
 
         async def fn():
-            for lock in self.locks_list:
-                await lock.acquire()
-
-            try:
+            with self._groups_lock:
                 if group not in self.groups:
                     self.groups[group] = []
                     self.groups = OrderedDict(sorted(self.groups.items()))
 
                 self.groups[group].insert(0, handler)
-            finally:
-                for lock in self.locks_list:
-                    lock.release()
 
         self.client.loop.create_task(fn())

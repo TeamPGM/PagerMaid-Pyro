@@ -120,9 +120,7 @@ async def _run_session(shutdown_event):
 
     handler = bot.add_handler(DisconnectHandler(_on_disconnect))
     try:
-        completed, _ = await _wait_or_shutdown(
-            disconnect_event.wait(), shutdown_event
-        )
+        completed, _ = await _wait_or_shutdown(disconnect_event.wait(), shutdown_event)
     except RETRYABLE_CONNECTION_ERRORS as e:
         reason = f"{type(e).__name__}: {e}"
         completed = True
@@ -267,6 +265,8 @@ async def main():
     shutdown_event = web.shutdown_event
     if not scheduler.running:
         scheduler.start()
+    bot._loop = asyncio.get_running_loop()
+    bot._rebuild_loop_bound_state()
     await web.start()
     try:
         if not (Config.WEB_ENABLE and Config.WEB_LOGIN):

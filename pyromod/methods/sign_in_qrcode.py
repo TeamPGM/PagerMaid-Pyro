@@ -52,11 +52,11 @@ async def sign_in_qrcode(
         )
         await client.storage.user_id(req.authorization.user.id)
         await client.storage.is_bot(False)
-        return pyrogram.types.User._parse(client, req.authorization.user)
+        return await pyrogram.types.User._parse(client, req.authorization.user)
     elif isinstance(req, pyrogram.raw.types.auth.LoginTokenSuccess):
         await client.storage.user_id(req.authorization.user.id)
         await client.storage.is_bot(False)
-        return pyrogram.types.User._parse(client, req.authorization.user)
+        return await pyrogram.types.User._parse(client, req.authorization.user)
 
 
 async def authorize_by_qrcode(

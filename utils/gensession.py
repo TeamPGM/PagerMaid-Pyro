@@ -16,6 +16,7 @@ def install_package(package: str):
         print(f"Failed to install {package}: {exc}")
         sys.exit(exc.returncode or 1)
 
+
 try:
     from pyrogram.errors import ApiIdInvalid, PhoneNumberInvalid
     from pyrogram import Client
