@@ -349,23 +349,15 @@ class Message(pyrogram.types.Message):
 class Dispatcher(pyrogram.dispatcher.Dispatcher):  # noqa
     @patchable
     def remove_all_handlers(self):
-        async def fn():
-            with self._groups_lock:
-                self.groups.clear()
-
-        self.client.loop.create_task(fn())
+        with self._groups_lock:
+            self.groups.clear()
 
     @patchable
     def add_handler(self, handler, group: int, first: bool = False):
         if not first:
             return self.oldadd_handler(handler, group)
 
-        async def fn():
-            with self._groups_lock:
-                if group not in self.groups:
-                    self.groups[group] = []
-                    self.groups = OrderedDict(sorted(self.groups.items()))
-
-                self.groups[group].insert(0, handler)
-
-        self.client.loop.create_task(fn())
+        with self._groups_lock:
+            groups = self._copy_groups()
+            groups.setdefault(group, []).insert(0, handler)
+            self.groups = dict(sorted(groups.items()))
