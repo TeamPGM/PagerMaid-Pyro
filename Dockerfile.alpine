@@ -1,4 +1,4 @@
-FROM astral/uv:0.11 AS uv
+FROM astral/uv:0.13 AS uv
 
 FROM python:alpine
 
@@ -14,7 +14,8 @@ COPY ./ /pagermaid/workdir
 RUN apk add --no-cache git bash libmagic curl tzdata libzbar figlet fortune openssl tini fastfetch \
     && apk add --no-cache --update --virtual .build-deps gcc python3-dev musl-dev linux-headers rust cargo \
     && git config --global pull.ff only \
-    && uv pip install --system -r requirements.txt \
+    && uv sync --frozen --python=3.12 \
+    && uv pip install -r requirements.txt \
     && uv cache clean \
     && rm -rf /root/.cargo \
     && apk del .build-deps

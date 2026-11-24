@@ -22,7 +22,7 @@ configure () {
     sed -i "s/HASH_HERE/$api_hash/" $config_file
     printf "控制台二维码扫码登录？（避免无法收到验证码） [Y/n]"
     read -r choi <&1
-    if [ "$choi" == "y" ] || [ "$choi" == "Y" ]; then
+    if [ "$choi" = "y" ] || [ "$choi" = "Y" ]; then
         sed -i "s/qrcode_login: \"False\"/qrcode_login: \"True\"/" $config_file
     fi
     printf "请输入应用程序语言（默认：zh-cn）："

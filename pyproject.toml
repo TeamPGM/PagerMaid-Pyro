@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
     "pyrogram @ git+https://github.com/TeamPGM/pyrogram@1.5.14",
-    "PyroTgCrypto>=1.2.7",
+    "kuricrypt>=0.1.2",
     "Pillow>=12.3.0",
     "pytz>=2026.1",
     "PyYAML>=6.0.2",
@@ -27,7 +27,7 @@ dependencies = [
     "pyjwt>=2.15.0",
     "winuvloop>=0.2.4",
 ]
-requires-python = ">=3.10.0"
+requires-python = ">=3.11.0"
 readme = "README.md"
 license = {text = "AGPL 3.0+"}
 

@@ -1,6 +1,6 @@
-FROM astral/uv:0.11 AS uv
+FROM astral/uv:0.13 AS uv
 
-FROM ubuntu:jammy
+FROM ubuntu:noble
 ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
     LANG=zh_CN.UTF-8 \
     SHELL=/bin/bash \
@@ -15,8 +15,8 @@ RUN source ~/.bashrc \
 #   && sed -i 's/archive.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
 #   && sed -i 's/security.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
 #   && sed -i 's/ports.ubuntu.com/mirrors.bfsu.edu.cn/g' /etc/apt/sources.list \
-    && cp /etc/apt/sources.list /etc/apt/sources.list.bak \
-    && sed -Ei "s@(security|ports|archive).ubuntu.com@mirrors.cloud.tencent.com@g" /etc/apt/sources.list \
+    && cp /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/ubuntu.sources.bak \
+    && sed -Ei "s@(security|ports|archive).ubuntu.com@mirrors.cloud.tencent.com@g" /etc/apt/sources.list.d/ubuntu.sources \
     && apt-get update \
     && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y \
@@ -79,7 +79,9 @@ RUN source ~/.bashrc \
     && git clone -b master https://github.com/TeamPGM/PagerMaid-Pyro.git /pagermaid/workdir \
     && git config --global pull.ff only \
     ## install Python dependencies
-    && uv pip install --system -r requirements.txt \
+    && uv sync --frozen --python=3.12 \
+    && uv pip install -r requirements.txt \
+    && uv cache clean \
     ## 卸载编译依赖，清理安装缓存
     && sudo apt-get purge --auto-remove -y \
         build-essential \
@@ -110,5 +112,6 @@ RUN source ~/.bashrc \
         /var/lib/apt/lists/* \
         /var/tmp/* \
         ~/.cache \
-    && cp -f /etc/apt/sources.list.bak /etc/apt/sources.list
+    && cp -f /etc/apt/sources.list.d/ubuntu.sources.bak /etc/apt/sources.list.d/ubuntu.sources
+ENV PATH="/pagermaid/workdir/.venv/bin:$PATH"
 ENTRYPOINT ["sh","utils/docker-config.sh"]
